@@ -1,0 +1,124 @@
+/* Telly — calm, warm-neutral frame; colour comes from posters + one tangerine accent.
+   Fredoka (display) / Nunito (body). */
+@font-face {
+  font-family: 'Fredoka';
+  src: url('fonts/fredoka.woff2') format('woff2');
+  font-weight: 300 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Nunito';
+  src: url('fonts/nunito.woff2') format('woff2');
+  font-weight: 200 1000;
+  font-display: swap;
+}
+
+:root {
+  --bg: #141316;
+  --surface: #1c1b1f;
+  --surface-2: #252428;
+  --surface-3: #302f34;
+  --line: #2b2a2f;
+  --text: #f5f2ee;
+  --muted: #a8a39d;
+  --faint: #7a7671;
+  --accent: #ffa14a; /* tangerine */
+  --accent-strong: #ffb56e;
+  --on-accent: #2a1500;
+  --pink: #ff7a93;
+  --mint: #62d6b4;
+  --sky: #8fb0ff; /* Telly's body */
+  --display: 'Fredoka', 'Nunito', system-ui, sans-serif;
+  --body: 'Nunito', system-ui, sans-serif;
+  --shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--body); }
+body { -webkit-font-smoothing: antialiased; }
+h1, h2, h3, h4 { font-family: var(--display); font-weight: 600; margin: 0; }
+p { margin: 0; }
+a { color: var(--sky); }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line);
+  background: var(--surface-2); color: var(--text); font-family: var(--display); font-weight: 500; font-size: 14px;
+  transition: background .15s, transform .1s;
+}
+.btn:hover { background: var(--surface-3); }
+.btn:active { transform: scale(.97); }
+.btn[disabled] { opacity: .4; cursor: default; }
+.btn-primary { background: var(--accent); color: var(--on-accent); border-color: transparent; font-weight: 600; }
+.btn-primary:hover { background: var(--accent-strong); }
+.btn-ghost { background: transparent; border-color: transparent; color: var(--muted); }
+.btn-ghost:hover { background: var(--surface-2); color: var(--text); }
+.btn-sm { height: 32px; padding: 0 12px; font-size: 13px; }
+.icon-btn {
+  width: 40px; height: 40px; border-radius: 999px; border: 0; background: transparent; color: var(--muted);
+  display: inline-grid; place-items: center; position: relative;
+}
+.icon-btn:hover { background: var(--surface-2); color: var(--text); }
+.icon-btn .pip { position: absolute; top: 8px; right: 8px; width: 7px; height: 7px; border-radius: 99px; background: var(--accent); }
+.round { width: 54px; height: 54px; padding: 0; border-radius: 999px; }
+
+/* Segmented control, selects, inputs */
+.seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 12px; background: var(--surface); }
+.seg button { height: 30px; padding: 0 12px; border: 0; border-radius: 9px; background: transparent; color: var(--muted); font-size: 13px; font-weight: 700; }
+.seg button[aria-pressed='true'] { background: var(--surface-3); color: var(--text); }
+.select {
+  height: 36px; padding: 0 30px 0 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface);
+  font-size: 13px; font-weight: 700; color: var(--text); appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 16px) 16px, calc(100% - 11px) 16px; background-size: 5px 5px; background-repeat: no-repeat;
+}
+.input { height: 42px; width: 100%; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--text); font-size: 14px; }
+.input::placeholder, textarea::placeholder { color: var(--faint); }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border-radius: 999px;
+  border: 1px solid var(--line); background: transparent; color: var(--muted); font-size: 12.5px; font-weight: 700; white-space: nowrap;
+}
+.chip[aria-pressed='true'] { border-color: var(--accent); color: var(--text); background: rgba(255, 161, 74, .1); }
+.dot { width: 7px; height: 7px; border-radius: 99px; display: inline-block; flex-shrink: 0; }
+.badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; color: var(--muted); }
+
+/* Posters — real TMDB posters in the live catalog; colourful stand-ins for the sample */
+.poster { position: relative; overflow: hidden; border-radius: 12px; background: var(--surface-3); }
+.poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.poster .ph { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 12px; overflow: hidden; }
+.poster .ph-shape { position: absolute; border-radius: 999px; opacity: .55; }
+.poster .ph-title { position: relative; font-family: var(--display); font-weight: 600; font-size: 16px; line-height: 1.05; color: #fff; text-shadow: 0 1px 8px rgba(0, 0, 0, .35); }
+
+/* ⓘ info tip */
+.info { position: relative; display: inline-flex; vertical-align: middle; }
+.info > button {
+  width: 20px; height: 20px; border-radius: 99px; border: 1px solid var(--surface-3); background: transparent; color: var(--faint);
+  font: 700 11px/1 var(--body); display: grid; place-items: center; padding: 0;
+}
+.info > button:hover, .info > button[aria-expanded='true'] { color: var(--text); border-color: var(--muted); }
+.info-pop {
+  position: absolute; top: 26px; left: -8px; z-index: 30; width: max-content; max-width: 280px; padding: 10px 12px;
+  border-radius: 12px; background: var(--surface-3); color: var(--text); font: 500 13px/1.45 var(--body); box-shadow: var(--shadow);
+}
+
+/* Modal */
+.overlay { position: fixed; inset: 0; z-index: 40; background: rgba(8, 8, 10, .6); display: grid; place-items: center; padding: 20px; animation: fade .15s ease-out; }
+.modal { width: min(560px, 100%); max-height: 90vh; overflow: auto; border-radius: 24px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); padding: 22px; animation: rise .18s ease-out; }
+@keyframes fade { from { opacity: 0; } }
+@keyframes rise { from { transform: translateY(10px); opacity: 0; } }
+
+/* Telly */
+.telly-eyes { transform-box: fill-box; transform-origin: center; animation: telly-blink 6s infinite; }
+@keyframes telly-blink { 0%, 95%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}

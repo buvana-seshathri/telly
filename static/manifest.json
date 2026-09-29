@@ -1,0 +1,67 @@
+{
+  "manifest_version": 3,
+  "name": "Telly — what to watch, with reasons",
+  "short_name": "Telly",
+  "version": "0.1.0",
+  "description": "Personal picks across Netflix, Prime Video and more, each with a reason. Swipe to decide. Your history stays in your browser.",
+  "icons": { "16": "icons/icon-16.png", "32": "icons/icon-32.png", "48": "icons/icon-48.png", "128": "icons/icon-128.png" },
+  "action": { "default_title": "Open Telly", "default_icon": { "16": "icons/icon-16.png", "32": "icons/icon-32.png" } },
+  "background": { "service_worker": "sw.js", "type": "module" },
+  "permissions": ["storage", "unlimitedStorage"],
+  "host_permissions": [
+    "https://www.netflix.com/*",
+    "https://www.primevideo.com/*",
+    "https://www.amazon.com/*"
+  ],
+  "optional_host_permissions": [
+    "https://generativelanguage.googleapis.com/*",
+    "https://api.groq.com/*",
+    "https://api.openai.com/*",
+    "https://api.anthropic.com/*",
+    "https://openrouter.ai/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.netflix.com/*",
+        "https://www.primevideo.com/*",
+        "https://www.amazon.com/gp/video/*",
+        "https://www.hulu.com/*",
+        "https://www.disneyplus.com/*",
+        "https://play.max.com/*",
+        "https://play.hbomax.com/*",
+        "https://tv.apple.com/*",
+        "https://www.peacocktv.com/*",
+        "https://www.paramountplus.com/*"
+      ],
+      "js": ["corner.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://www.netflix.com/*"],
+      "js": ["netflix-main.js"],
+      "run_at": "document_idle",
+      "world": "MAIN"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["popup.html", "popup.js", "popup.css", "base.css", "chunks/*", "fonts/*", "icons/*", "catalog/*"],
+      "matches": [
+        "https://www.netflix.com/*",
+        "https://www.primevideo.com/*",
+        "https://www.amazon.com/*",
+        "https://www.hulu.com/*",
+        "https://www.disneyplus.com/*",
+        "https://play.max.com/*",
+        "https://play.hbomax.com/*",
+        "https://tv.apple.com/*",
+        "https://www.peacocktv.com/*",
+        "https://www.paramountplus.com/*"
+      ]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  }
+}

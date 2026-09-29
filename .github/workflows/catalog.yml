@@ -1,0 +1,26 @@
+# Rebuilds the catalog weekly and publishes it to GitHub Pages (free).
+# Setup: repo Settings → Secrets → TMDB_TOKEN (TMDB "API Read Access Token"); Settings → Pages → GitHub Actions.
+# Then paste https://<you>.github.io/<repo>/ into Telly → Settings → Catalog.
+name: weekly-catalog
+on:
+  schedule: [{ cron: '0 6 * * 1' }]
+  workflow_dispatch:
+permissions: { contents: read, pages: write, id-token: write }
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm ci
+      - run: npx tsx scripts/build-catalog.ts --region US --pages 25 --embedder minilm --out catalog-dist
+        env: { TMDB_TOKEN: '${{ secrets.TMDB_TOKEN }}' }
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: catalog-dist }
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: { name: github-pages }
+    steps:
+      - uses: actions/deploy-pages@v4

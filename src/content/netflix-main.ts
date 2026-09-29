@@ -3,6 +3,8 @@
 // to the extension's content script via window.postMessage and sends nothing anywhere else.
 // Netflix has no public API, so this is best-effort: if it breaks, CSV import still works.
 
+import { parseLooseDate } from '../platforms/netflix-csv';
+
 interface NfItem {
   title?: string;
   seriesTitle?: string;
@@ -32,20 +34,69 @@ function profile(): { id: string; name: string } | null {
 
 const post = (msg: Record<string, unknown>) => window.postMessage({ source: 'tonight-nf', ...msg }, location.origin);
 
-async function fetchHistory(maxPages = 40): Promise<NfItem[]> {
+/** Netflix has changed this endpoint's path before, so try the known shapes in turn. */
+function apiBases(): string[] {
   const build = ctx()?.models?.serverDefs?.data?.BUILD_IDENTIFIER;
-  if (!build) throw new Error('Could not read Netflix build id');
-  const items: NfItem[] = [];
-  for (let pg = 0; pg < maxPages; pg++) {
-    const res = await fetch(`/api/shakti/${build}/viewingactivity?pg=${pg}&pgSize=100`, { credentials: 'include' });
-    if (!res.ok) throw new Error(`Netflix returned ${res.status}`);
-    const j = (await res.json()) as { viewedItems?: NfItem[] };
-    const page = j.viewedItems ?? [];
-    items.push(...page);
-    if (page.length < 100) break;
-    await new Promise((r) => setTimeout(r, 250)); // be gentle
+  return ['/api/shakti/mre/viewingactivity', ...(build ? [`/api/shakti/${build}/viewingactivity`] : [])];
+}
+
+async function fetchViaApi(maxPages = 40): Promise<NfItem[]> {
+  const codes: number[] = [];
+  for (const base of apiBases()) {
+    const items: NfItem[] = [];
+    let ok = true;
+    for (let pg = 0; pg < maxPages; pg++) {
+      const res = await fetch(`${base}?pg=${pg}&pgSize=100`, { credentials: 'include' });
+      if (!res.ok) {
+        if (pg === 0) codes.push(res.status);
+        ok = pg > 0;
+        break;
+      }
+      const j = (await res.json().catch(() => ({}))) as { viewedItems?: NfItem[] };
+      const page = j.viewedItems ?? [];
+      items.push(...page);
+      if (page.length < 100) break;
+      await new Promise((r) => setTimeout(r, 250)); // be gentle
+    }
+    if (ok && items.length) return items;
   }
+  throw new Error(`Netflix returned ${codes.join('/') || 'no data'}`);
+}
+
+/** Fallback: read the rows of the viewing-activity page itself (only works while it is open). */
+async function readActivityPage(): Promise<NfItem[]> {
+  if (!/^\/viewingactivity/.test(location.pathname)) throw new Error('Open the Viewing activity page to read it');
+  const rows = () => document.querySelectorAll('.retableRow');
+  const more = () => [...document.querySelectorAll('button')].find((b) => /^show more$/i.test(b.textContent?.trim() ?? ''));
+  for (let i = 0; i < 80; i++) {
+    const btn = more();
+    if (!btn) break;
+    const before = rows().length;
+    btn.click();
+    for (let w = 0; w < 12 && rows().length === before && more(); w++) await new Promise((r) => setTimeout(r, 250));
+  }
+  const raw = [...rows()].map((row) => ({
+    title: (row.querySelector('.title')?.textContent ?? '').replace(/[“”"]/g, '').trim(),
+    date: (row.querySelector('.date')?.textContent ?? '').trim(),
+  }));
+  const dayFirst = raw.some((r) => /^\d{1,2}\//.test(r.date) && +r.date.split('/')[0] > 12);
+  const items: NfItem[] = raw
+    .map((r) => ({ title: r.title, date: parseLooseDate(r.date, dayFirst) ?? undefined }))
+    .filter((r) => r.title && r.date);
+  if (!items.length) throw new Error('Could not read the rows on this page');
   return items;
+}
+
+async function fetchHistory(): Promise<NfItem[]> {
+  try {
+    return await fetchViaApi();
+  } catch (apiErr) {
+    try {
+      return await readActivityPage();
+    } catch {
+      throw apiErr;
+    }
+  }
 }
 
 function announce() {

@@ -37,6 +37,9 @@ const Icon = {
   x: (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>
   ),
+  eye: (
+    <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /></svg>
+  ),
   dice: (
     <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4" /><circle cx="9" cy="9" r="1" fill="currentColor" /><circle cx="15" cy="15" r="1" fill="currentColor" /><circle cx="15" cy="9" r="1" fill="currentColor" /><circle cx="9" cy="15" r="1" fill="currentColor" /></svg>
   ),
@@ -242,6 +245,7 @@ export function Deck({ engine, embed, currentPlatform }: Props) {
 
       <div class="deck-actions">
         <button class="btn round" aria-label="Skip" title="Skip" disabled={!top} onClick={() => swipeRef.current('left')}>{Icon.x}</button>
+        <button class="btn round" aria-label="Already watched" title="Already watched" disabled={!top} onClick={() => top && markSeen(top)}>{Icon.eye}</button>
         <button class="btn btn-primary watch" disabled={!top} onClick={() => top && watch(top)}>Watch</button>
         <button class="btn round" aria-label="Random movie and series" title="Random" onClick={doSurprise}>{Icon.dice}</button>
       </div>
@@ -322,7 +326,7 @@ function SwipeCard({ card, showWhy, onToggleWhy, onCommit, onSeen, bindSwipe, se
             <ul class="evidence">
               {card.evidence.slice(0, 3).map((e) => <li>{e.text}</li>)}
             </ul>
-            <button class="linkish" onClick={onSeen}>I've already seen it</button>
+            <button class="linkish" onClick={onSeen}>Already watched</button>
           </div>
         )}
       </div>

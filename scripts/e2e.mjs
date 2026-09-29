@@ -26,8 +26,14 @@ items.push({ title: 'Whiplash', date: now - 40 * DAY, bookmark: 6000, duration: 
 items.push({ title: 'The Social Network', date: now - 60 * DAY, bookmark: 7000, duration: 7200 });
 items.push({ title: 'Some Title Not In Catalog', date: now - 5 * DAY });
 let apiHits = 0;
+let apiDown = false;
 await ctx.route('https://www.netflix.com/**', async (route) => {
   const url = new URL(route.request().url());
+  if (apiDown && url.pathname.startsWith('/api/shakti')) return route.fulfill({ status: 404, body: 'nope' });
+  if (url.pathname.startsWith('/viewingactivity')) {
+    const rows = ['Severance: Season 1: "Hello, Ms. Cobel"|9/25/26', 'Arrival|9/24/26', 'Parasite|9/23/26'].map((r) => { const [t, d] = r.split('|'); return `<li class="retableRow"><div class="date">${d}</div><div class="title"><a>${t}</a></div></li>`; });
+    return route.fulfill({ contentType: 'text/html', body: `<!doctype html><html><head><title>Viewing activity</title><script>window.netflix={reactContext:{models:{userInfo:{data:{guid:'PROFILE123',name:'Buvana'}},serverDefs:{data:{BUILD_IDENTIFIER:'v123'}}}}}</script></head><body><ul>${rows.join('')}</ul></body></html>` });
+  }
   if (url.pathname.startsWith('/api/shakti/v123/viewingactivity')) {
     apiHits++;
     const pg = +url.searchParams.get('pg');
@@ -69,5 +75,16 @@ await app.waitForTimeout(1200);
 await app.screenshot({ path: `${out}/e2e-settings.png`, fullPage: true });
 const errs = [];
 app.on('pageerror', (e) => errs.push(e.message));
-await ctx.close();
+// API changed/404: the viewing-activity page itself should still be readable
+apiDown = true;
+const p2 = await ctx.newPage();
+await p2.goto('https://www.netflix.com/viewingactivity?tonight-sync=1');
+await p2.waitForTimeout(3500);
+const after404 = await sw.evaluate(async () => {
+  const all = await chrome.storage.local.get(null);
+  return Object.entries(all).filter(([k]) => k.startsWith('events:')).map(([k, v]) => [k, v.length]);
+});
+console.log('after API 404, events', JSON.stringify(after404));
 console.log('page errors', errs);
+await ctx.close();
+

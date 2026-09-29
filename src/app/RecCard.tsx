@@ -94,7 +94,7 @@ export function DetailModal({ rec, engine, onClose, extra }: { rec: Rec; engine:
           <button class="btn btn-primary" onClick={() => act.watch(rec)}>Watch</button>
           <button class="btn" onClick={after('Saved', () => act.save(rec))}>{done === 'Saved' ? 'Saved ✓' : 'Save'}</button>
           <span class="grow" />
-          <button class="btn btn-ghost btn-sm" onClick={after('Seen', () => act.seen(rec))}>Seen it</button>
+          <button class="btn btn-ghost btn-sm" onClick={after('Seen', () => act.seen(rec))}>Already watched</button>
           <button class="btn btn-ghost btn-sm" onClick={after('Skip', () => act.nope(rec))}>Not for me</button>
         </div>
       </div>

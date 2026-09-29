@@ -18,7 +18,7 @@ export const DEFAULT_SETTINGS: Settings = {
   refresh: 'every-visit',
   passiveLogging: true,
   cornerButton: true,
-  catalogUrl: '',
+  catalogUrl: 'https://buvana-seshathri.github.io/telly/',
   llm: { enabled: false, provider: 'gemini', apiKey: '', model: '' },
 };
 

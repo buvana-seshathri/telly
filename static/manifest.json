@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Telly — what to watch, with reasons",
+  "name": "Telly: what to watch, with reasons",
   "short_name": "Telly",
   "version": "0.1.0",
   "description": "Personal picks across Netflix, Prime Video and more, each with a reason. Swipe to decide. Your history stays in your browser.",

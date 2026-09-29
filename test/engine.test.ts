@@ -71,6 +71,12 @@ describe('taste profile + recommendations', () => {
     expect(surprise(cat, p, all, 'movie', () => 0.5)?.item.type).toBe('movie');
     expect(surprise(cat, p, all, 'tv', () => 0.5)?.item.type).toBe('tv');
   });
+  it('shows every genre in the catalog, not just the top few', () => {
+    const secs = genreSections(cat, p, all, 3, 50);
+    expect(secs.length).toBeGreaterThan(8);
+    expect(new Set(secs.map((s) => s.genre)).size).toBe(secs.length);
+    expect(genreSections(cat, p, all, 3, 6)).toHaveLength(6);
+  });
   it('cold start still gives picks', () => {
     const empty = buildProfile(cat, [], []);
     expect(recommend(cat, empty, all, 5)).toHaveLength(5);

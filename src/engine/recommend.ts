@@ -111,34 +111,55 @@ export interface GenreSection {
   recs: Rec[];
 }
 
-/** Top picks for the genres you actually watch, plus one "stretch" genre next to your taste. */
-export function genreSections(cat: Catalog, p: TasteProfile, f: Filters, perGenre = 3, maxGenres = 5, exclude: Iterable<string> = []): GenreSection[] {
+/**
+ * Top picks per genre. Order: the genres you watch most, one "stretch" genre next to your
+ * taste, then every other genre in the catalog (best match first). Stops at `maxGenres`.
+ */
+export function genreSections(cat: Catalog, p: TasteProfile, f: Filters, perGenre = 3, maxGenres = 6, exclude: Iterable<string> = []): GenreSection[] {
   const used = new Set<string>(exclude);
-  const sections: GenreSection[] = [];
-  let genres = [...p.genreShare.entries()].filter(([, s]) => s >= 0.08).sort((a, b) => b[1] - a[1]);
-  if (!genres.length) genres = ['drama', 'comedy', 'thriller', 'sci-fi', 'documentary'].map((g) => [g, 0] as [string, number]);
-  for (const [genre, share] of genres.slice(0, maxGenres)) {
-    const recs = recommend(cat, p, { ...f, genre }, perGenre, used);
-    recs.forEach((r) => used.add(r.item.id));
-    if (recs.length) sections.push({ genre, share, stretch: false, recs });
-  }
+  const all = rankAll(cat, p, f, used);
+  const best = new Map<string, number>(); // genre -> best score available to this person
+  for (const s of all) for (const g of cat.items[s.index].genres) if ((best.get(g) ?? -Infinity) < s.score) best.set(g, s.score);
+
+  let mine = [...p.genreShare.entries()].filter(([g, s]) => s >= 0.08 && best.has(g)).sort((a, b) => b[1] - a[1]);
+  if (!mine.length) mine = ['drama', 'comedy', 'thriller', 'sci-fi', 'documentary'].filter((g) => best.has(g)).map((g) => [g, 0] as [string, number]);
+  mine = mine.slice(0, 4);
+  const mineSet = new Set(mine.map(([g]) => g));
+
   // stretch: a genre you rarely watch whose items sit closest to your taste
+  let stretch: string | null = null;
   if (p.pos) {
-    const present = new Set(genres.map(([g]) => g));
-    const candidates = new Map<string, number>();
-    const all = rankAll(cat, p, f, used);
+    const cand = new Map<string, number>();
     for (const s of all.slice(0, 80)) {
       for (const g of cat.items[s.index].genres) {
-        if (present.has(g) || (p.genreShare.get(g) ?? 0) >= 0.05) continue;
-        candidates.set(g, Math.max(candidates.get(g) ?? 0, s.score));
+        if (mineSet.has(g) || (p.genreShare.get(g) ?? 0) >= 0.05) continue;
+        cand.set(g, Math.max(cand.get(g) ?? 0, s.score));
       }
     }
-    const best = [...candidates.entries()].sort((a, b) => b[1] - a[1])[0];
-    if (best) {
-      const ranked = rankAll(cat, p, { ...f, genre: best[0] }, used);
-      const recs = diversify(cat, ranked, perGenre).map((s) => toRec(cat, p, s, f, true));
-      if (recs.length) sections.push({ genre: best[0], share: p.genreShare.get(best[0]) ?? 0, stretch: true, recs });
-    }
+    stretch = [...cand.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+  }
+
+  const rest = [...best.entries()]
+    .filter(([g]) => !mineSet.has(g) && g !== stretch)
+    .sort((a, b) => b[1] - a[1])
+    .map(([g]) => g);
+
+  const order: { genre: string; stretch: boolean }[] = [
+    ...mine.map(([genre]) => ({ genre, stretch: false })),
+    ...(stretch ? [{ genre: stretch, stretch: true }] : []),
+    ...rest.map((genre) => ({ genre, stretch: false })),
+  ];
+
+  const sections: GenreSection[] = [];
+  for (const { genre, stretch: isStretch } of order) {
+    if (sections.length >= maxGenres) break;
+    const gf = { ...f, genre };
+    const recs = isStretch
+      ? diversify(cat, rankAll(cat, p, gf, used), perGenre).map((s) => toRec(cat, p, s, f, true))
+      : recommend(cat, p, gf, perGenre, used);
+    if (!recs.length) continue;
+    recs.forEach((r) => used.add(r.item.id));
+    sections.push({ genre, share: p.genreShare.get(genre) ?? 0, stretch: isStretch, recs });
   }
   return sections;
 }

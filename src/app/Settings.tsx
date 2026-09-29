@@ -164,7 +164,7 @@ function HistoryPanel({ engine }: { engine: EngineState }) {
       <label class="row" for="passive">
         <span class="grow">
           Learn while I watch{' '}
-          <InfoTip label="About learning while watching">On Hulu, Disney+, Max and others, I remember titles you play for 2+ minutes.</InfoTip>
+          <InfoTip label="About learning while watching">Only Netflix and Prime have a history page I can read. On Hulu, Disney+, Max and others, I remember titles you play for 2+ minutes. You can also tap Already watched on any pick.</InfoTip>
         </span>
         <Toggle id="passive" label="Learn while I watch" checked={s.passiveLogging} onChange={(v) => saveSettings({ passiveLogging: v })} />
       </label>
@@ -287,7 +287,7 @@ function CatalogUrl({ value, onSave }: { value: string; onSave: (v: string) => v
   return (
     <div class="inline-form">
       <label class="sr-only" for="caturl">Catalog URL</label>
-      <input id="caturl" class="input" value={v} placeholder="Catalog URL (blank = sample)" onInput={(e) => setV(e.currentTarget.value)} />
+      <input id="caturl" class="input" value={v} placeholder="Catalog URL (blank = bundled sample)" onInput={(e) => setV(e.currentTarget.value)} />
       <button class="btn btn-sm" onClick={() => onSave(v.trim())}>Save</button>
     </div>
   );

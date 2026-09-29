@@ -149,7 +149,7 @@ function initNetflix() {
       const added = await addEvents(prof.key, events, true);
       if (added > 0 || forcedSync) say(added ? `Telly learned ${added} new views ✓` : 'Telly is up to date ✓');
     }
-    if (d.type === 'error' && forcedSync) say(`Couldn't read Netflix history (${d.message}). Try CSV import in Settings.`, 'toast', 7000);
+    if (d.type === 'error' && forcedSync) say(`Couldn't read Netflix history (${d.message}). Use "Download all" at the bottom of this page, then Import CSV in Telly's Settings.`, 'toast', 9000);
   });
   window.postMessage({ source: 'tonight-cs', type: 'hello' }, location.origin);
 }

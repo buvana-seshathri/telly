@@ -49,7 +49,7 @@ export function loadCatalog(url: string): Promise<Catalog> {
         await idbSet('catalog', { url, fetchedAt: Date.now(), ...got } satisfies CachedCatalog).catch(() => {});
         return parseCatalog(got.file, got.vectors);
       } catch (err) {
-        console.warn('[tonight] catalog download failed, using fallback', err);
+        console.warn('[telly] catalog download failed, using fallback', err);
         if (cached) return parseCatalog(cached.file, cached.vectors);
       }
     }

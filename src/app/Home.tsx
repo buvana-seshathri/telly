@@ -36,6 +36,7 @@ export function Home({ engine }: { engine: EngineState }) {
   const [hostIdx, setHostIdx] = useState(0);
   const [whyOpen, setWhyOpen] = useState(false);
   const [mood, setMood] = useState<TellyMood>('happy');
+  const [genreCap, setGenreCap] = useState(6);
   const [hostVisible, setHostVisible] = useState(true);
   const hostRef = useRef<HTMLElement>(null);
   const act = useActions(engine);
@@ -50,8 +51,8 @@ export function Home({ engine }: { engine: EngineState }) {
   const pick = hostRecs.length ? hostRecs[hostIdx % hostRecs.length] : null;
 
   const sections = useMemo(
-    () => (catalog && profile ? genreSections(catalog, profile, filters, 3, 3, top[0] ? [top[0].item.id] : []) : []),
-    [catalog, profile, fkey, top[0]?.item.id],
+    () => (catalog && profile ? genreSections(catalog, profile, filters, 3, genreCap, top[0] ? [top[0].item.id] : []) : []),
+    [catalog, profile, fkey, top[0]?.item.id, genreCap],
   );
 
   useEffect(() => {
@@ -128,6 +129,7 @@ export function Home({ engine }: { engine: EngineState }) {
               {hostRecs.length > 1 && (
                 <button class="btn btn-ghost big" onClick={another}>Another</button>
               )}
+              <button class="btn btn-ghost" onClick={() => { act.seen(pick); setWhyOpen(false); }}>Already watched</button>
               <button class="icon-btn" aria-label="Not for me" title="Not for me" onClick={() => { act.nope(pick); setWhyOpen(false); }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>
               </button>
@@ -198,6 +200,11 @@ export function Home({ engine }: { engine: EngineState }) {
           />
         ))}
       </div>
+      {sections.length >= genreCap && (
+        <div class="more-row">
+          <button class="btn" onClick={() => setGenreCap((n) => n + 6)}>More genres</button>
+        </div>
+      )}
 
       {catalog.meta.sample && (
         <p class="sample-note">

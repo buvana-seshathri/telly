@@ -68,12 +68,15 @@ async function readActivityPage(): Promise<NfItem[]> {
   if (!/^\/viewingactivity/.test(location.pathname)) throw new Error('Open the Viewing activity page to read it');
   const rows = () => document.querySelectorAll('.retableRow');
   const more = () => [...document.querySelectorAll('button')].find((b) => /^show more$/i.test(b.textContent?.trim() ?? ''));
-  for (let i = 0; i < 80; i++) {
+  // Recent history is what matters, so stop at ~1,500 rows or ~75 seconds and use what we have.
+  const started = Date.now();
+  for (let i = 0; i < 120; i++) {
     const btn = more();
-    if (!btn) break;
+    if (!btn || rows().length >= 1500 || Date.now() - started > 75_000) break;
     const before = rows().length;
     btn.click();
     for (let w = 0; w < 12 && rows().length === before && more(); w++) await new Promise((r) => setTimeout(r, 250));
+    post({ type: 'progress', count: rows().length });
   }
   const raw = [...rows()].map((row) => ({
     title: (row.querySelector('.title')?.textContent ?? '').replace(/[“”"]/g, '').trim(),
@@ -104,10 +107,13 @@ function announce() {
   if (p) post({ type: 'profile', ...p });
 }
 
+let syncing = false;
 window.addEventListener('message', async (e) => {
   if (e.source !== window || e.data?.source !== 'tonight-cs') return;
   if (e.data.type === 'hello') announce();
   if (e.data.type === 'sync') {
+    if (syncing) return;
+    syncing = true;
     const p = profile();
     try {
       if (!p) throw new Error('No Netflix profile selected yet');
@@ -123,9 +129,20 @@ window.addEventListener('message', async (e) => {
         })),
       });
     } catch (err) {
+      console.info('[telly] history read failed:', (err as Error).message);
       post({ type: 'error', message: (err as Error).message });
+    } finally {
+      syncing = false;
     }
   }
 });
 
+// Netflix fills in its profile info a moment after load; keep looking for a few seconds.
 announce();
+let tries = 0;
+const poll = setInterval(() => {
+  if (profile()) {
+    announce();
+    clearInterval(poll);
+  } else if (++tries > 20) clearInterval(poll);
+}, 500);

@@ -26,6 +26,10 @@ const REGION = flag('region', 'US')!;
 const PAGES = parseInt(flag('pages', '25')!, 10);
 const EMBEDDER = flag('embedder', SAMPLE ? 'hash' : 'minilm')!;
 const OUT = flag('out', SAMPLE ? 'static/catalog' : 'catalog-dist')!;
+// Extra discovery in these original languages, so K-dramas, anime, telenovelas etc. are well covered
+// (a plain popularity sort is dominated by English-language titles).
+const LANGS = flag('langs', 'ko,ja,es,hi,fr,de,it,tr,zh,pt,th')!.split(',').filter(Boolean);
+const LANG_PAGES = parseInt(flag('lang-pages', '10')!, 10);
 
 // TMDB watch-provider ids (US). Verify with /watch/providers/movie?watch_region=US if a platform looks empty.
 const PROVIDER_IDS: Partial<Record<PlatformId, number[]>> = {
@@ -45,7 +49,7 @@ const GENRE_MAP: Record<string, string[]> = {
   'drama': ['drama'], 'family': ['family'], 'fantasy': ['fantasy'], 'history': ['history'], 'horror': ['horror'],
   'music': ['music'], 'mystery': ['mystery'], 'romance': ['romance'], 'science fiction': ['sci-fi'],
   'sci-fi & fantasy': ['sci-fi', 'fantasy'], 'thriller': ['thriller'], 'war': ['war'], 'war & politics': ['war'],
-  'western': ['western'], 'reality': ['reality'], 'kids': ['kids'],
+  'western': ['western'], 'reality': ['reality'], 'kids': ['kids'], 'talk': ['talk'], 'soap': ['drama'], 'news': ['news'],
 };
 
 async function main() {
@@ -59,6 +63,7 @@ async function main() {
     region: REGION,
     generatedAt: new Date().toISOString(),
     sample: SAMPLE || undefined,
+    hasRecs: items.some((i) => i.recs?.length) || undefined,
     items,
   };
   mkdirSync(OUT, { recursive: true });
@@ -71,7 +76,9 @@ async function main() {
 
 function loadSample(): CatalogItem[] {
   const raw = JSON.parse(readFileSync('data/sample-titles.json', 'utf8')) as { items: any[] };
+  const at = new Map<string, number>(raw.items.map((r, i) => [r.title, i]));
   return raw.items.map((r, i) => ({
+    recs: ((r.related ?? []) as string[]).map((t) => at.get(t)).filter((j): j is number => j != null),
     id: `${r.type}:sample${i + 1}`,
     tmdbId: 0,
     type: r.type,
@@ -89,6 +96,7 @@ function loadSample(): CatalogItem[] {
     providers: r.providers ?? [],
     poster: null,
     aliases: r.aliases,
+    lang: r.lang ?? 'en',
   }));
 }
 
@@ -144,6 +152,26 @@ async function loadTmdb(): Promise<CatalogItem[]> {
       console.log(`discovered ${platform}/${type}: total ${ids.size}`);
     }
   }
+  // language passes: every platform at once, sorted by popularity within the language
+  const allProviders = Object.values(PROVIDER_IDS).flat().join('|');
+  for (const lang of LANGS) {
+    for (const type of ['movie', 'tv'] as const) {
+      for (let page = 1; page <= LANG_PAGES; page++) {
+        const r = await tmdb<{ results: { id: number }[]; total_pages: number }>(`/discover/${type}`, {
+          watch_region: REGION,
+          with_watch_providers: allProviders,
+          with_watch_monetization_types: 'flatrate',
+          with_original_language: lang,
+          sort_by: 'popularity.desc',
+          'vote_count.gte': type === 'movie' ? 30 : 10,
+          page,
+        });
+        r.results.forEach((x) => ids.add(`${type}:${x.id}`));
+        if (page >= r.total_pages) break;
+      }
+    }
+    console.log(`discovered ${lang}: total ${ids.size}`);
+  }
   const list = [...ids];
   const details = await pool(list, 8, async (key) => {
     const [type, id] = key.split(':');
@@ -154,15 +182,34 @@ async function loadTmdb(): Promise<CatalogItem[]> {
       return null;
     }
   });
-  const items = details.filter((x): x is CatalogItem & { _pop: number } => !!x && x.providers.length > 0);
+  type Raw = CatalogItem & { _pop: number; _recs: string[] };
+  const items = details.filter((x): x is Raw => !!x && x.providers.length > 0);
   // popularity -> 0..1 by rank
   const sorted = [...items].sort((a, b) => a._pop - b._pop);
   sorted.forEach((it, i) => (it.popularity = +(i / Math.max(1, sorted.length - 1)).toFixed(3)));
-  return items.map(({ _pop, ...it }) => it);
+  // neighbour lists: keep only neighbours that are in the catalog, as indexes (best first)
+  const at = new Map(items.map((it, i) => [it.id, i]));
+  let withRecs = 0;
+  const out = items.map(({ _pop, _recs, ...it }, i) => {
+    const recs = _recs.map((id) => at.get(id)).filter((j): j is number => j != null && j !== i).slice(0, 12);
+    if (recs.length) withRecs++;
+    return recs.length ? { ...it, recs } : it;
+  });
+  console.log(`neighbour lists: ${withRecs}/${out.length} titles`);
+  return out;
 }
 
-async function detail(type: 'movie' | 'tv', id: number): Promise<(CatalogItem & { _pop: number }) | null> {
-  const d = await tmdb<any>(`/${type}/${id}`, { append_to_response: 'keywords,credits,watch/providers' });
+/** Other names a title goes by (original language, romanised, regional), so history titles still match. */
+function aliasesOf(title: string, original: string | undefined, d: any): string[] | undefined {
+  const names = new Set<string>();
+  if (original && original !== title) names.add(original);
+  const alt = d.alternative_titles?.titles ?? d.alternative_titles?.results ?? [];
+  for (const a of alt.slice(0, 12)) if (a.title && a.title !== title) names.add(a.title);
+  return names.size ? [...names].slice(0, 8) : undefined;
+}
+
+async function detail(type: 'movie' | 'tv', id: number): Promise<(CatalogItem & { _pop: number; _recs: string[] }) | null> {
+  const d = await tmdb<any>(`/${type}/${id}`, { append_to_response: 'keywords,credits,watch/providers,recommendations,alternative_titles' });
   const providers = new Set<PlatformId>();
   for (const p of d['watch/providers']?.results?.[REGION]?.flatrate ?? []) {
     const pid = platformFromTmdbName(p.provider_name);
@@ -196,7 +243,11 @@ async function detail(type: 'movie' | 'tv', id: number): Promise<(CatalogItem & 
     popularity: 0,
     providers: [...providers],
     poster: d.poster_path ? `https://image.tmdb.org/t/p/w342${d.poster_path}` : null,
-    aliases: original && original !== title ? [original] : undefined,
+    aliases: aliasesOf(title, original, d),
+    lang: d.original_language || undefined,
+    countries: (type === 'tv' ? d.origin_country : (d.production_countries ?? []).map((c: any) => c.iso_3166_1))?.slice(0, 3),
+    studios: (type === 'tv' ? d.networks : d.production_companies)?.slice(0, 3).map((n: any) => n.name),
+    _recs: (d.recommendations?.results ?? []).map((r: any) => `${type}:${r.id}`),
     _pop: d.popularity ?? 0,
   };
 }

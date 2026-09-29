@@ -1,94 +1,3523 @@
 {
-  "_note": "Hand-written SAMPLE catalog for development and demos only. Overviews are short paraphrases, ratings are rough, and 'providers' are illustrative, not real availability. The live catalog comes from TMDB via scripts/build-catalog.mjs.",
-  "items": [
-    {"type":"tv","title":"Dark","year":2017,"genres":["sci-fi","mystery","thriller","drama"],"runtime":55,"seasons":3,"creators":["Baran bo Odar","Jantje Friese"],"cast":["Louis Hofmann","Lisa Vicari"],"keywords":["time travel","small town","family secrets","missing child","german","puzzle box","slow burn"],"rating":8.4,"popularity":0.72,"providers":["netflix"],"overview":"When a child vanishes in a German town, four families uncover a time loop that ties their pasts and futures together."},
-    {"type":"tv","title":"1899","year":2022,"genres":["mystery","sci-fi","drama"],"runtime":58,"seasons":1,"creators":["Baran bo Odar","Jantje Friese"],"cast":["Emily Beecham","Andreas Pietschmann"],"keywords":["ship","puzzle box","immigrants","mystery","slow burn","reality bending"],"rating":7.5,"popularity":0.55,"providers":["netflix"],"overview":"Passengers on a migrant ship bound for New York find a missing vessel at sea, and reality starts to unravel."},
-    {"type":"tv","title":"Stranger Things","year":2016,"genres":["sci-fi","horror","drama","mystery"],"runtime":55,"seasons":5,"creators":["The Duffer Brothers"],"cast":["Millie Bobby Brown","Winona Ryder"],"keywords":["1980s","small town","friendship","supernatural","government experiment","nostalgia"],"rating":8.6,"popularity":0.95,"providers":["netflix"],"overview":"Kids in a 1980s Indiana town search for their missing friend and run into secret experiments and a monstrous other world."},
-    {"type":"tv","title":"Mindhunter","year":2017,"genres":["crime","drama","thriller"],"runtime":55,"seasons":2,"creators":["Joe Penhall","David Fincher"],"cast":["Jonathan Groff","Holt McCallany"],"keywords":["fbi","serial killer","psychology","1970s","interviews","slow burn","methodical"],"rating":8.3,"popularity":0.62,"providers":["netflix"],"overview":"Two FBI agents interview imprisoned serial killers in the late 1970s to understand how they think."},
-    {"type":"tv","title":"Ozark","year":2017,"genres":["crime","drama","thriller"],"runtime":60,"seasons":4,"creators":["Bill Dubuque","Mark Williams"],"cast":["Jason Bateman","Laura Linney"],"keywords":["money laundering","cartel","family","lake","tense"],"rating":8.2,"popularity":0.7,"providers":["netflix"],"overview":"A financial planner moves his family to the Missouri Ozarks to launder money for a drug cartel."},
-    {"type":"tv","title":"Bodies","year":2023,"genres":["crime","mystery","sci-fi"],"runtime":50,"seasons":1,"creators":["Paul Tomalin"],"cast":["Stephen Graham","Amaka Okafor"],"keywords":["time travel","detective","london","multiple timelines","murder mystery","puzzle box"],"rating":7.5,"popularity":0.45,"providers":["netflix"],"overview":"Four detectives in four different eras of London find the same body in the same place."},
-    {"type":"tv","title":"The Queen's Gambit","year":2020,"genres":["drama"],"runtime":60,"seasons":1,"creators":["Scott Frank","Allan Scott"],"cast":["Anya Taylor-Joy"],"keywords":["chess","prodigy","orphan","addiction","1960s","coming of age"],"rating":8.5,"popularity":0.7,"providers":["netflix"],"overview":"An orphaned chess prodigy rises through the competitive chess world while fighting her own demons."},
-    {"type":"tv","title":"Squid Game","year":2021,"genres":["thriller","drama","action"],"runtime":55,"seasons":3,"creators":["Hwang Dong-hyuk"],"cast":["Lee Jung-jae"],"keywords":["debt","survival game","korean","class","deadly games"],"rating":7.8,"popularity":0.9,"providers":["netflix"],"overview":"Hundreds of people deep in debt compete in children's games where losing means death."},
-    {"type":"tv","title":"Wednesday","year":2022,"genres":["comedy","mystery","fantasy"],"runtime":50,"seasons":2,"creators":["Alfred Gough","Miles Millar"],"cast":["Jenna Ortega"],"keywords":["boarding school","gothic","teen","murder mystery","dark humor"],"rating":8.4,"popularity":0.88,"providers":["netflix"],"overview":"Wednesday Addams investigates a string of murders while trying to survive a new boarding school."},
-    {"type":"tv","title":"BoJack Horseman","year":2014,"genres":["animation","comedy","drama"],"runtime":25,"seasons":6,"creators":["Raphael Bob-Waksberg"],"cast":["Will Arnett","Aaron Paul"],"keywords":["hollywood","depression","satire","has-been","dark humor","adult animation"],"rating":8.5,"popularity":0.5,"providers":["netflix"],"overview":"A washed-up sitcom horse tries to find meaning and make amends in Hollywood."},
-    {"type":"tv","title":"The Good Place","year":2016,"genres":["comedy","fantasy"],"runtime":22,"seasons":4,"creators":["Michael Schur"],"cast":["Kristen Bell","Ted Danson"],"keywords":["afterlife","ethics","feel good","twist","philosophy"],"rating":8.1,"popularity":0.6,"providers":["netflix"],"overview":"A selfish woman wakes up in a heavenly afterlife by mistake and tries to become a better person."},
-    {"type":"tv","title":"Schitt's Creek","year":2015,"genres":["comedy"],"runtime":22,"seasons":6,"creators":["Dan Levy","Eugene Levy"],"cast":["Eugene Levy","Catherine O'Hara"],"keywords":["riches to rags","family","small town","feel good","wholesome"],"rating":8.5,"popularity":0.6,"providers":["hulu"],"overview":"A wealthy family loses everything and rebuilds their lives in the small town they once bought as a joke."},
-    {"type":"tv","title":"Beef","year":2023,"genres":["comedy","drama"],"runtime":35,"seasons":1,"creators":["Lee Sung Jin"],"cast":["Steven Yeun","Ali Wong"],"keywords":["road rage","feud","dark humor","los angeles","burnout"],"rating":8.0,"popularity":0.5,"providers":["netflix"],"overview":"A road-rage incident between two strangers spirals into an obsessive feud."},
-    {"type":"tv","title":"Arcane","year":2021,"genres":["animation","action","fantasy","sci-fi"],"runtime":40,"seasons":2,"creators":["Christian Linke","Alex Yee"],"cast":["Hailee Steinfeld","Ella Purnell"],"keywords":["sisters","steampunk","class war","video game adaptation","stunning animation"],"rating":8.7,"popularity":0.75,"providers":["netflix"],"overview":"Two sisters end up on opposite sides of a conflict between a gleaming city and its undercity."},
-    {"type":"tv","title":"Money Heist","year":2017,"genres":["crime","thriller","action"],"runtime":50,"seasons":5,"creators":["Álex Pina"],"cast":["Úrsula Corberó","Álvaro Morte"],"keywords":["heist","spanish","mastermind","hostages","twisty"],"rating":8.2,"popularity":0.8,"providers":["netflix"],"overview":"A mastermind called the Professor leads a crew through an audacious heist on Spain's Royal Mint."},
-    {"type":"tv","title":"The Crown","year":2016,"genres":["drama","history"],"runtime":55,"seasons":6,"creators":["Peter Morgan"],"cast":["Claire Foy","Olivia Colman"],"keywords":["royal family","politics","period drama","biography","britain"],"rating":8.2,"popularity":0.6,"providers":["netflix"],"overview":"The reign of Queen Elizabeth II, from her early marriage through decades of political and personal change."},
-    {"type":"tv","title":"Black Mirror","year":2011,"genres":["sci-fi","thriller","drama"],"runtime":60,"seasons":7,"creators":["Charlie Brooker"],"cast":["Various"],"keywords":["anthology","technology","dystopia","twist","social media"],"rating":8.3,"popularity":0.75,"providers":["netflix"],"overview":"Standalone stories about the dark side of technology and where it could take us."},
-    {"type":"tv","title":"Severance","year":2022,"genres":["sci-fi","thriller","mystery","drama"],"runtime":50,"seasons":2,"creators":["Dan Erickson"],"cast":["Adam Scott","Britt Lower"],"keywords":["workplace","memory","corporate","puzzle box","office","dystopia"],"rating":8.7,"popularity":0.8,"providers":["appletv"],"overview":"Office workers have their memories surgically split between work and home, until one starts asking questions."},
-    {"type":"tv","title":"Ted Lasso","year":2020,"genres":["comedy","drama"],"runtime":35,"seasons":3,"creators":["Jason Sudeikis","Bill Lawrence","Brendan Hunt","Joe Kelly"],"cast":["Jason Sudeikis","Hannah Waddingham"],"keywords":["football","coach","optimism","feel good","underdog","motivational","kindness"],"rating":8.4,"popularity":0.75,"providers":["appletv"],"overview":"An upbeat American football coach is hired to manage an English soccer team he knows nothing about."},
-    {"type":"tv","title":"Slow Horses","year":2022,"genres":["thriller","drama"],"runtime":45,"seasons":5,"creators":["Will Smith"],"cast":["Gary Oldman","Jack Lowden"],"keywords":["spy","mi5","misfits","dark humor","london"],"rating":8.2,"popularity":0.55,"providers":["appletv"],"overview":"A team of disgraced MI5 agents stuck in a dead-end office keep stumbling into real espionage."},
-    {"type":"tv","title":"The Bear","year":2022,"genres":["drama","comedy"],"runtime":30,"seasons":4,"creators":["Christopher Storer"],"cast":["Jeremy Allen White","Ayo Edebiri"],"keywords":["restaurant","chef","grief","chicago","stress","family business","career"],"rating":8.5,"popularity":0.7,"providers":["hulu"],"overview":"A fine-dining chef comes home to run his late brother's chaotic Chicago sandwich shop."},
-    {"type":"tv","title":"Only Murders in the Building","year":2021,"genres":["comedy","mystery","crime"],"runtime":30,"seasons":5,"creators":["Steve Martin","John Hoffman"],"cast":["Steve Martin","Martin Short","Selena Gomez"],"keywords":["podcast","true crime","neighbors","cozy mystery","new york"],"rating":8.1,"popularity":0.65,"providers":["hulu"],"overview":"Three neighbors obsessed with true crime start a podcast about a death in their building."},
-    {"type":"tv","title":"Shōgun","year":2024,"genres":["drama","history","war"],"runtime":60,"seasons":1,"creators":["Rachel Kondo","Justin Marks"],"cast":["Hiroyuki Sanada","Anna Sawai"],"keywords":["feudal japan","samurai","politics","epic"],"aliases":["Shogun"],"rating":8.6,"popularity":0.7,"providers":["hulu","disney"],"overview":"A shipwrecked English navigator is drawn into a deadly power struggle in feudal Japan."},
-    {"type":"tv","title":"The Handmaid's Tale","year":2017,"genres":["drama","sci-fi"],"runtime":55,"seasons":6,"creators":["Bruce Miller"],"cast":["Elisabeth Moss"],"keywords":["dystopia","resistance","oppression","novel adaptation"],"rating":8.1,"popularity":0.55,"providers":["hulu"],"overview":"In a totalitarian state, a woman forced into servitude fights to survive and find her daughter."},
-    {"type":"tv","title":"Succession","year":2018,"genres":["drama","comedy"],"runtime":60,"seasons":4,"creators":["Jesse Armstrong"],"cast":["Brian Cox","Jeremy Strong"],"keywords":["media empire","family","power","satire","wealth"],"rating":8.8,"popularity":0.7,"providers":["max"],"overview":"The children of a media mogul scheme to take over the family company."},
-    {"type":"tv","title":"The Last of Us","year":2023,"genres":["drama","sci-fi","horror"],"runtime":55,"seasons":2,"creators":["Craig Mazin","Neil Druckmann"],"cast":["Pedro Pascal","Bella Ramsey"],"keywords":["post-apocalyptic","survival","found family","video game adaptation","road trip"],"rating":8.7,"popularity":0.85,"providers":["max"],"overview":"A smuggler escorts a teenage girl across a ruined America after a fungal pandemic."},
-    {"type":"tv","title":"The White Lotus","year":2021,"genres":["comedy","drama","mystery"],"runtime":60,"seasons":3,"creators":["Mike White"],"cast":["Jennifer Coolidge"],"keywords":["resort","satire","wealth","vacation","dark humor"],"rating":8.0,"popularity":0.7,"providers":["max"],"overview":"Guests and staff at a luxury resort get tangled up over a week that ends in a death."},
-    {"type":"tv","title":"Chernobyl","year":2019,"genres":["drama","history"],"runtime":65,"seasons":1,"creators":["Craig Mazin"],"cast":["Jared Harris","Stellan Skarsgård"],"keywords":["nuclear disaster","soviet union","true story","tense"],"rating":8.9,"popularity":0.6,"providers":["max"],"overview":"The 1986 nuclear disaster and the people who fought to contain it and uncover the truth."},
-    {"type":"tv","title":"True Detective","year":2014,"genres":["crime","mystery","drama"],"runtime":60,"seasons":4,"creators":["Nic Pizzolatto"],"cast":["Matthew McConaughey","Woody Harrelson"],"keywords":["detective","louisiana","anthology","philosophical","slow burn","serial killer"],"rating":8.3,"popularity":0.55,"providers":["max"],"overview":"Detectives chase a ritualistic killer across years in Louisiana, in an anthology crime series."},
-    {"type":"tv","title":"The Boys","year":2019,"genres":["action","sci-fi","comedy"],"runtime":60,"seasons":5,"creators":["Eric Kripke"],"cast":["Karl Urban","Jack Quaid"],"keywords":["superheroes","satire","corporate","violent","dark humor"],"rating":8.5,"popularity":0.85,"providers":["prime"],"overview":"Vigilantes take on corrupt, celebrity superheroes owned by a powerful corporation."},
-    {"type":"tv","title":"Fallout","year":2024,"genres":["sci-fi","action","drama"],"runtime":60,"seasons":2,"creators":["Graham Wagner","Geneva Robertson-Dworet"],"cast":["Ella Purnell","Walton Goggins"],"keywords":["post-apocalyptic","vault","video game adaptation","dark humor","wasteland"],"rating":8.3,"popularity":0.8,"providers":["prime"],"overview":"A sheltered vault dweller heads into the nuclear wasteland of Los Angeles to find her father."},
-    {"type":"tv","title":"Reacher","year":2022,"genres":["action","crime","thriller"],"runtime":50,"seasons":3,"creators":["Nick Santora"],"cast":["Alan Ritchson"],"keywords":["drifter","military police","conspiracy","fights","novel adaptation"],"rating":8.0,"popularity":0.75,"providers":["prime"],"overview":"A former military cop drifts from town to town and keeps getting pulled into conspiracies."},
-    {"type":"tv","title":"The Marvelous Mrs. Maisel","year":2017,"genres":["comedy","drama"],"runtime":55,"seasons":5,"creators":["Amy Sherman-Palladino"],"cast":["Rachel Brosnahan"],"keywords":["stand-up comedy","1950s","new york","reinvention","career","feel good"],"rating":8.2,"popularity":0.5,"providers":["prime"],"overview":"A 1950s housewife discovers a talent for stand-up comedy and starts over."},
-    {"type":"tv","title":"Fleabag","year":2016,"genres":["comedy","drama"],"runtime":25,"seasons":2,"creators":["Phoebe Waller-Bridge"],"cast":["Phoebe Waller-Bridge","Andrew Scott"],"keywords":["fourth wall","grief","london","dark humor","messy life"],"rating":8.7,"popularity":0.5,"providers":["prime"],"overview":"A sharp, grieving woman navigates family, love and her café in London, talking straight to the camera."},
-    {"type":"tv","title":"Andor","year":2022,"genres":["sci-fi","action","drama"],"runtime":50,"seasons":2,"creators":["Tony Gilroy"],"cast":["Diego Luna"],"keywords":["rebellion","space","political thriller","slow burn","star wars"],"rating":8.5,"popularity":0.65,"providers":["disney"],"overview":"A thief becomes a rebel as a galactic empire tightens its grip."},
-    {"type":"tv","title":"The Mandalorian","year":2019,"genres":["sci-fi","action","adventure"],"runtime":40,"seasons":3,"creators":["Jon Favreau"],"cast":["Pedro Pascal"],"keywords":["bounty hunter","space western","found family","star wars"],"rating":8.4,"popularity":0.75,"providers":["disney"],"overview":"A lone bounty hunter protects a mysterious child across the outer reaches of the galaxy."},
-    {"type":"tv","title":"Bluey","year":2018,"genres":["animation","family","comedy"],"runtime":8,"seasons":3,"creators":["Joe Brumm"],"cast":["Dave McCormack"],"keywords":["family","dogs","wholesome","short episodes","parenting","feel good"],"rating":8.8,"popularity":0.7,"providers":["disney"],"overview":"A six-year-old puppy turns everyday family life into imaginative games."},
-    {"type":"tv","title":"Abbott Elementary","year":2021,"genres":["comedy"],"runtime":22,"seasons":5,"creators":["Quinta Brunson"],"cast":["Quinta Brunson","Tyler James Williams"],"keywords":["teachers","mockumentary","workplace","feel good","philadelphia"],"rating":8.2,"popularity":0.6,"providers":["hulu"],"overview":"Underfunded but determined teachers at a Philadelphia public school, filmed documentary-style."},
-    {"type":"tv","title":"Our Planet","year":2019,"genres":["documentary"],"runtime":50,"seasons":2,"creators":["Alastair Fothergill"],"cast":["David Attenborough"],"keywords":["nature","wildlife","climate","relaxing","beautiful"],"rating":8.9,"popularity":0.5,"providers":["netflix"],"overview":"Wildlife across every continent, and what a changing climate means for it."},
-    {"type":"tv","title":"Chef's Table","year":2015,"genres":["documentary"],"runtime":50,"seasons":7,"creators":["David Gelb"],"cast":["Various"],"keywords":["food","chefs","craft","inspiring","career","passion"],"rating":8.5,"popularity":0.4,"providers":["netflix"],"overview":"Each episode profiles a world-class chef and the path that shaped their cooking."},
-    {"type":"tv","title":"Cobra Kai","year":2018,"genres":["action","comedy","drama"],"runtime":30,"seasons":6,"creators":["Josh Heald","Jon Hurwitz","Hayden Schlossberg"],"cast":["Ralph Macchio","William Zabka"],"keywords":["karate","rivalry","second chances","nostalgia","underdog"],"rating":8.1,"popularity":0.7,"providers":["netflix"],"overview":"Decades after their famous tournament, two karate rivals reopen old wounds through a new generation."},
-    {"type":"tv","title":"Brooklyn Nine-Nine","year":2013,"genres":["comedy","crime"],"runtime":22,"seasons":8,"creators":["Dan Goor","Michael Schur"],"cast":["Andy Samberg","Andre Braugher"],"keywords":["police","workplace","feel good","found family"],"rating":8.2,"popularity":0.7,"providers":["peacock"],"overview":"A goofy but gifted detective and his squad work cases in a Brooklyn precinct."},
-    {"type":"tv","title":"The Office","year":2005,"genres":["comedy"],"runtime":22,"seasons":9,"creators":["Greg Daniels"],"cast":["Steve Carell","John Krasinski"],"keywords":["mockumentary","workplace","cringe","comfort show","office"],"rating":8.6,"popularity":0.8,"providers":["peacock"],"overview":"The everyday lives of employees at a small paper company, documentary-style."},
-    {"type":"tv","title":"Star Trek: Strange New Worlds","year":2022,"genres":["sci-fi","adventure"],"runtime":50,"seasons":3,"creators":["Akiva Goldsman","Alex Kurtzman","Jenny Lumet"],"cast":["Anson Mount","Ethan Peck"],"keywords":["space exploration","episodic","optimistic","starship"],"rating":8.2,"popularity":0.45,"providers":["paramount"],"overview":"Captain Pike and the Enterprise crew explore new worlds, one adventure per episode."},
-    {"type":"movie","title":"The Pursuit of Happyness","year":2006,"genres":["drama"],"runtime":117,"creators":["Gabriele Muccino"],"cast":["Will Smith","Jaden Smith"],"keywords":["job search","homelessness","single father","perseverance","based on true story","underdog","career","motivational","internship"],"rating":7.9,"popularity":0.6,"providers":["netflix"],"overview":"A struggling salesman takes an unpaid stockbroker internship while raising his son and fighting homelessness."},
-    {"type":"movie","title":"Chef","year":2014,"genres":["comedy","drama"],"runtime":115,"creators":["Jon Favreau"],"cast":["Jon Favreau","John Leguizamo","Sofía Vergara"],"keywords":["food truck","fired","starting over","father son","road trip","feel good","career"],"rating":7.3,"popularity":0.45,"providers":["prime"],"overview":"After losing his restaurant job, a chef rebuilds his life and career with a food truck and his son."},
-    {"type":"movie","title":"Joy","year":2015,"genres":["drama","comedy"],"runtime":124,"creators":["David O. Russell"],"cast":["Jennifer Lawrence","Robert De Niro"],"keywords":["inventor","entrepreneur","perseverance","based on true story","family business","setbacks","motivational"],"rating":6.6,"popularity":0.35,"providers":["hulu"],"overview":"A single mother fights setback after setback to build a business around her invention."},
-    {"type":"movie","title":"Up in the Air","year":2009,"genres":["drama","comedy","romance"],"runtime":109,"creators":["Jason Reitman"],"cast":["George Clooney","Vera Farmiga","Anna Kendrick"],"keywords":["layoffs","job loss","corporate","travel","loneliness","career"],"rating":7.4,"popularity":0.35,"providers":["paramount"],"overview":"A man who fires people for a living faces his own rootless life as his job is threatened."},
-    {"type":"movie","title":"The Intern","year":2015,"genres":["comedy","drama"],"runtime":121,"creators":["Nancy Meyers"],"cast":["Robert De Niro","Anne Hathaway"],"keywords":["startup","workplace","retirement","mentor","feel good","career","second chances"],"rating":7.1,"popularity":0.55,"providers":["max"],"overview":"A 70-year-old widower becomes a senior intern at a fast-growing fashion startup."},
-    {"type":"movie","title":"Whiplash","year":2014,"genres":["drama","music"],"runtime":107,"creators":["Damien Chazelle"],"cast":["Miles Teller","J.K. Simmons"],"keywords":["drummer","ambition","abusive mentor","jazz","obsession","intense"],"rating":8.4,"popularity":0.6,"providers":["netflix"],"overview":"A young drummer at an elite conservatory is pushed to the edge by a ruthless instructor."},
-    {"type":"movie","title":"The Social Network","year":2010,"genres":["drama"],"runtime":120,"creators":["David Fincher"],"cast":["Jesse Eisenberg","Andrew Garfield"],"keywords":["startup","facebook","betrayal","lawsuit","based on true story","ambition"],"rating":7.7,"popularity":0.5,"providers":["netflix"],"overview":"The founding of Facebook and the friendships and lawsuits it left behind."},
-    {"type":"movie","title":"Moneyball","year":2011,"genres":["drama"],"runtime":133,"creators":["Bennett Miller"],"cast":["Brad Pitt","Jonah Hill"],"keywords":["baseball","data","underdog","based on true story","sports"],"rating":7.6,"popularity":0.45,"providers":["netflix"],"overview":"A baseball general manager uses statistics to build a winning team on a tiny budget."},
-    {"type":"movie","title":"Hidden Figures","year":2016,"genres":["drama","history"],"runtime":127,"creators":["Theodore Melfi"],"cast":["Taraji P. Henson","Octavia Spencer","Janelle Monáe"],"keywords":["nasa","mathematicians","based on true story","perseverance","inspiring","career","workplace"],"rating":8.0,"popularity":0.5,"providers":["disney"],"overview":"Three Black women mathematicians at NASA play a crucial role in the early space race."},
-    {"type":"movie","title":"The Secret Life of Walter Mitty","year":2013,"genres":["adventure","comedy","drama"],"runtime":114,"creators":["Ben Stiller"],"cast":["Ben Stiller","Kristen Wiig"],"keywords":["daydreaming","job loss","adventure","self discovery","iceland","uplifting","motivational"],"rating":7.1,"popularity":0.45,"providers":["disney"],"overview":"A daydreaming photo manager about to lose his job sets off on a real adventure across the world."},
-    {"type":"movie","title":"Zodiac","year":2007,"genres":["crime","mystery","thriller"],"runtime":157,"creators":["David Fincher"],"cast":["Jake Gyllenhaal","Mark Ruffalo"],"keywords":["serial killer","obsession","investigation","1970s","journalism","methodical","based on true story"],"rating":7.7,"popularity":0.45,"providers":["paramount"],"overview":"A cartoonist, a reporter and detectives become obsessed with catching the Zodiac killer."},
-    {"type":"movie","title":"Gone Girl","year":2014,"genres":["thriller","mystery","drama"],"runtime":149,"creators":["David Fincher"],"cast":["Ben Affleck","Rosamund Pike"],"keywords":["missing wife","marriage","twist","media","novel adaptation"],"rating":7.9,"popularity":0.6,"providers":["prime"],"overview":"When his wife disappears on their anniversary, a husband becomes the prime suspect."},
-    {"type":"movie","title":"Prisoners","year":2013,"genres":["thriller","crime","drama"],"runtime":153,"creators":["Denis Villeneuve"],"cast":["Hugh Jackman","Jake Gyllenhaal"],"keywords":["kidnapping","vigilante","detective","moral dilemma","tense","missing child"],"rating":8.1,"popularity":0.55,"providers":["max"],"overview":"A desperate father takes the law into his own hands after his daughter goes missing."},
-    {"type":"movie","title":"Arrival","year":2016,"genres":["sci-fi","drama","mystery"],"runtime":116,"creators":["Denis Villeneuve"],"cast":["Amy Adams","Jeremy Renner"],"keywords":["aliens","language","time","grief","thoughtful","nonlinear"],"rating":7.6,"popularity":0.55,"providers":["paramount"],"overview":"A linguist races to communicate with aliens, and what she learns changes how she sees time."},
-    {"type":"movie","title":"Interstellar","year":2014,"genres":["sci-fi","adventure","drama"],"runtime":169,"creators":["Christopher Nolan"],"cast":["Matthew McConaughey","Anne Hathaway"],"keywords":["space","time dilation","father daughter","black hole","epic"],"rating":8.4,"popularity":0.85,"providers":["paramount"],"overview":"Astronauts travel through a wormhole to find humanity a new home as Earth fails."},
-    {"type":"movie","title":"Inception","year":2010,"genres":["sci-fi","action","thriller"],"runtime":148,"creators":["Christopher Nolan"],"cast":["Leonardo DiCaprio","Joseph Gordon-Levitt"],"keywords":["dreams","heist","mind bending","puzzle box","twist"],"rating":8.4,"popularity":0.85,"providers":["max"],"overview":"A thief who steals secrets from dreams is hired to plant an idea instead."},
-    {"type":"movie","title":"Primer","year":2004,"genres":["sci-fi","thriller","drama"],"runtime":77,"creators":["Shane Carruth"],"cast":["Shane Carruth","David Sullivan"],"keywords":["time travel","engineers","garage invention","puzzle box","low budget","mind bending"],"rating":6.8,"popularity":0.2,"providers":["prime"],"overview":"Two engineers accidentally build a time machine in their garage, and the consequences tangle fast."},
-    {"type":"movie","title":"Predestination","year":2014,"genres":["sci-fi","thriller"],"runtime":97,"creators":["Michael Spierig","Peter Spierig"],"cast":["Ethan Hawke","Sarah Snook"],"keywords":["time travel","paradox","twist","agent","mind bending"],"rating":7.4,"popularity":0.3,"providers":["netflix"],"overview":"A time-travelling agent chases a bomber through history in a story that folds back on itself."},
-    {"type":"movie","title":"Everything Everywhere All at Once","year":2022,"genres":["sci-fi","comedy","action"],"runtime":139,"creators":["Daniel Kwan","Daniel Scheinert"],"cast":["Michelle Yeoh","Ke Huy Quan"],"keywords":["multiverse","mother daughter","immigrant family","absurd","heartfelt"],"rating":7.8,"popularity":0.6,"providers":["prime"],"overview":"A laundromat owner in the middle of a tax audit discovers she must save the multiverse."},
-    {"type":"movie","title":"Knives Out","year":2019,"genres":["mystery","comedy","crime"],"runtime":130,"creators":["Rian Johnson"],"cast":["Daniel Craig","Ana de Armas"],"keywords":["whodunit","detective","rich family","twisty","cozy mystery"],"rating":7.8,"popularity":0.6,"providers":["prime"],"overview":"A detective investigates the death of a wealthy crime novelist and his very suspicious family."},
-    {"type":"movie","title":"Glass Onion","year":2022,"genres":["mystery","comedy","crime"],"runtime":139,"creators":["Rian Johnson"],"cast":["Daniel Craig","Janelle Monáe"],"keywords":["whodunit","detective","billionaire","island","twisty"],"rating":7.1,"popularity":0.55,"providers":["netflix"],"overview":"Detective Benoit Blanc joins a tech billionaire's private-island murder-mystery party."},
-    {"type":"movie","title":"Palm Springs","year":2020,"genres":["comedy","romance","sci-fi"],"runtime":90,"creators":["Max Barbakow"],"cast":["Andy Samberg","Cristin Milioti"],"keywords":["time loop","wedding","romantic comedy","existential","feel good"],"rating":7.4,"popularity":0.4,"providers":["hulu"],"overview":"Two wedding guests get stuck reliving the same day together."},
-    {"type":"movie","title":"Superbad","year":2007,"genres":["comedy"],"runtime":113,"creators":["Greg Mottola"],"cast":["Jonah Hill","Michael Cera"],"keywords":["high school","friendship","party","coming of age","raunchy"],"rating":7.2,"popularity":0.5,"providers":["netflix"],"overview":"Two best friends try to make their last high school party count before college splits them up."},
-    {"type":"movie","title":"Game Night","year":2018,"genres":["comedy","crime"],"runtime":100,"creators":["John Francis Daley","Jonathan Goldstein"],"cast":["Jason Bateman","Rachel McAdams"],"keywords":["couples","game night","kidnapping","mistaken identity","fun"],"rating":7.0,"popularity":0.4,"providers":["max"],"overview":"A couples' game night turns into a real mystery when one guest is actually kidnapped."},
-    {"type":"movie","title":"Paddington 2","year":2017,"genres":["family","comedy","adventure"],"runtime":104,"creators":["Paul King"],"cast":["Ben Whishaw","Hugh Grant"],"keywords":["bear","kindness","wholesome","london","feel good","uplifting"],"rating":7.8,"popularity":0.4,"providers":["netflix"],"overview":"Paddington takes odd jobs to buy a gift and ends up framed for theft."},
-    {"type":"movie","title":"Spider-Man: Into the Spider-Verse","year":2018,"genres":["animation","action","adventure","sci-fi"],"runtime":117,"creators":["Bob Persichetti","Peter Ramsey","Rodney Rothman"],"cast":["Shameik Moore","Hailee Steinfeld"],"keywords":["multiverse","superhero","coming of age","stunning animation","uplifting"],"rating":8.4,"popularity":0.7,"providers":["netflix"],"overview":"Brooklyn teen Miles Morales becomes Spider-Man and teams up with Spider-People from other dimensions."},
-    {"type":"movie","title":"Coco","year":2017,"genres":["animation","family","music","fantasy"],"runtime":105,"creators":["Lee Unkrich"],"cast":["Anthony Gonzalez","Gael García Bernal"],"keywords":["day of the dead","music","family","afterlife","heartfelt"],"rating":8.2,"popularity":0.6,"providers":["disney"],"overview":"A boy who dreams of music crosses into the Land of the Dead to uncover his family's history."},
-    {"type":"movie","title":"Inside Out","year":2015,"genres":["animation","family","comedy"],"runtime":95,"creators":["Pete Docter"],"cast":["Amy Poehler","Phyllis Smith"],"keywords":["emotions","growing up","moving","heartfelt","feel good"],"rating":7.9,"popularity":0.6,"providers":["disney"],"overview":"The emotions inside an 11-year-old girl's head try to guide her through a big move."},
-    {"type":"movie","title":"Get Out","year":2017,"genres":["horror","thriller","mystery"],"runtime":104,"creators":["Jordan Peele"],"cast":["Daniel Kaluuya","Allison Williams"],"keywords":["social thriller","meet the parents","hypnosis","twist","satire"],"rating":7.6,"popularity":0.5,"providers":["peacock"],"overview":"A young man's weekend with his girlfriend's family turns into something far more sinister."},
-    {"type":"movie","title":"Hereditary","year":2018,"genres":["horror","drama","mystery"],"runtime":127,"creators":["Ari Aster"],"cast":["Toni Collette","Alex Wolff"],"keywords":["grief","family","occult","disturbing","slow burn"],"rating":7.3,"popularity":0.45,"providers":["max"],"overview":"After their grandmother dies, a family starts uncovering terrifying secrets about their ancestry."},
-    {"type":"movie","title":"A Quiet Place","year":2018,"genres":["horror","sci-fi","thriller"],"runtime":90,"creators":["John Krasinski"],"cast":["Emily Blunt","John Krasinski"],"keywords":["silence","monsters","family survival","tense","post-apocalyptic"],"rating":7.4,"popularity":0.55,"providers":["paramount"],"overview":"A family must live in total silence to hide from creatures that hunt by sound."},
-    {"type":"movie","title":"Parasite","year":2019,"genres":["thriller","drama","comedy"],"runtime":132,"creators":["Bong Joon Ho"],"cast":["Song Kang-ho","Choi Woo-shik"],"keywords":["class","con artists","korean","twist","dark humor"],"rating":8.5,"popularity":0.6,"providers":["max"],"overview":"A poor family schemes its way into working for a wealthy household, until things go wrong."},
-    {"type":"movie","title":"La La Land","year":2016,"genres":["romance","music","drama","comedy"],"runtime":128,"creators":["Damien Chazelle"],"cast":["Ryan Gosling","Emma Stone"],"keywords":["musical","los angeles","dreams","career","jazz","bittersweet"],"rating":7.9,"popularity":0.6,"providers":["netflix"],"overview":"An aspiring actress and a jazz pianist fall in love while chasing their dreams in Los Angeles."},
-    {"type":"movie","title":"Past Lives","year":2023,"genres":["romance","drama"],"runtime":106,"creators":["Celine Song"],"cast":["Greta Lee","Teo Yoo"],"keywords":["childhood friends","immigration","what if","quiet","bittersweet"],"rating":7.8,"popularity":0.4,"providers":["paramount"],"overview":"Two childhood friends from Seoul reunite in New York decades later and wonder what might have been."},
-    {"type":"movie","title":"Free Solo","year":2018,"genres":["documentary"],"runtime":100,"creators":["Jimmy Chin","Elizabeth Chai Vasarhelyi"],"cast":["Alex Honnold"],"keywords":["climbing","el capitan","fear","inspiring","extreme sports","motivational"],"rating":7.9,"popularity":0.35,"providers":["disney"],"overview":"A climber prepares to scale Yosemite's El Capitan with no rope."},
-    {"type":"movie","title":"The Social Dilemma","year":2020,"genres":["documentary"],"runtime":94,"creators":["Jeff Orlowski"],"cast":["Tristan Harris"],"keywords":["social media","technology","tech industry","addiction","eye opening"],"rating":7.5,"popularity":0.35,"providers":["netflix"],"overview":"Former tech insiders explain how social media platforms are designed to hook us."},
-    {"type":"movie","title":"Mad Max: Fury Road","year":2015,"genres":["action","sci-fi","adventure"],"runtime":120,"creators":["George Miller"],"cast":["Tom Hardy","Charlize Theron"],"keywords":["post-apocalyptic","chase","desert","practical effects","nonstop action"],"rating":7.6,"popularity":0.6,"providers":["max"],"overview":"In a desert wasteland, a drifter joins a warrior fleeing a tyrant in one long chase."},
-    {"type":"movie","title":"John Wick","year":2014,"genres":["action","thriller","crime"],"runtime":101,"creators":["Chad Stahelski"],"cast":["Keanu Reeves"],"keywords":["hitman","revenge","stylish action","dog"],"rating":7.4,"popularity":0.7,"providers":["peacock"],"overview":"A retired hitman comes back for revenge against the gangsters who took everything from him."},
-    {"type":"movie","title":"Top Gun: Maverick","year":2022,"genres":["action","drama"],"runtime":131,"creators":["Joseph Kosinski"],"cast":["Tom Cruise","Miles Teller"],"keywords":["fighter pilots","mentor","legacy","crowd pleaser","aviation"],"rating":8.2,"popularity":0.7,"providers":["paramount"],"overview":"A veteran Navy pilot trains a new generation of aviators for a nearly impossible mission."},
-    {"type":"movie","title":"The Martian","year":2015,"genres":["sci-fi","adventure","drama"],"runtime":144,"creators":["Ridley Scott"],"cast":["Matt Damon","Jessica Chastain"],"keywords":["mars","survival","problem solving","optimistic","science","motivational"],"rating":7.7,"popularity":0.6,"providers":["disney"],"overview":"An astronaut stranded on Mars uses science and humor to survive until rescue."},
-    {"type":"movie","title":"Soul","year":2020,"genres":["animation","comedy","drama","family"],"runtime":100,"creators":["Pete Docter"],"cast":["Jamie Foxx","Tina Fey"],"keywords":["jazz","purpose","career","life meaning","heartfelt","uplifting"],"rating":8.0,"popularity":0.5,"providers":["disney"],"overview":"A music teacher who finally lands his dream gig has an accident and must rediscover what makes life worth living."},
-    {"type":"movie","title":"Rocky","year":1976,"genres":["drama"],"runtime":120,"creators":["John G. Avildsen"],"cast":["Sylvester Stallone","Talia Shire"],"keywords":["boxing","underdog","philadelphia","perseverance","motivational","sports"],"rating":7.7,"popularity":0.4,"providers":["prime"],"overview":"A small-time boxer gets a once-in-a-lifetime shot at the heavyweight title."},
-    {"type":"movie","title":"Good Will Hunting","year":1997,"genres":["drama","romance"],"runtime":126,"creators":["Gus Van Sant"],"cast":["Matt Damon","Robin Williams"],"keywords":["genius","therapy","friendship","boston","potential","career","coming of age"],"rating":8.1,"popularity":0.45,"providers":["paramount"],"overview":"A janitor with a gift for math works with a therapist to face his past and his future."},
-    {"type":"movie","title":"The Devil Wears Prada","year":2006,"genres":["comedy","drama"],"runtime":109,"creators":["David Frankel"],"cast":["Meryl Streep","Anne Hathaway"],"keywords":["fashion","first job","demanding boss","workplace","career","new york"],"rating":7.4,"popularity":0.55,"providers":["hulu"],"overview":"A recent graduate lands a job as assistant to a notoriously demanding fashion editor."},
-    {"type":"movie","title":"Jiro Dreams of Sushi","year":2011,"genres":["documentary"],"runtime":81,"creators":["David Gelb"],"cast":["Jiro Ono"],"keywords":["sushi","craft","mastery","father son","japan","food","dedication"],"rating":7.8,"popularity":0.2,"providers":["hulu"],"overview":"An 85-year-old sushi master and his lifelong pursuit of perfection."}
-  ]
+ "_note": "Hand-written SAMPLE catalog for development and demos only. Overviews are short paraphrases, ratings are rough, and 'providers' are illustrative, not real availability. The live catalog comes from TMDB via scripts/build-catalog.mjs.",
+ "items": [
+  {
+   "type": "tv",
+   "title": "Dark",
+   "year": 2017,
+   "genres": [
+    "sci-fi",
+    "mystery",
+    "thriller",
+    "drama"
+   ],
+   "runtime": 55,
+   "seasons": 3,
+   "creators": [
+    "Baran bo Odar",
+    "Jantje Friese"
+   ],
+   "cast": [
+    "Louis Hofmann",
+    "Lisa Vicari"
+   ],
+   "keywords": [
+    "time travel",
+    "small town",
+    "family secrets",
+    "missing child",
+    "german",
+    "puzzle box",
+    "slow burn"
+   ],
+   "rating": 8.4,
+   "popularity": 0.72,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "When a child vanishes in a German town, four families uncover a time loop that ties their pasts and futures together.",
+   "lang": "de",
+   "related": [
+    "1899",
+    "Bodies",
+    "Severance",
+    "Black Mirror",
+    "Stranger Things"
+   ]
+  },
+  {
+   "type": "tv",
+   "title": "1899",
+   "year": 2022,
+   "genres": [
+    "mystery",
+    "sci-fi",
+    "drama"
+   ],
+   "runtime": 58,
+   "seasons": 1,
+   "creators": [
+    "Baran bo Odar",
+    "Jantje Friese"
+   ],
+   "cast": [
+    "Emily Beecham",
+    "Andreas Pietschmann"
+   ],
+   "keywords": [
+    "ship",
+    "puzzle box",
+    "immigrants",
+    "mystery",
+    "slow burn",
+    "reality bending"
+   ],
+   "rating": 7.5,
+   "popularity": 0.55,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "Passengers on a migrant ship bound for New York find a missing vessel at sea, and reality starts to unravel.",
+   "lang": "de"
+  },
+  {
+   "type": "tv",
+   "title": "Stranger Things",
+   "year": 2016,
+   "genres": [
+    "sci-fi",
+    "horror",
+    "drama",
+    "mystery"
+   ],
+   "runtime": 55,
+   "seasons": 5,
+   "creators": [
+    "The Duffer Brothers"
+   ],
+   "cast": [
+    "Millie Bobby Brown",
+    "Winona Ryder"
+   ],
+   "keywords": [
+    "1980s",
+    "small town",
+    "friendship",
+    "supernatural",
+    "government experiment",
+    "nostalgia"
+   ],
+   "rating": 8.6,
+   "popularity": 0.95,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "Kids in a 1980s Indiana town search for their missing friend and run into secret experiments and a monstrous other world.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Mindhunter",
+   "year": 2017,
+   "genres": [
+    "crime",
+    "drama",
+    "thriller"
+   ],
+   "runtime": 55,
+   "seasons": 2,
+   "creators": [
+    "Joe Penhall",
+    "David Fincher"
+   ],
+   "cast": [
+    "Jonathan Groff",
+    "Holt McCallany"
+   ],
+   "keywords": [
+    "fbi",
+    "serial killer",
+    "psychology",
+    "1970s",
+    "interviews",
+    "slow burn",
+    "methodical"
+   ],
+   "rating": 8.3,
+   "popularity": 0.62,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "Two FBI agents interview imprisoned serial killers in the late 1970s to understand how they think.",
+   "lang": "en",
+   "related": [
+    "Zodiac",
+    "True Detective",
+    "Ozark",
+    "Prisoners"
+   ]
+  },
+  {
+   "type": "tv",
+   "title": "Ozark",
+   "year": 2017,
+   "genres": [
+    "crime",
+    "drama",
+    "thriller"
+   ],
+   "runtime": 60,
+   "seasons": 4,
+   "creators": [
+    "Bill Dubuque",
+    "Mark Williams"
+   ],
+   "cast": [
+    "Jason Bateman",
+    "Laura Linney"
+   ],
+   "keywords": [
+    "money laundering",
+    "cartel",
+    "family",
+    "lake",
+    "tense"
+   ],
+   "rating": 8.2,
+   "popularity": 0.7,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A financial planner moves his family to the Missouri Ozarks to launder money for a drug cartel.",
+   "lang": "en",
+   "related": [
+    "Mindhunter",
+    "Money Heist",
+    "True Detective",
+    "Reacher"
+   ]
+  },
+  {
+   "type": "tv",
+   "title": "Bodies",
+   "year": 2023,
+   "genres": [
+    "crime",
+    "mystery",
+    "sci-fi"
+   ],
+   "runtime": 50,
+   "seasons": 1,
+   "creators": [
+    "Paul Tomalin"
+   ],
+   "cast": [
+    "Stephen Graham",
+    "Amaka Okafor"
+   ],
+   "keywords": [
+    "time travel",
+    "detective",
+    "london",
+    "multiple timelines",
+    "murder mystery",
+    "puzzle box"
+   ],
+   "rating": 7.5,
+   "popularity": 0.45,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "Four detectives in four different eras of London find the same body in the same place.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "The Queen's Gambit",
+   "year": 2020,
+   "genres": [
+    "drama"
+   ],
+   "runtime": 60,
+   "seasons": 1,
+   "creators": [
+    "Scott Frank",
+    "Allan Scott"
+   ],
+   "cast": [
+    "Anya Taylor-Joy"
+   ],
+   "keywords": [
+    "chess",
+    "prodigy",
+    "orphan",
+    "addiction",
+    "1960s",
+    "coming of age"
+   ],
+   "rating": 8.5,
+   "popularity": 0.7,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "An orphaned chess prodigy rises through the competitive chess world while fighting her own demons.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Squid Game",
+   "year": 2021,
+   "genres": [
+    "thriller",
+    "drama",
+    "action"
+   ],
+   "runtime": 55,
+   "seasons": 3,
+   "creators": [
+    "Hwang Dong-hyuk"
+   ],
+   "cast": [
+    "Lee Jung-jae"
+   ],
+   "keywords": [
+    "debt",
+    "survival game",
+    "korean",
+    "class",
+    "deadly games"
+   ],
+   "rating": 7.8,
+   "popularity": 0.9,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "Hundreds of people deep in debt compete in children's games where losing means death.",
+   "lang": "ko",
+   "related": [
+    "All of Us Are Dead",
+    "The Glory",
+    "Vincenzo",
+    "Parasite",
+    "Money Heist"
+   ]
+  },
+  {
+   "type": "tv",
+   "title": "Wednesday",
+   "year": 2022,
+   "genres": [
+    "comedy",
+    "mystery",
+    "fantasy"
+   ],
+   "runtime": 50,
+   "seasons": 2,
+   "creators": [
+    "Alfred Gough",
+    "Miles Millar"
+   ],
+   "cast": [
+    "Jenna Ortega"
+   ],
+   "keywords": [
+    "boarding school",
+    "gothic",
+    "teen",
+    "murder mystery",
+    "dark humor"
+   ],
+   "rating": 8.4,
+   "popularity": 0.88,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "Wednesday Addams investigates a string of murders while trying to survive a new boarding school.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "BoJack Horseman",
+   "year": 2014,
+   "genres": [
+    "animation",
+    "comedy",
+    "drama"
+   ],
+   "runtime": 25,
+   "seasons": 6,
+   "creators": [
+    "Raphael Bob-Waksberg"
+   ],
+   "cast": [
+    "Will Arnett",
+    "Aaron Paul"
+   ],
+   "keywords": [
+    "hollywood",
+    "depression",
+    "satire",
+    "has-been",
+    "dark humor",
+    "adult animation"
+   ],
+   "rating": 8.5,
+   "popularity": 0.5,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A washed-up sitcom horse tries to find meaning and make amends in Hollywood.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "The Good Place",
+   "year": 2016,
+   "genres": [
+    "comedy",
+    "fantasy"
+   ],
+   "runtime": 22,
+   "seasons": 4,
+   "creators": [
+    "Michael Schur"
+   ],
+   "cast": [
+    "Kristen Bell",
+    "Ted Danson"
+   ],
+   "keywords": [
+    "afterlife",
+    "ethics",
+    "feel good",
+    "twist",
+    "philosophy"
+   ],
+   "rating": 8.1,
+   "popularity": 0.6,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A selfish woman wakes up in a heavenly afterlife by mistake and tries to become a better person.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Schitt's Creek",
+   "year": 2015,
+   "genres": [
+    "comedy"
+   ],
+   "runtime": 22,
+   "seasons": 6,
+   "creators": [
+    "Dan Levy",
+    "Eugene Levy"
+   ],
+   "cast": [
+    "Eugene Levy",
+    "Catherine O'Hara"
+   ],
+   "keywords": [
+    "riches to rags",
+    "family",
+    "small town",
+    "feel good",
+    "wholesome"
+   ],
+   "rating": 8.5,
+   "popularity": 0.6,
+   "providers": [
+    "hulu"
+   ],
+   "overview": "A wealthy family loses everything and rebuilds their lives in the small town they once bought as a joke.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Beef",
+   "year": 2023,
+   "genres": [
+    "comedy",
+    "drama"
+   ],
+   "runtime": 35,
+   "seasons": 1,
+   "creators": [
+    "Lee Sung Jin"
+   ],
+   "cast": [
+    "Steven Yeun",
+    "Ali Wong"
+   ],
+   "keywords": [
+    "road rage",
+    "feud",
+    "dark humor",
+    "los angeles",
+    "burnout"
+   ],
+   "rating": 8.0,
+   "popularity": 0.5,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A road-rage incident between two strangers spirals into an obsessive feud.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Arcane",
+   "year": 2021,
+   "genres": [
+    "animation",
+    "action",
+    "fantasy",
+    "sci-fi"
+   ],
+   "runtime": 40,
+   "seasons": 2,
+   "creators": [
+    "Christian Linke",
+    "Alex Yee"
+   ],
+   "cast": [
+    "Hailee Steinfeld",
+    "Ella Purnell"
+   ],
+   "keywords": [
+    "sisters",
+    "steampunk",
+    "class war",
+    "video game adaptation",
+    "stunning animation"
+   ],
+   "rating": 8.7,
+   "popularity": 0.75,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "Two sisters end up on opposite sides of a conflict between a gleaming city and its undercity.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Money Heist",
+   "year": 2017,
+   "genres": [
+    "crime",
+    "thriller",
+    "action"
+   ],
+   "runtime": 50,
+   "seasons": 5,
+   "creators": [
+    "Álex Pina"
+   ],
+   "cast": [
+    "Úrsula Corberó",
+    "Álvaro Morte"
+   ],
+   "keywords": [
+    "heist",
+    "spanish",
+    "mastermind",
+    "hostages",
+    "twisty"
+   ],
+   "rating": 8.2,
+   "popularity": 0.8,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A mastermind called the Professor leads a crew through an audacious heist on Spain's Royal Mint.",
+   "lang": "es"
+  },
+  {
+   "type": "tv",
+   "title": "The Crown",
+   "year": 2016,
+   "genres": [
+    "drama",
+    "history"
+   ],
+   "runtime": 55,
+   "seasons": 6,
+   "creators": [
+    "Peter Morgan"
+   ],
+   "cast": [
+    "Claire Foy",
+    "Olivia Colman"
+   ],
+   "keywords": [
+    "royal family",
+    "politics",
+    "period drama",
+    "biography",
+    "britain"
+   ],
+   "rating": 8.2,
+   "popularity": 0.6,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "The reign of Queen Elizabeth II, from her early marriage through decades of political and personal change.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Black Mirror",
+   "year": 2011,
+   "genres": [
+    "sci-fi",
+    "thriller",
+    "drama"
+   ],
+   "runtime": 60,
+   "seasons": 7,
+   "creators": [
+    "Charlie Brooker"
+   ],
+   "cast": [
+    "Various"
+   ],
+   "keywords": [
+    "anthology",
+    "technology",
+    "dystopia",
+    "twist",
+    "social media"
+   ],
+   "rating": 8.3,
+   "popularity": 0.75,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "Standalone stories about the dark side of technology and where it could take us.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Severance",
+   "year": 2022,
+   "genres": [
+    "sci-fi",
+    "thriller",
+    "mystery",
+    "drama"
+   ],
+   "runtime": 50,
+   "seasons": 2,
+   "creators": [
+    "Dan Erickson"
+   ],
+   "cast": [
+    "Adam Scott",
+    "Britt Lower"
+   ],
+   "keywords": [
+    "workplace",
+    "memory",
+    "corporate",
+    "puzzle box",
+    "office",
+    "dystopia"
+   ],
+   "rating": 8.7,
+   "popularity": 0.8,
+   "providers": [
+    "appletv"
+   ],
+   "overview": "Office workers have their memories surgically split between work and home, until one starts asking questions.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Ted Lasso",
+   "year": 2020,
+   "genres": [
+    "comedy",
+    "drama"
+   ],
+   "runtime": 35,
+   "seasons": 3,
+   "creators": [
+    "Jason Sudeikis",
+    "Bill Lawrence",
+    "Brendan Hunt",
+    "Joe Kelly"
+   ],
+   "cast": [
+    "Jason Sudeikis",
+    "Hannah Waddingham"
+   ],
+   "keywords": [
+    "football",
+    "coach",
+    "optimism",
+    "feel good",
+    "underdog",
+    "motivational",
+    "kindness"
+   ],
+   "rating": 8.4,
+   "popularity": 0.75,
+   "providers": [
+    "appletv"
+   ],
+   "overview": "An upbeat American football coach is hired to manage an English soccer team he knows nothing about.",
+   "lang": "en",
+   "related": [
+    "Schitt's Creek",
+    "Abbott Elementary",
+    "The Good Place",
+    "Brooklyn Nine-Nine"
+   ]
+  },
+  {
+   "type": "tv",
+   "title": "Slow Horses",
+   "year": 2022,
+   "genres": [
+    "thriller",
+    "drama"
+   ],
+   "runtime": 45,
+   "seasons": 5,
+   "creators": [
+    "Will Smith"
+   ],
+   "cast": [
+    "Gary Oldman",
+    "Jack Lowden"
+   ],
+   "keywords": [
+    "spy",
+    "mi5",
+    "misfits",
+    "dark humor",
+    "london"
+   ],
+   "rating": 8.2,
+   "popularity": 0.55,
+   "providers": [
+    "appletv"
+   ],
+   "overview": "A team of disgraced MI5 agents stuck in a dead-end office keep stumbling into real espionage.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "The Bear",
+   "year": 2022,
+   "genres": [
+    "drama",
+    "comedy"
+   ],
+   "runtime": 30,
+   "seasons": 4,
+   "creators": [
+    "Christopher Storer"
+   ],
+   "cast": [
+    "Jeremy Allen White",
+    "Ayo Edebiri"
+   ],
+   "keywords": [
+    "restaurant",
+    "chef",
+    "grief",
+    "chicago",
+    "stress",
+    "family business",
+    "career"
+   ],
+   "rating": 8.5,
+   "popularity": 0.7,
+   "providers": [
+    "hulu"
+   ],
+   "overview": "A fine-dining chef comes home to run his late brother's chaotic Chicago sandwich shop.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Only Murders in the Building",
+   "year": 2021,
+   "genres": [
+    "comedy",
+    "mystery",
+    "crime"
+   ],
+   "runtime": 30,
+   "seasons": 5,
+   "creators": [
+    "Steve Martin",
+    "John Hoffman"
+   ],
+   "cast": [
+    "Steve Martin",
+    "Martin Short",
+    "Selena Gomez"
+   ],
+   "keywords": [
+    "podcast",
+    "true crime",
+    "neighbors",
+    "cozy mystery",
+    "new york"
+   ],
+   "rating": 8.1,
+   "popularity": 0.65,
+   "providers": [
+    "hulu"
+   ],
+   "overview": "Three neighbors obsessed with true crime start a podcast about a death in their building.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Shōgun",
+   "year": 2024,
+   "genres": [
+    "drama",
+    "history",
+    "war"
+   ],
+   "runtime": 60,
+   "seasons": 1,
+   "creators": [
+    "Rachel Kondo",
+    "Justin Marks"
+   ],
+   "cast": [
+    "Hiroyuki Sanada",
+    "Anna Sawai"
+   ],
+   "keywords": [
+    "feudal japan",
+    "samurai",
+    "politics",
+    "epic"
+   ],
+   "aliases": [
+    "Shogun"
+   ],
+   "rating": 8.6,
+   "popularity": 0.7,
+   "providers": [
+    "hulu",
+    "disney"
+   ],
+   "overview": "A shipwrecked English navigator is drawn into a deadly power struggle in feudal Japan.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "The Handmaid's Tale",
+   "year": 2017,
+   "genres": [
+    "drama",
+    "sci-fi"
+   ],
+   "runtime": 55,
+   "seasons": 6,
+   "creators": [
+    "Bruce Miller"
+   ],
+   "cast": [
+    "Elisabeth Moss"
+   ],
+   "keywords": [
+    "dystopia",
+    "resistance",
+    "oppression",
+    "novel adaptation"
+   ],
+   "rating": 8.1,
+   "popularity": 0.55,
+   "providers": [
+    "hulu"
+   ],
+   "overview": "In a totalitarian state, a woman forced into servitude fights to survive and find her daughter.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Succession",
+   "year": 2018,
+   "genres": [
+    "drama",
+    "comedy"
+   ],
+   "runtime": 60,
+   "seasons": 4,
+   "creators": [
+    "Jesse Armstrong"
+   ],
+   "cast": [
+    "Brian Cox",
+    "Jeremy Strong"
+   ],
+   "keywords": [
+    "media empire",
+    "family",
+    "power",
+    "satire",
+    "wealth"
+   ],
+   "rating": 8.8,
+   "popularity": 0.7,
+   "providers": [
+    "max"
+   ],
+   "overview": "The children of a media mogul scheme to take over the family company.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "The Last of Us",
+   "year": 2023,
+   "genres": [
+    "drama",
+    "sci-fi",
+    "horror"
+   ],
+   "runtime": 55,
+   "seasons": 2,
+   "creators": [
+    "Craig Mazin",
+    "Neil Druckmann"
+   ],
+   "cast": [
+    "Pedro Pascal",
+    "Bella Ramsey"
+   ],
+   "keywords": [
+    "post-apocalyptic",
+    "survival",
+    "found family",
+    "video game adaptation",
+    "road trip"
+   ],
+   "rating": 8.7,
+   "popularity": 0.85,
+   "providers": [
+    "max"
+   ],
+   "overview": "A smuggler escorts a teenage girl across a ruined America after a fungal pandemic.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "The White Lotus",
+   "year": 2021,
+   "genres": [
+    "comedy",
+    "drama",
+    "mystery"
+   ],
+   "runtime": 60,
+   "seasons": 3,
+   "creators": [
+    "Mike White"
+   ],
+   "cast": [
+    "Jennifer Coolidge"
+   ],
+   "keywords": [
+    "resort",
+    "satire",
+    "wealth",
+    "vacation",
+    "dark humor"
+   ],
+   "rating": 8.0,
+   "popularity": 0.7,
+   "providers": [
+    "max"
+   ],
+   "overview": "Guests and staff at a luxury resort get tangled up over a week that ends in a death.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Chernobyl",
+   "year": 2019,
+   "genres": [
+    "drama",
+    "history"
+   ],
+   "runtime": 65,
+   "seasons": 1,
+   "creators": [
+    "Craig Mazin"
+   ],
+   "cast": [
+    "Jared Harris",
+    "Stellan Skarsgård"
+   ],
+   "keywords": [
+    "nuclear disaster",
+    "soviet union",
+    "true story",
+    "tense"
+   ],
+   "rating": 8.9,
+   "popularity": 0.6,
+   "providers": [
+    "max"
+   ],
+   "overview": "The 1986 nuclear disaster and the people who fought to contain it and uncover the truth.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "True Detective",
+   "year": 2014,
+   "genres": [
+    "crime",
+    "mystery",
+    "drama"
+   ],
+   "runtime": 60,
+   "seasons": 4,
+   "creators": [
+    "Nic Pizzolatto"
+   ],
+   "cast": [
+    "Matthew McConaughey",
+    "Woody Harrelson"
+   ],
+   "keywords": [
+    "detective",
+    "louisiana",
+    "anthology",
+    "philosophical",
+    "slow burn",
+    "serial killer"
+   ],
+   "rating": 8.3,
+   "popularity": 0.55,
+   "providers": [
+    "max"
+   ],
+   "overview": "Detectives chase a ritualistic killer across years in Louisiana, in an anthology crime series.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "The Boys",
+   "year": 2019,
+   "genres": [
+    "action",
+    "sci-fi",
+    "comedy"
+   ],
+   "runtime": 60,
+   "seasons": 5,
+   "creators": [
+    "Eric Kripke"
+   ],
+   "cast": [
+    "Karl Urban",
+    "Jack Quaid"
+   ],
+   "keywords": [
+    "superheroes",
+    "satire",
+    "corporate",
+    "violent",
+    "dark humor"
+   ],
+   "rating": 8.5,
+   "popularity": 0.85,
+   "providers": [
+    "prime"
+   ],
+   "overview": "Vigilantes take on corrupt, celebrity superheroes owned by a powerful corporation.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Fallout",
+   "year": 2024,
+   "genres": [
+    "sci-fi",
+    "action",
+    "drama"
+   ],
+   "runtime": 60,
+   "seasons": 2,
+   "creators": [
+    "Graham Wagner",
+    "Geneva Robertson-Dworet"
+   ],
+   "cast": [
+    "Ella Purnell",
+    "Walton Goggins"
+   ],
+   "keywords": [
+    "post-apocalyptic",
+    "vault",
+    "video game adaptation",
+    "dark humor",
+    "wasteland"
+   ],
+   "rating": 8.3,
+   "popularity": 0.8,
+   "providers": [
+    "prime"
+   ],
+   "overview": "A sheltered vault dweller heads into the nuclear wasteland of Los Angeles to find her father.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Reacher",
+   "year": 2022,
+   "genres": [
+    "action",
+    "crime",
+    "thriller"
+   ],
+   "runtime": 50,
+   "seasons": 3,
+   "creators": [
+    "Nick Santora"
+   ],
+   "cast": [
+    "Alan Ritchson"
+   ],
+   "keywords": [
+    "drifter",
+    "military police",
+    "conspiracy",
+    "fights",
+    "novel adaptation"
+   ],
+   "rating": 8.0,
+   "popularity": 0.75,
+   "providers": [
+    "prime"
+   ],
+   "overview": "A former military cop drifts from town to town and keeps getting pulled into conspiracies.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "The Marvelous Mrs. Maisel",
+   "year": 2017,
+   "genres": [
+    "comedy",
+    "drama"
+   ],
+   "runtime": 55,
+   "seasons": 5,
+   "creators": [
+    "Amy Sherman-Palladino"
+   ],
+   "cast": [
+    "Rachel Brosnahan"
+   ],
+   "keywords": [
+    "stand-up comedy",
+    "1950s",
+    "new york",
+    "reinvention",
+    "career",
+    "feel good"
+   ],
+   "rating": 8.2,
+   "popularity": 0.5,
+   "providers": [
+    "prime"
+   ],
+   "overview": "A 1950s housewife discovers a talent for stand-up comedy and starts over.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Fleabag",
+   "year": 2016,
+   "genres": [
+    "comedy",
+    "drama"
+   ],
+   "runtime": 25,
+   "seasons": 2,
+   "creators": [
+    "Phoebe Waller-Bridge"
+   ],
+   "cast": [
+    "Phoebe Waller-Bridge",
+    "Andrew Scott"
+   ],
+   "keywords": [
+    "fourth wall",
+    "grief",
+    "london",
+    "dark humor",
+    "messy life"
+   ],
+   "rating": 8.7,
+   "popularity": 0.5,
+   "providers": [
+    "prime"
+   ],
+   "overview": "A sharp, grieving woman navigates family, love and her café in London, talking straight to the camera.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Andor",
+   "year": 2022,
+   "genres": [
+    "sci-fi",
+    "action",
+    "drama"
+   ],
+   "runtime": 50,
+   "seasons": 2,
+   "creators": [
+    "Tony Gilroy"
+   ],
+   "cast": [
+    "Diego Luna"
+   ],
+   "keywords": [
+    "rebellion",
+    "space",
+    "political thriller",
+    "slow burn",
+    "star wars"
+   ],
+   "rating": 8.5,
+   "popularity": 0.65,
+   "providers": [
+    "disney"
+   ],
+   "overview": "A thief becomes a rebel as a galactic empire tightens its grip.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "The Mandalorian",
+   "year": 2019,
+   "genres": [
+    "sci-fi",
+    "action",
+    "adventure"
+   ],
+   "runtime": 40,
+   "seasons": 3,
+   "creators": [
+    "Jon Favreau"
+   ],
+   "cast": [
+    "Pedro Pascal"
+   ],
+   "keywords": [
+    "bounty hunter",
+    "space western",
+    "found family",
+    "star wars"
+   ],
+   "rating": 8.4,
+   "popularity": 0.75,
+   "providers": [
+    "disney"
+   ],
+   "overview": "A lone bounty hunter protects a mysterious child across the outer reaches of the galaxy.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Bluey",
+   "year": 2018,
+   "genres": [
+    "animation",
+    "family",
+    "comedy"
+   ],
+   "runtime": 8,
+   "seasons": 3,
+   "creators": [
+    "Joe Brumm"
+   ],
+   "cast": [
+    "Dave McCormack"
+   ],
+   "keywords": [
+    "family",
+    "dogs",
+    "wholesome",
+    "short episodes",
+    "parenting",
+    "feel good"
+   ],
+   "rating": 8.8,
+   "popularity": 0.7,
+   "providers": [
+    "disney"
+   ],
+   "overview": "A six-year-old puppy turns everyday family life into imaginative games.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Abbott Elementary",
+   "year": 2021,
+   "genres": [
+    "comedy"
+   ],
+   "runtime": 22,
+   "seasons": 5,
+   "creators": [
+    "Quinta Brunson"
+   ],
+   "cast": [
+    "Quinta Brunson",
+    "Tyler James Williams"
+   ],
+   "keywords": [
+    "teachers",
+    "mockumentary",
+    "workplace",
+    "feel good",
+    "philadelphia"
+   ],
+   "rating": 8.2,
+   "popularity": 0.6,
+   "providers": [
+    "hulu"
+   ],
+   "overview": "Underfunded but determined teachers at a Philadelphia public school, filmed documentary-style.",
+   "lang": "en",
+   "related": [
+    "Schitt's Creek",
+    "The Office",
+    "Brooklyn Nine-Nine",
+    "Ted Lasso"
+   ]
+  },
+  {
+   "type": "tv",
+   "title": "Our Planet",
+   "year": 2019,
+   "genres": [
+    "documentary"
+   ],
+   "runtime": 50,
+   "seasons": 2,
+   "creators": [
+    "Alastair Fothergill"
+   ],
+   "cast": [
+    "David Attenborough"
+   ],
+   "keywords": [
+    "nature",
+    "wildlife",
+    "climate",
+    "relaxing",
+    "beautiful"
+   ],
+   "rating": 8.9,
+   "popularity": 0.5,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "Wildlife across every continent, and what a changing climate means for it.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Chef's Table",
+   "year": 2015,
+   "genres": [
+    "documentary"
+   ],
+   "runtime": 50,
+   "seasons": 7,
+   "creators": [
+    "David Gelb"
+   ],
+   "cast": [
+    "Various"
+   ],
+   "keywords": [
+    "food",
+    "chefs",
+    "craft",
+    "inspiring",
+    "career",
+    "passion"
+   ],
+   "rating": 8.5,
+   "popularity": 0.4,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "Each episode profiles a world-class chef and the path that shaped their cooking.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Cobra Kai",
+   "year": 2018,
+   "genres": [
+    "action",
+    "comedy",
+    "drama"
+   ],
+   "runtime": 30,
+   "seasons": 6,
+   "creators": [
+    "Josh Heald",
+    "Jon Hurwitz",
+    "Hayden Schlossberg"
+   ],
+   "cast": [
+    "Ralph Macchio",
+    "William Zabka"
+   ],
+   "keywords": [
+    "karate",
+    "rivalry",
+    "second chances",
+    "nostalgia",
+    "underdog"
+   ],
+   "rating": 8.1,
+   "popularity": 0.7,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "Decades after their famous tournament, two karate rivals reopen old wounds through a new generation.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "Brooklyn Nine-Nine",
+   "year": 2013,
+   "genres": [
+    "comedy",
+    "crime"
+   ],
+   "runtime": 22,
+   "seasons": 8,
+   "creators": [
+    "Dan Goor",
+    "Michael Schur"
+   ],
+   "cast": [
+    "Andy Samberg",
+    "Andre Braugher"
+   ],
+   "keywords": [
+    "police",
+    "workplace",
+    "feel good",
+    "found family"
+   ],
+   "rating": 8.2,
+   "popularity": 0.7,
+   "providers": [
+    "peacock"
+   ],
+   "overview": "A goofy but gifted detective and his squad work cases in a Brooklyn precinct.",
+   "lang": "en"
+  },
+  {
+   "type": "tv",
+   "title": "The Office",
+   "year": 2005,
+   "genres": [
+    "comedy"
+   ],
+   "runtime": 22,
+   "seasons": 9,
+   "creators": [
+    "Greg Daniels"
+   ],
+   "cast": [
+    "Steve Carell",
+    "John Krasinski"
+   ],
+   "keywords": [
+    "mockumentary",
+    "workplace",
+    "cringe",
+    "comfort show",
+    "office"
+   ],
+   "rating": 8.6,
+   "popularity": 0.8,
+   "providers": [
+    "peacock"
+   ],
+   "overview": "The everyday lives of employees at a small paper company, documentary-style.",
+   "lang": "en",
+   "related": [
+    "Abbott Elementary",
+    "Brooklyn Nine-Nine",
+    "Schitt's Creek"
+   ]
+  },
+  {
+   "type": "tv",
+   "title": "Star Trek: Strange New Worlds",
+   "year": 2022,
+   "genres": [
+    "sci-fi",
+    "adventure"
+   ],
+   "runtime": 50,
+   "seasons": 3,
+   "creators": [
+    "Akiva Goldsman",
+    "Alex Kurtzman",
+    "Jenny Lumet"
+   ],
+   "cast": [
+    "Anson Mount",
+    "Ethan Peck"
+   ],
+   "keywords": [
+    "space exploration",
+    "episodic",
+    "optimistic",
+    "starship"
+   ],
+   "rating": 8.2,
+   "popularity": 0.45,
+   "providers": [
+    "paramount"
+   ],
+   "overview": "Captain Pike and the Enterprise crew explore new worlds, one adventure per episode.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "The Pursuit of Happyness",
+   "year": 2006,
+   "genres": [
+    "drama"
+   ],
+   "runtime": 117,
+   "creators": [
+    "Gabriele Muccino"
+   ],
+   "cast": [
+    "Will Smith",
+    "Jaden Smith"
+   ],
+   "keywords": [
+    "job search",
+    "homelessness",
+    "single father",
+    "perseverance",
+    "based on true story",
+    "underdog",
+    "career",
+    "motivational",
+    "internship"
+   ],
+   "rating": 7.9,
+   "popularity": 0.6,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A struggling salesman takes an unpaid stockbroker internship while raising his son and fighting homelessness.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Chef",
+   "year": 2014,
+   "genres": [
+    "comedy",
+    "drama"
+   ],
+   "runtime": 115,
+   "creators": [
+    "Jon Favreau"
+   ],
+   "cast": [
+    "Jon Favreau",
+    "John Leguizamo",
+    "Sofía Vergara"
+   ],
+   "keywords": [
+    "food truck",
+    "fired",
+    "starting over",
+    "father son",
+    "road trip",
+    "feel good",
+    "career"
+   ],
+   "rating": 7.3,
+   "popularity": 0.45,
+   "providers": [
+    "prime"
+   ],
+   "overview": "After losing his restaurant job, a chef rebuilds his life and career with a food truck and his son.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Joy",
+   "year": 2015,
+   "genres": [
+    "drama",
+    "comedy"
+   ],
+   "runtime": 124,
+   "creators": [
+    "David O. Russell"
+   ],
+   "cast": [
+    "Jennifer Lawrence",
+    "Robert De Niro"
+   ],
+   "keywords": [
+    "inventor",
+    "entrepreneur",
+    "perseverance",
+    "based on true story",
+    "family business",
+    "setbacks",
+    "motivational"
+   ],
+   "rating": 6.6,
+   "popularity": 0.35,
+   "providers": [
+    "hulu"
+   ],
+   "overview": "A single mother fights setback after setback to build a business around her invention.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Up in the Air",
+   "year": 2009,
+   "genres": [
+    "drama",
+    "comedy",
+    "romance"
+   ],
+   "runtime": 109,
+   "creators": [
+    "Jason Reitman"
+   ],
+   "cast": [
+    "George Clooney",
+    "Vera Farmiga",
+    "Anna Kendrick"
+   ],
+   "keywords": [
+    "layoffs",
+    "job loss",
+    "corporate",
+    "travel",
+    "loneliness",
+    "career"
+   ],
+   "rating": 7.4,
+   "popularity": 0.35,
+   "providers": [
+    "paramount"
+   ],
+   "overview": "A man who fires people for a living faces his own rootless life as his job is threatened.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "The Intern",
+   "year": 2015,
+   "genres": [
+    "comedy",
+    "drama"
+   ],
+   "runtime": 121,
+   "creators": [
+    "Nancy Meyers"
+   ],
+   "cast": [
+    "Robert De Niro",
+    "Anne Hathaway"
+   ],
+   "keywords": [
+    "startup",
+    "workplace",
+    "retirement",
+    "mentor",
+    "feel good",
+    "career",
+    "second chances"
+   ],
+   "rating": 7.1,
+   "popularity": 0.55,
+   "providers": [
+    "max"
+   ],
+   "overview": "A 70-year-old widower becomes a senior intern at a fast-growing fashion startup.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Whiplash",
+   "year": 2014,
+   "genres": [
+    "drama",
+    "music"
+   ],
+   "runtime": 107,
+   "creators": [
+    "Damien Chazelle"
+   ],
+   "cast": [
+    "Miles Teller",
+    "J.K. Simmons"
+   ],
+   "keywords": [
+    "drummer",
+    "ambition",
+    "abusive mentor",
+    "jazz",
+    "obsession",
+    "intense"
+   ],
+   "rating": 8.4,
+   "popularity": 0.6,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A young drummer at an elite conservatory is pushed to the edge by a ruthless instructor.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "The Social Network",
+   "year": 2010,
+   "genres": [
+    "drama"
+   ],
+   "runtime": 120,
+   "creators": [
+    "David Fincher"
+   ],
+   "cast": [
+    "Jesse Eisenberg",
+    "Andrew Garfield"
+   ],
+   "keywords": [
+    "startup",
+    "facebook",
+    "betrayal",
+    "lawsuit",
+    "based on true story",
+    "ambition"
+   ],
+   "rating": 7.7,
+   "popularity": 0.5,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "The founding of Facebook and the friendships and lawsuits it left behind.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Moneyball",
+   "year": 2011,
+   "genres": [
+    "drama"
+   ],
+   "runtime": 133,
+   "creators": [
+    "Bennett Miller"
+   ],
+   "cast": [
+    "Brad Pitt",
+    "Jonah Hill"
+   ],
+   "keywords": [
+    "baseball",
+    "data",
+    "underdog",
+    "based on true story",
+    "sports"
+   ],
+   "rating": 7.6,
+   "popularity": 0.45,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A baseball general manager uses statistics to build a winning team on a tiny budget.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Hidden Figures",
+   "year": 2016,
+   "genres": [
+    "drama",
+    "history"
+   ],
+   "runtime": 127,
+   "creators": [
+    "Theodore Melfi"
+   ],
+   "cast": [
+    "Taraji P. Henson",
+    "Octavia Spencer",
+    "Janelle Monáe"
+   ],
+   "keywords": [
+    "nasa",
+    "mathematicians",
+    "based on true story",
+    "perseverance",
+    "inspiring",
+    "career",
+    "workplace"
+   ],
+   "rating": 8.0,
+   "popularity": 0.5,
+   "providers": [
+    "disney"
+   ],
+   "overview": "Three Black women mathematicians at NASA play a crucial role in the early space race.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "The Secret Life of Walter Mitty",
+   "year": 2013,
+   "genres": [
+    "adventure",
+    "comedy",
+    "drama"
+   ],
+   "runtime": 114,
+   "creators": [
+    "Ben Stiller"
+   ],
+   "cast": [
+    "Ben Stiller",
+    "Kristen Wiig"
+   ],
+   "keywords": [
+    "daydreaming",
+    "job loss",
+    "adventure",
+    "self discovery",
+    "iceland",
+    "uplifting",
+    "motivational"
+   ],
+   "rating": 7.1,
+   "popularity": 0.45,
+   "providers": [
+    "disney"
+   ],
+   "overview": "A daydreaming photo manager about to lose his job sets off on a real adventure across the world.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Zodiac",
+   "year": 2007,
+   "genres": [
+    "crime",
+    "mystery",
+    "thriller"
+   ],
+   "runtime": 157,
+   "creators": [
+    "David Fincher"
+   ],
+   "cast": [
+    "Jake Gyllenhaal",
+    "Mark Ruffalo"
+   ],
+   "keywords": [
+    "serial killer",
+    "obsession",
+    "investigation",
+    "1970s",
+    "journalism",
+    "methodical",
+    "based on true story"
+   ],
+   "rating": 7.7,
+   "popularity": 0.45,
+   "providers": [
+    "paramount"
+   ],
+   "overview": "A cartoonist, a reporter and detectives become obsessed with catching the Zodiac killer.",
+   "lang": "en",
+   "related": [
+    "Mindhunter",
+    "Gone Girl",
+    "Prisoners",
+    "True Detective"
+   ]
+  },
+  {
+   "type": "movie",
+   "title": "Gone Girl",
+   "year": 2014,
+   "genres": [
+    "thriller",
+    "mystery",
+    "drama"
+   ],
+   "runtime": 149,
+   "creators": [
+    "David Fincher"
+   ],
+   "cast": [
+    "Ben Affleck",
+    "Rosamund Pike"
+   ],
+   "keywords": [
+    "missing wife",
+    "marriage",
+    "twist",
+    "media",
+    "novel adaptation"
+   ],
+   "rating": 7.9,
+   "popularity": 0.6,
+   "providers": [
+    "prime"
+   ],
+   "overview": "When his wife disappears on their anniversary, a husband becomes the prime suspect.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Prisoners",
+   "year": 2013,
+   "genres": [
+    "thriller",
+    "crime",
+    "drama"
+   ],
+   "runtime": 153,
+   "creators": [
+    "Denis Villeneuve"
+   ],
+   "cast": [
+    "Hugh Jackman",
+    "Jake Gyllenhaal"
+   ],
+   "keywords": [
+    "kidnapping",
+    "vigilante",
+    "detective",
+    "moral dilemma",
+    "tense",
+    "missing child"
+   ],
+   "rating": 8.1,
+   "popularity": 0.55,
+   "providers": [
+    "max"
+   ],
+   "overview": "A desperate father takes the law into his own hands after his daughter goes missing.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Arrival",
+   "year": 2016,
+   "genres": [
+    "sci-fi",
+    "drama",
+    "mystery"
+   ],
+   "runtime": 116,
+   "creators": [
+    "Denis Villeneuve"
+   ],
+   "cast": [
+    "Amy Adams",
+    "Jeremy Renner"
+   ],
+   "keywords": [
+    "aliens",
+    "language",
+    "time",
+    "grief",
+    "thoughtful",
+    "nonlinear"
+   ],
+   "rating": 7.6,
+   "popularity": 0.55,
+   "providers": [
+    "paramount"
+   ],
+   "overview": "A linguist races to communicate with aliens, and what she learns changes how she sees time.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Interstellar",
+   "year": 2014,
+   "genres": [
+    "sci-fi",
+    "adventure",
+    "drama"
+   ],
+   "runtime": 169,
+   "creators": [
+    "Christopher Nolan"
+   ],
+   "cast": [
+    "Matthew McConaughey",
+    "Anne Hathaway"
+   ],
+   "keywords": [
+    "space",
+    "time dilation",
+    "father daughter",
+    "black hole",
+    "epic"
+   ],
+   "rating": 8.4,
+   "popularity": 0.85,
+   "providers": [
+    "paramount"
+   ],
+   "overview": "Astronauts travel through a wormhole to find humanity a new home as Earth fails.",
+   "lang": "en",
+   "related": [
+    "Arrival",
+    "The Martian",
+    "Inception"
+   ]
+  },
+  {
+   "type": "movie",
+   "title": "Inception",
+   "year": 2010,
+   "genres": [
+    "sci-fi",
+    "action",
+    "thriller"
+   ],
+   "runtime": 148,
+   "creators": [
+    "Christopher Nolan"
+   ],
+   "cast": [
+    "Leonardo DiCaprio",
+    "Joseph Gordon-Levitt"
+   ],
+   "keywords": [
+    "dreams",
+    "heist",
+    "mind bending",
+    "puzzle box",
+    "twist"
+   ],
+   "rating": 8.4,
+   "popularity": 0.85,
+   "providers": [
+    "max"
+   ],
+   "overview": "A thief who steals secrets from dreams is hired to plant an idea instead.",
+   "lang": "en",
+   "related": [
+    "Interstellar",
+    "Primer",
+    "Predestination",
+    "Arrival"
+   ]
+  },
+  {
+   "type": "movie",
+   "title": "Primer",
+   "year": 2004,
+   "genres": [
+    "sci-fi",
+    "thriller",
+    "drama"
+   ],
+   "runtime": 77,
+   "creators": [
+    "Shane Carruth"
+   ],
+   "cast": [
+    "Shane Carruth",
+    "David Sullivan"
+   ],
+   "keywords": [
+    "time travel",
+    "engineers",
+    "garage invention",
+    "puzzle box",
+    "low budget",
+    "mind bending"
+   ],
+   "rating": 6.8,
+   "popularity": 0.2,
+   "providers": [
+    "prime"
+   ],
+   "overview": "Two engineers accidentally build a time machine in their garage, and the consequences tangle fast.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Predestination",
+   "year": 2014,
+   "genres": [
+    "sci-fi",
+    "thriller"
+   ],
+   "runtime": 97,
+   "creators": [
+    "Michael Spierig",
+    "Peter Spierig"
+   ],
+   "cast": [
+    "Ethan Hawke",
+    "Sarah Snook"
+   ],
+   "keywords": [
+    "time travel",
+    "paradox",
+    "twist",
+    "agent",
+    "mind bending"
+   ],
+   "rating": 7.4,
+   "popularity": 0.3,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A time-travelling agent chases a bomber through history in a story that folds back on itself.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Everything Everywhere All at Once",
+   "year": 2022,
+   "genres": [
+    "sci-fi",
+    "comedy",
+    "action"
+   ],
+   "runtime": 139,
+   "creators": [
+    "Daniel Kwan",
+    "Daniel Scheinert"
+   ],
+   "cast": [
+    "Michelle Yeoh",
+    "Ke Huy Quan"
+   ],
+   "keywords": [
+    "multiverse",
+    "mother daughter",
+    "immigrant family",
+    "absurd",
+    "heartfelt"
+   ],
+   "rating": 7.8,
+   "popularity": 0.6,
+   "providers": [
+    "prime"
+   ],
+   "overview": "A laundromat owner in the middle of a tax audit discovers she must save the multiverse.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Knives Out",
+   "year": 2019,
+   "genres": [
+    "mystery",
+    "comedy",
+    "crime"
+   ],
+   "runtime": 130,
+   "creators": [
+    "Rian Johnson"
+   ],
+   "cast": [
+    "Daniel Craig",
+    "Ana de Armas"
+   ],
+   "keywords": [
+    "whodunit",
+    "detective",
+    "rich family",
+    "twisty",
+    "cozy mystery"
+   ],
+   "rating": 7.8,
+   "popularity": 0.6,
+   "providers": [
+    "prime"
+   ],
+   "overview": "A detective investigates the death of a wealthy crime novelist and his very suspicious family.",
+   "lang": "en",
+   "related": [
+    "Glass Onion",
+    "Only Murders in the Building",
+    "Game Night"
+   ]
+  },
+  {
+   "type": "movie",
+   "title": "Glass Onion",
+   "year": 2022,
+   "genres": [
+    "mystery",
+    "comedy",
+    "crime"
+   ],
+   "runtime": 139,
+   "creators": [
+    "Rian Johnson"
+   ],
+   "cast": [
+    "Daniel Craig",
+    "Janelle Monáe"
+   ],
+   "keywords": [
+    "whodunit",
+    "detective",
+    "billionaire",
+    "island",
+    "twisty"
+   ],
+   "rating": 7.1,
+   "popularity": 0.55,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "Detective Benoit Blanc joins a tech billionaire's private-island murder-mystery party.",
+   "lang": "en",
+   "related": [
+    "Knives Out",
+    "Only Murders in the Building"
+   ]
+  },
+  {
+   "type": "movie",
+   "title": "Palm Springs",
+   "year": 2020,
+   "genres": [
+    "comedy",
+    "romance",
+    "sci-fi"
+   ],
+   "runtime": 90,
+   "creators": [
+    "Max Barbakow"
+   ],
+   "cast": [
+    "Andy Samberg",
+    "Cristin Milioti"
+   ],
+   "keywords": [
+    "time loop",
+    "wedding",
+    "romantic comedy",
+    "existential",
+    "feel good"
+   ],
+   "rating": 7.4,
+   "popularity": 0.4,
+   "providers": [
+    "hulu"
+   ],
+   "overview": "Two wedding guests get stuck reliving the same day together.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Superbad",
+   "year": 2007,
+   "genres": [
+    "comedy"
+   ],
+   "runtime": 113,
+   "creators": [
+    "Greg Mottola"
+   ],
+   "cast": [
+    "Jonah Hill",
+    "Michael Cera"
+   ],
+   "keywords": [
+    "high school",
+    "friendship",
+    "party",
+    "coming of age",
+    "raunchy"
+   ],
+   "rating": 7.2,
+   "popularity": 0.5,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "Two best friends try to make their last high school party count before college splits them up.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Game Night",
+   "year": 2018,
+   "genres": [
+    "comedy",
+    "crime"
+   ],
+   "runtime": 100,
+   "creators": [
+    "John Francis Daley",
+    "Jonathan Goldstein"
+   ],
+   "cast": [
+    "Jason Bateman",
+    "Rachel McAdams"
+   ],
+   "keywords": [
+    "couples",
+    "game night",
+    "kidnapping",
+    "mistaken identity",
+    "fun"
+   ],
+   "rating": 7.0,
+   "popularity": 0.4,
+   "providers": [
+    "max"
+   ],
+   "overview": "A couples' game night turns into a real mystery when one guest is actually kidnapped.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Paddington 2",
+   "year": 2017,
+   "genres": [
+    "family",
+    "comedy",
+    "adventure"
+   ],
+   "runtime": 104,
+   "creators": [
+    "Paul King"
+   ],
+   "cast": [
+    "Ben Whishaw",
+    "Hugh Grant"
+   ],
+   "keywords": [
+    "bear",
+    "kindness",
+    "wholesome",
+    "london",
+    "feel good",
+    "uplifting"
+   ],
+   "rating": 7.8,
+   "popularity": 0.4,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "Paddington takes odd jobs to buy a gift and ends up framed for theft.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Spider-Man: Into the Spider-Verse",
+   "year": 2018,
+   "genres": [
+    "animation",
+    "action",
+    "adventure",
+    "sci-fi"
+   ],
+   "runtime": 117,
+   "creators": [
+    "Bob Persichetti",
+    "Peter Ramsey",
+    "Rodney Rothman"
+   ],
+   "cast": [
+    "Shameik Moore",
+    "Hailee Steinfeld"
+   ],
+   "keywords": [
+    "multiverse",
+    "superhero",
+    "coming of age",
+    "stunning animation",
+    "uplifting"
+   ],
+   "rating": 8.4,
+   "popularity": 0.7,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "Brooklyn teen Miles Morales becomes Spider-Man and teams up with Spider-People from other dimensions.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Coco",
+   "year": 2017,
+   "genres": [
+    "animation",
+    "family",
+    "music",
+    "fantasy"
+   ],
+   "runtime": 105,
+   "creators": [
+    "Lee Unkrich"
+   ],
+   "cast": [
+    "Anthony Gonzalez",
+    "Gael García Bernal"
+   ],
+   "keywords": [
+    "day of the dead",
+    "music",
+    "family",
+    "afterlife",
+    "heartfelt"
+   ],
+   "rating": 8.2,
+   "popularity": 0.6,
+   "providers": [
+    "disney"
+   ],
+   "overview": "A boy who dreams of music crosses into the Land of the Dead to uncover his family's history.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Inside Out",
+   "year": 2015,
+   "genres": [
+    "animation",
+    "family",
+    "comedy"
+   ],
+   "runtime": 95,
+   "creators": [
+    "Pete Docter"
+   ],
+   "cast": [
+    "Amy Poehler",
+    "Phyllis Smith"
+   ],
+   "keywords": [
+    "emotions",
+    "growing up",
+    "moving",
+    "heartfelt",
+    "feel good"
+   ],
+   "rating": 7.9,
+   "popularity": 0.6,
+   "providers": [
+    "disney"
+   ],
+   "overview": "The emotions inside an 11-year-old girl's head try to guide her through a big move.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Get Out",
+   "year": 2017,
+   "genres": [
+    "horror",
+    "thriller",
+    "mystery"
+   ],
+   "runtime": 104,
+   "creators": [
+    "Jordan Peele"
+   ],
+   "cast": [
+    "Daniel Kaluuya",
+    "Allison Williams"
+   ],
+   "keywords": [
+    "social thriller",
+    "meet the parents",
+    "hypnosis",
+    "twist",
+    "satire"
+   ],
+   "rating": 7.6,
+   "popularity": 0.5,
+   "providers": [
+    "peacock"
+   ],
+   "overview": "A young man's weekend with his girlfriend's family turns into something far more sinister.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Hereditary",
+   "year": 2018,
+   "genres": [
+    "horror",
+    "drama",
+    "mystery"
+   ],
+   "runtime": 127,
+   "creators": [
+    "Ari Aster"
+   ],
+   "cast": [
+    "Toni Collette",
+    "Alex Wolff"
+   ],
+   "keywords": [
+    "grief",
+    "family",
+    "occult",
+    "disturbing",
+    "slow burn"
+   ],
+   "rating": 7.3,
+   "popularity": 0.45,
+   "providers": [
+    "max"
+   ],
+   "overview": "After their grandmother dies, a family starts uncovering terrifying secrets about their ancestry.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "A Quiet Place",
+   "year": 2018,
+   "genres": [
+    "horror",
+    "sci-fi",
+    "thriller"
+   ],
+   "runtime": 90,
+   "creators": [
+    "John Krasinski"
+   ],
+   "cast": [
+    "Emily Blunt",
+    "John Krasinski"
+   ],
+   "keywords": [
+    "silence",
+    "monsters",
+    "family survival",
+    "tense",
+    "post-apocalyptic"
+   ],
+   "rating": 7.4,
+   "popularity": 0.55,
+   "providers": [
+    "paramount"
+   ],
+   "overview": "A family must live in total silence to hide from creatures that hunt by sound.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Parasite",
+   "year": 2019,
+   "genres": [
+    "thriller",
+    "drama",
+    "comedy"
+   ],
+   "runtime": 132,
+   "creators": [
+    "Bong Joon Ho"
+   ],
+   "cast": [
+    "Song Kang-ho",
+    "Choi Woo-shik"
+   ],
+   "keywords": [
+    "class",
+    "con artists",
+    "korean",
+    "twist",
+    "dark humor"
+   ],
+   "rating": 8.5,
+   "popularity": 0.6,
+   "providers": [
+    "max"
+   ],
+   "overview": "A poor family schemes its way into working for a wealthy household, until things go wrong.",
+   "lang": "ko",
+   "related": [
+    "Burning",
+    "Oldboy",
+    "Squid Game",
+    "The Handmaiden"
+   ]
+  },
+  {
+   "type": "movie",
+   "title": "La La Land",
+   "year": 2016,
+   "genres": [
+    "romance",
+    "music",
+    "drama",
+    "comedy"
+   ],
+   "runtime": 128,
+   "creators": [
+    "Damien Chazelle"
+   ],
+   "cast": [
+    "Ryan Gosling",
+    "Emma Stone"
+   ],
+   "keywords": [
+    "musical",
+    "los angeles",
+    "dreams",
+    "career",
+    "jazz",
+    "bittersweet"
+   ],
+   "rating": 7.9,
+   "popularity": 0.6,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "An aspiring actress and a jazz pianist fall in love while chasing their dreams in Los Angeles.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Past Lives",
+   "year": 2023,
+   "genres": [
+    "romance",
+    "drama"
+   ],
+   "runtime": 106,
+   "creators": [
+    "Celine Song"
+   ],
+   "cast": [
+    "Greta Lee",
+    "Teo Yoo"
+   ],
+   "keywords": [
+    "childhood friends",
+    "immigration",
+    "what if",
+    "quiet",
+    "bittersweet"
+   ],
+   "rating": 7.8,
+   "popularity": 0.4,
+   "providers": [
+    "paramount"
+   ],
+   "overview": "Two childhood friends from Seoul reunite in New York decades later and wonder what might have been.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Free Solo",
+   "year": 2018,
+   "genres": [
+    "documentary"
+   ],
+   "runtime": 100,
+   "creators": [
+    "Jimmy Chin",
+    "Elizabeth Chai Vasarhelyi"
+   ],
+   "cast": [
+    "Alex Honnold"
+   ],
+   "keywords": [
+    "climbing",
+    "el capitan",
+    "fear",
+    "inspiring",
+    "extreme sports",
+    "motivational"
+   ],
+   "rating": 7.9,
+   "popularity": 0.35,
+   "providers": [
+    "disney"
+   ],
+   "overview": "A climber prepares to scale Yosemite's El Capitan with no rope.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "The Social Dilemma",
+   "year": 2020,
+   "genres": [
+    "documentary"
+   ],
+   "runtime": 94,
+   "creators": [
+    "Jeff Orlowski"
+   ],
+   "cast": [
+    "Tristan Harris"
+   ],
+   "keywords": [
+    "social media",
+    "technology",
+    "tech industry",
+    "addiction",
+    "eye opening"
+   ],
+   "rating": 7.5,
+   "popularity": 0.35,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "Former tech insiders explain how social media platforms are designed to hook us.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Mad Max: Fury Road",
+   "year": 2015,
+   "genres": [
+    "action",
+    "sci-fi",
+    "adventure"
+   ],
+   "runtime": 120,
+   "creators": [
+    "George Miller"
+   ],
+   "cast": [
+    "Tom Hardy",
+    "Charlize Theron"
+   ],
+   "keywords": [
+    "post-apocalyptic",
+    "chase",
+    "desert",
+    "practical effects",
+    "nonstop action"
+   ],
+   "rating": 7.6,
+   "popularity": 0.6,
+   "providers": [
+    "max"
+   ],
+   "overview": "In a desert wasteland, a drifter joins a warrior fleeing a tyrant in one long chase.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "John Wick",
+   "year": 2014,
+   "genres": [
+    "action",
+    "thriller",
+    "crime"
+   ],
+   "runtime": 101,
+   "creators": [
+    "Chad Stahelski"
+   ],
+   "cast": [
+    "Keanu Reeves"
+   ],
+   "keywords": [
+    "hitman",
+    "revenge",
+    "stylish action",
+    "dog"
+   ],
+   "rating": 7.4,
+   "popularity": 0.7,
+   "providers": [
+    "peacock"
+   ],
+   "overview": "A retired hitman comes back for revenge against the gangsters who took everything from him.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Top Gun: Maverick",
+   "year": 2022,
+   "genres": [
+    "action",
+    "drama"
+   ],
+   "runtime": 131,
+   "creators": [
+    "Joseph Kosinski"
+   ],
+   "cast": [
+    "Tom Cruise",
+    "Miles Teller"
+   ],
+   "keywords": [
+    "fighter pilots",
+    "mentor",
+    "legacy",
+    "crowd pleaser",
+    "aviation"
+   ],
+   "rating": 8.2,
+   "popularity": 0.7,
+   "providers": [
+    "paramount"
+   ],
+   "overview": "A veteran Navy pilot trains a new generation of aviators for a nearly impossible mission.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "The Martian",
+   "year": 2015,
+   "genres": [
+    "sci-fi",
+    "adventure",
+    "drama"
+   ],
+   "runtime": 144,
+   "creators": [
+    "Ridley Scott"
+   ],
+   "cast": [
+    "Matt Damon",
+    "Jessica Chastain"
+   ],
+   "keywords": [
+    "mars",
+    "survival",
+    "problem solving",
+    "optimistic",
+    "science",
+    "motivational"
+   ],
+   "rating": 7.7,
+   "popularity": 0.6,
+   "providers": [
+    "disney"
+   ],
+   "overview": "An astronaut stranded on Mars uses science and humor to survive until rescue.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Soul",
+   "year": 2020,
+   "genres": [
+    "animation",
+    "comedy",
+    "drama",
+    "family"
+   ],
+   "runtime": 100,
+   "creators": [
+    "Pete Docter"
+   ],
+   "cast": [
+    "Jamie Foxx",
+    "Tina Fey"
+   ],
+   "keywords": [
+    "jazz",
+    "purpose",
+    "career",
+    "life meaning",
+    "heartfelt",
+    "uplifting"
+   ],
+   "rating": 8.0,
+   "popularity": 0.5,
+   "providers": [
+    "disney"
+   ],
+   "overview": "A music teacher who finally lands his dream gig has an accident and must rediscover what makes life worth living.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Rocky",
+   "year": 1976,
+   "genres": [
+    "drama"
+   ],
+   "runtime": 120,
+   "creators": [
+    "John G. Avildsen"
+   ],
+   "cast": [
+    "Sylvester Stallone",
+    "Talia Shire"
+   ],
+   "keywords": [
+    "boxing",
+    "underdog",
+    "philadelphia",
+    "perseverance",
+    "motivational",
+    "sports"
+   ],
+   "rating": 7.7,
+   "popularity": 0.4,
+   "providers": [
+    "prime"
+   ],
+   "overview": "A small-time boxer gets a once-in-a-lifetime shot at the heavyweight title.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Good Will Hunting",
+   "year": 1997,
+   "genres": [
+    "drama",
+    "romance"
+   ],
+   "runtime": 126,
+   "creators": [
+    "Gus Van Sant"
+   ],
+   "cast": [
+    "Matt Damon",
+    "Robin Williams"
+   ],
+   "keywords": [
+    "genius",
+    "therapy",
+    "friendship",
+    "boston",
+    "potential",
+    "career",
+    "coming of age"
+   ],
+   "rating": 8.1,
+   "popularity": 0.45,
+   "providers": [
+    "paramount"
+   ],
+   "overview": "A janitor with a gift for math works with a therapist to face his past and his future.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "The Devil Wears Prada",
+   "year": 2006,
+   "genres": [
+    "comedy",
+    "drama"
+   ],
+   "runtime": 109,
+   "creators": [
+    "David Frankel"
+   ],
+   "cast": [
+    "Meryl Streep",
+    "Anne Hathaway"
+   ],
+   "keywords": [
+    "fashion",
+    "first job",
+    "demanding boss",
+    "workplace",
+    "career",
+    "new york"
+   ],
+   "rating": 7.4,
+   "popularity": 0.55,
+   "providers": [
+    "hulu"
+   ],
+   "overview": "A recent graduate lands a job as assistant to a notoriously demanding fashion editor.",
+   "lang": "en"
+  },
+  {
+   "type": "movie",
+   "title": "Jiro Dreams of Sushi",
+   "year": 2011,
+   "genres": [
+    "documentary"
+   ],
+   "runtime": 81,
+   "creators": [
+    "David Gelb"
+   ],
+   "cast": [
+    "Jiro Ono"
+   ],
+   "keywords": [
+    "sushi",
+    "craft",
+    "mastery",
+    "father son",
+    "japan",
+    "food",
+    "dedication"
+   ],
+   "rating": 7.8,
+   "popularity": 0.2,
+   "providers": [
+    "hulu"
+   ],
+   "overview": "An 85-year-old sushi master and his lifelong pursuit of perfection.",
+   "lang": "ja"
+  },
+  {
+   "type": "tv",
+   "title": "Crash Landing on You",
+   "year": 2019,
+   "genres": [
+    "romance",
+    "drama",
+    "comedy"
+   ],
+   "runtime": 70,
+   "seasons": 1,
+   "creators": [
+    "Lee Jeong-hyo"
+   ],
+   "cast": [
+    "Hyun Bin",
+    "Son Ye-jin"
+   ],
+   "keywords": [
+    "forbidden love",
+    "north korea",
+    "rescue",
+    "fish out of water",
+    "slow burn"
+   ],
+   "rating": 8.6,
+   "popularity": 0.7,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A South Korean heiress paraglides into North Korea by accident and is hidden by an army officer, and the two fall in love.",
+   "lang": "ko",
+   "related": [
+    "Hometown Cha-Cha-Cha",
+    "Business Proposal",
+    "True Beauty",
+    "Reply 1988",
+    "Vincenzo"
+   ]
+  },
+  {
+   "type": "tv",
+   "title": "True Beauty",
+   "year": 2020,
+   "genres": [
+    "romance",
+    "comedy",
+    "drama"
+   ],
+   "runtime": 65,
+   "seasons": 1,
+   "creators": [
+    "Kim Sang-hyub"
+   ],
+   "cast": [
+    "Moon Ga-young",
+    "Cha Eun-woo"
+   ],
+   "keywords": [
+    "high school",
+    "makeup",
+    "insecurity",
+    "love triangle",
+    "teen romance"
+   ],
+   "rating": 8.0,
+   "popularity": 0.6,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A student who is bullied for her looks masters makeup and becomes a star at a new school, hiding her real face.",
+   "lang": "ko",
+   "related": [
+    "Business Proposal",
+    "Crash Landing on You",
+    "Hometown Cha-Cha-Cha",
+    "Extraordinary Attorney Woo"
+   ]
+  },
+  {
+   "type": "tv",
+   "title": "Business Proposal",
+   "year": 2022,
+   "genres": [
+    "romance",
+    "comedy"
+   ],
+   "runtime": 65,
+   "seasons": 1,
+   "creators": [
+    "Park Sun-ho"
+   ],
+   "cast": [
+    "Kim Se-jeong",
+    "Ahn Hyo-seop"
+   ],
+   "keywords": [
+    "fake dating",
+    "office romance",
+    "blind date",
+    "rich boss",
+    "mistaken identity"
+   ],
+   "rating": 8.1,
+   "popularity": 0.6,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A woman goes on a blind date in place of her friend and finds the man across the table is her boss.",
+   "lang": "ko",
+   "related": [
+    "True Beauty",
+    "Crash Landing on You",
+    "Extraordinary Attorney Woo",
+    "Hometown Cha-Cha-Cha"
+   ]
+  },
+  {
+   "type": "tv",
+   "title": "The Glory",
+   "year": 2022,
+   "genres": [
+    "drama",
+    "thriller",
+    "crime"
+   ],
+   "runtime": 55,
+   "seasons": 2,
+   "creators": [
+    "An Gil-ho"
+   ],
+   "cast": [
+    "Song Hye-kyo",
+    "Lee Do-hyun"
+   ],
+   "keywords": [
+    "revenge",
+    "school bullying",
+    "long game",
+    "meticulous plan",
+    "dark"
+   ],
+   "rating": 8.5,
+   "popularity": 0.7,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A woman abused at school spends years planning a precise revenge on those who ruined her life.",
+   "lang": "ko",
+   "related": [
+    "Vincenzo",
+    "Squid Game",
+    "All of Us Are Dead",
+    "Burning"
+   ]
+  },
+  {
+   "type": "tv",
+   "title": "All of Us Are Dead",
+   "year": 2022,
+   "genres": [
+    "horror",
+    "thriller",
+    "drama"
+   ],
+   "runtime": 60,
+   "seasons": 1,
+   "creators": [
+    "Lee Jae-kyoo"
+   ],
+   "cast": [
+    "Park Ji-hu",
+    "Yoon Chan-young"
+   ],
+   "keywords": [
+    "zombies",
+    "high school",
+    "outbreak",
+    "survival",
+    "teen"
+   ],
+   "rating": 7.6,
+   "popularity": 0.65,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A school becomes ground zero for a zombie outbreak, and trapped students must fight to get out.",
+   "lang": "ko",
+   "related": [
+    "Squid Game",
+    "Train to Busan",
+    "The Glory"
+   ]
+  },
+  {
+   "type": "tv",
+   "title": "Reply 1988",
+   "year": 2015,
+   "genres": [
+    "drama",
+    "comedy",
+    "romance"
+   ],
+   "runtime": 90,
+   "seasons": 1,
+   "creators": [
+    "Shin Won-ho"
+   ],
+   "cast": [
+    "Lee Hye-ri",
+    "Park Bo-gum"
+   ],
+   "keywords": [
+    "nostalgia",
+    "neighbors",
+    "family",
+    "1980s",
+    "warm",
+    "friendship"
+   ],
+   "rating": 9.1,
+   "popularity": 0.5,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "Five families in one Seoul neighborhood share ordinary joys and troubles in 1988.",
+   "lang": "ko",
+   "related": [
+    "Hometown Cha-Cha-Cha",
+    "Crash Landing on You",
+    "Miracle in Cell No. 7"
+   ]
+  },
+  {
+   "type": "tv",
+   "title": "Extraordinary Attorney Woo",
+   "year": 2022,
+   "genres": [
+    "drama",
+    "comedy",
+    "romance"
+   ],
+   "runtime": 70,
+   "seasons": 1,
+   "creators": [
+    "Yoo In-shik"
+   ],
+   "cast": [
+    "Park Eun-bin",
+    "Kang Tae-oh"
+   ],
+   "keywords": [
+    "lawyer",
+    "autism",
+    "legal cases",
+    "workplace",
+    "feel good"
+   ],
+   "rating": 8.6,
+   "popularity": 0.65,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A brilliant young lawyer on the autism spectrum takes on hard cases at a big law firm and wins over her colleagues.",
+   "lang": "ko",
+   "related": [
+    "Vincenzo",
+    "Hometown Cha-Cha-Cha",
+    "Business Proposal",
+    "The Glory"
+   ]
+  },
+  {
+   "type": "tv",
+   "title": "Vincenzo",
+   "year": 2021,
+   "genres": [
+    "crime",
+    "comedy",
+    "drama"
+   ],
+   "runtime": 80,
+   "seasons": 1,
+   "creators": [
+    "Kim Hee-won"
+   ],
+   "cast": [
+    "Song Joong-ki",
+    "Jeon Yeo-been"
+   ],
+   "keywords": [
+    "mafia",
+    "lawyer",
+    "revenge",
+    "dark comedy",
+    "heist"
+   ],
+   "rating": 8.5,
+   "popularity": 0.6,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A Korean-Italian mafia lawyer returns to Seoul and takes on a ruthless conglomerate.",
+   "lang": "ko",
+   "related": [
+    "The Glory",
+    "Squid Game",
+    "Extraordinary Attorney Woo",
+    "Money Heist"
+   ]
+  },
+  {
+   "type": "tv",
+   "title": "Hometown Cha-Cha-Cha",
+   "year": 2021,
+   "genres": [
+    "romance",
+    "comedy",
+    "drama"
+   ],
+   "runtime": 75,
+   "seasons": 1,
+   "creators": [
+    "Yoo Je-won"
+   ],
+   "cast": [
+    "Shin Min-a",
+    "Kim Seon-ho"
+   ],
+   "keywords": [
+    "seaside village",
+    "small town",
+    "healing",
+    "slow burn",
+    "warm"
+   ],
+   "rating": 8.5,
+   "popularity": 0.5,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A dentist leaves the city for a seaside village and falls for the town's odd-job man.",
+   "lang": "ko",
+   "related": [
+    "Crash Landing on You",
+    "Reply 1988",
+    "Extraordinary Attorney Woo",
+    "Business Proposal"
+   ]
+  },
+  {
+   "type": "movie",
+   "title": "Train to Busan",
+   "year": 2016,
+   "genres": [
+    "horror",
+    "action",
+    "thriller"
+   ],
+   "runtime": 118,
+   "seasons": null,
+   "creators": [
+    "Yeon Sang-ho"
+   ],
+   "cast": [
+    "Gong Yoo",
+    "Ma Dong-seok"
+   ],
+   "keywords": [
+    "zombies",
+    "train",
+    "survival",
+    "father and daughter",
+    "outbreak"
+   ],
+   "rating": 7.6,
+   "popularity": 0.7,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "Passengers on a speeding train fight to survive as a zombie outbreak sweeps the country.",
+   "lang": "ko",
+   "related": [
+    "All of Us Are Dead",
+    "Squid Game",
+    "Parasite",
+    "Oldboy"
+   ]
+  },
+  {
+   "type": "movie",
+   "title": "Burning",
+   "year": 2018,
+   "genres": [
+    "mystery",
+    "thriller",
+    "drama"
+   ],
+   "runtime": 148,
+   "seasons": null,
+   "creators": [
+    "Lee Chang-dong"
+   ],
+   "cast": [
+    "Yoo Ah-in",
+    "Steven Yeun"
+   ],
+   "keywords": [
+    "slow burn",
+    "jealousy",
+    "disappearance",
+    "class",
+    "ambiguous"
+   ],
+   "rating": 7.4,
+   "popularity": 0.35,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A young man's obsession grows when a girl he loves returns with a wealthy stranger, and then vanishes.",
+   "lang": "ko",
+   "related": [
+    "Parasite",
+    "Oldboy",
+    "The Handmaiden",
+    "Zodiac"
+   ]
+  },
+  {
+   "type": "movie",
+   "title": "Oldboy",
+   "year": 2003,
+   "genres": [
+    "mystery",
+    "thriller",
+    "action"
+   ],
+   "runtime": 120,
+   "seasons": null,
+   "creators": [
+    "Park Chan-wook"
+   ],
+   "cast": [
+    "Choi Min-sik",
+    "Yoo Ji-tae"
+   ],
+   "keywords": [
+    "revenge",
+    "imprisonment",
+    "hallway fight",
+    "twist",
+    "dark"
+   ],
+   "rating": 8.3,
+   "popularity": 0.5,
+   "providers": [
+    "prime"
+   ],
+   "overview": "A man held captive for fifteen years is suddenly freed and hunts for the reason.",
+   "lang": "ko",
+   "related": [
+    "The Handmaiden",
+    "Parasite",
+    "Burning",
+    "John Wick"
+   ]
+  },
+  {
+   "type": "movie",
+   "title": "Miracle in Cell No. 7",
+   "year": 2019,
+   "genres": [
+    "drama",
+    "comedy",
+    "family"
+   ],
+   "runtime": 132,
+   "seasons": null,
+   "creators": [
+    "Lee Hwan-kyung"
+   ],
+   "cast": [
+    "Ryu Seung-ryong",
+    "Kal So-won"
+   ],
+   "keywords": [
+    "father and daughter",
+    "wrongly accused",
+    "prison",
+    "heartbreaking",
+    "tearjerker"
+   ],
+   "rating": 8.2,
+   "popularity": 0.45,
+   "providers": [
+    "netflix"
+   ],
+   "overview": "A gentle father with an intellectual disability is jailed for a crime he did not commit, and his daughter is smuggled in to see him.",
+   "lang": "ko"
+  },
+  {
+   "type": "movie",
+   "title": "The Handmaiden",
+   "year": 2016,
+   "genres": [
+    "romance",
+    "thriller",
+    "mystery",
+    "drama"
+   ],
+   "runtime": 145,
+   "seasons": null,
+   "creators": [
+    "Park Chan-wook"
+   ],
+   "cast": [
+    "Kim Min-hee",
+    "Kim Tae-ri"
+   ],
+   "keywords": [
+    "con",
+    "1930s",
+    "twist",
+    "forbidden love",
+    "period"
+   ],
+   "rating": 8.1,
+   "popularity": 0.4,
+   "providers": [
+    "prime"
+   ],
+   "overview": "A pickpocket is hired as a maid to help a con man swindle a wealthy heiress, but nothing goes to plan.",
+   "lang": "ko"
+  }
+ ]
 }

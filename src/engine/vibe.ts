@@ -51,7 +51,7 @@ export function searchVibe(
   cat: Catalog,
   p: TasteProfile,
   query: string,
-  queryVec: Float32Array,
+  queryVec: Float32Array | null, // null = the language model could not load; match on words only
   base: Filters,
   k = 6,
 ): Rec[] {
@@ -66,16 +66,16 @@ export function searchVibe(
     const item = cat.items[i];
     if (p.seen.has(i) || p.rejected.has(i) || !passesFilters(item, f)) continue;
     if (parsed.short && item.runtime != null && item.runtime > (item.type === 'movie' ? 105 : 35)) continue;
-    const vibe = dot(queryVec, cat.vectors[i]);
+    const vibe = queryVec ? dot(queryVec, cat.vectors[i]) : 0;
     const taste = p.hasSignal ? tasteScore(cat, p, i).score : 0;
-    scored.push({ i, vibe, score: 0.78 * vibe + 0.22 * taste });
+    scored.push({ i, vibe, score: queryVec ? 0.78 * vibe + 0.22 * taste : 0.3 * taste });
   }
   scored.sort((a, b) => b.score - a.score);
   // Re-score the head with explicit term matches, so titles that actually speak to the
   // words in the request beat ones that are only loosely similar.
-  const head = scored.slice(0, 60).map((x) => {
+  const head = (queryVec ? scored.slice(0, 60) : scored).map((x) => {
     const terms = matchedTerms(query, cat.items[x.i]);
-    return { ...x, terms, score: x.score + 0.07 * Math.min(3, terms.length) - (terms.length ? 0 : 0.05) };
+    return { ...x, terms, score: x.score + (queryVec ? 0.07 : 0.25) * Math.min(3, terms.length) - (terms.length ? 0 : 0.05) };
   });
   head.sort((a, b) => b.score - a.score);
   return head.slice(0, k).map(({ i, score, terms }) => {

@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import type { Filters, Rec } from '../shared/types';
 import { enabledPlatforms } from '../shared/store';
-import { genreSections, recommend, surprise } from '../engine/recommend';
+import { genreSections, languageSections, recommend, surprise } from '../engine/recommend';
 import { searchVibe } from '../engine/vibe';
 import { embedQuery } from '../engine/embed-query';
-import { genreLabel } from '../engine/text';
+import { genreLabel, langLabel } from '../engine/text';
 import type { EngineState } from '../ui/useEngine';
 import { useLlmRerank } from '../ui/useLlm';
 import { Poster } from '../ui/Poster';
@@ -25,12 +25,14 @@ const TIMES: { label: string; value: number | null }[] = [
 export function Home({ engine }: { engine: EngineState }) {
   const { catalog, profile, settings } = engine;
   const enabled = enabledPlatforms(settings);
+  const perShelf = settings.picksPerShelf ?? 5;
   const [type, setType] = useState<Filters['type']>('any');
   const [maxMinutes, setMaxMinutes] = useState<number | null>(null);
   const [query, setQuery] = useState('');
   const [asked, setAsked] = useState('');
   const [vibeRecs, setVibeRecs] = useState<Rec[] | null>(null);
   const [searching, setSearching] = useState(false);
+  const [wordsOnly, setWordsOnly] = useState(false);
   const [open, setOpen] = useState<Rec | null>(null);
   const [rolled, setRolled] = useState<Rec[] | null>(null);
   const [hostIdx, setHostIdx] = useState(0);
@@ -50,10 +52,13 @@ export function Home({ engine }: { engine: EngineState }) {
   const hostRecs = vibeRecs ? vibeRanked : top;
   const pick = hostRecs.length ? hostRecs[hostIdx % hostRecs.length] : null;
 
-  const sections = useMemo(
-    () => (catalog && profile ? genreSections(catalog, profile, filters, 3, genreCap, top[0] ? [top[0].item.id] : []) : []),
-    [catalog, profile, fkey, top[0]?.item.id, genreCap],
-  );
+  const sections = useMemo(() => {
+    if (!catalog || !profile) return [];
+    const skip = top[0] ? [top[0].item.id] : [];
+    const langs = languageSections(catalog, profile, filters, perShelf, skip);
+    const taken = [...skip, ...langs.flatMap((s) => s.recs.map((r) => r.item.id))];
+    return [...langs, ...genreSections(catalog, profile, filters, perShelf, genreCap, taken)];
+  }, [catalog, profile, fkey, top[0]?.item.id, genreCap, perShelf]);
 
   useEffect(() => {
     setHostIdx(0);
@@ -74,7 +79,13 @@ export function Home({ engine }: { engine: EngineState }) {
     setSearching(true);
     setMood('wow');
     try {
-      const vec = await embedQuery(catalog, q);
+      let vec: Float32Array | null = null;
+      try {
+        vec = await embedQuery(catalog, q);
+      } catch (e) {
+        console.warn('[telly] language model unavailable, matching on words only', e);
+      }
+      setWordsOnly(!vec);
       setVibeRecs(searchVibe(catalog, profile, q, vec, filters, 6));
     } finally {
       setSearching(false);
@@ -123,6 +134,7 @@ export function Home({ engine }: { engine: EngineState }) {
               <BecauseChip rec={pick} catalog={catalog} />
             </div>
             {whyOpen && <p class="host-why">{pick.why}</p>}
+            {vibeRecs && wordsOnly && <p class="host-why">Matched on your words only, the smarter matching couldn't load.</p>}
             <div class="host-actions">
               <button class="btn btn-primary big" onClick={() => act.watch(pick)}>Watch</button>
               <button class="btn big" aria-expanded={whyOpen} onClick={() => setWhyOpen((v) => !v)}>Why?</button>
@@ -184,14 +196,16 @@ export function Home({ engine }: { engine: EngineState }) {
       <div class="stacks">
         {sections.map((s) => (
           <Stack
-            title={s.stretch ? 'Something different' : genreLabel(s.genre)}
+            title={s.lang ? langLabel(s.lang) : s.stretch ? 'Something different' : genreLabel(s.genre)}
             info={
-              <InfoTip label={`About ${s.stretch ? 'something different' : genreLabel(s.genre)}`}>
-                {s.stretch
-                  ? `${genreLabel(s.genre)} isn't your usual, but these sit close to your taste.`
-                  : s.share > 0
-                    ? `About ${Math.round(s.share * 100)}% of what you watch. Your top 3.`
-                    : 'Popular picks while I learn your taste.'}
+              <InfoTip label={`About ${s.lang ? langLabel(s.lang) : s.stretch ? 'something different' : genreLabel(s.genre)}`}>
+                {s.lang
+                  ? `About ${Math.round(s.share * 100)}% of what you watch is in ${langLabel(s.lang)}. Your top ${perShelf}.`
+                  : s.stretch
+                    ? `${genreLabel(s.genre)} isn't your usual, but these sit close to your taste.`
+                    : s.share > 0
+                      ? `About ${Math.round(s.share * 100)}% of what you watch. Your top ${perShelf}.`
+                      : 'Popular picks while I learn your taste.'}
               </InfoTip>
             }
             recs={s.recs}
@@ -200,7 +214,7 @@ export function Home({ engine }: { engine: EngineState }) {
           />
         ))}
       </div>
-      {sections.length >= genreCap && (
+      {sections.filter((s) => !s.lang).length >= genreCap && (
         <div class="more-row">
           <button class="btn" onClick={() => setGenreCap((n) => n + 6)}>More genres</button>
         </div>

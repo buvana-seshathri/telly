@@ -124,12 +124,24 @@ window.addEventListener('message', (e) => {
 
 // ---------------- Netflix history ----------------
 
+let nfProfileKey: string | null = null;
+
 function initNetflix() {
+  let gotProfile = false;
+  if (forcedSync) {
+    setTimeout(() => say('Telly is reading your Netflix history. This can take a minute.', 'toast', 9000), 600);
+    setTimeout(() => {
+      if (!gotProfile) say("Telly can't tell which Netflix profile this is. Pick your profile on Netflix's home page, then try Sync again.", 'toast', 10000);
+    }, 9000);
+  }
   window.addEventListener('message', async (e) => {
     if (e.source !== window || e.data?.source !== 'tonight-nf') return;
     const d = e.data;
+    if (d.type === 'progress' && forcedSync) say(`Reading your history: ${d.count} titles so far…`, 'toast', 8000);
     if (d.type === 'profile') {
+      gotProfile = true;
       const prof = await upsertProfile('netflix', d.id, d.name);
+      nfProfileKey = prof.key;
       const r = await chrome.runtime.sendMessage({ type: 'needs-sync', platform: 'netflix', profileKey: prof.key, forced: forcedSync });
       if (r?.sync) window.postMessage({ source: 'tonight-cs', type: 'sync' }, location.origin);
     }
@@ -193,6 +205,64 @@ function initPassive(platform: PlatformId) {
   }, 5000);
 }
 
+// ---------------- Netflix playback: how far you actually got ----------------
+// Netflix's history page says what you played, not for how long. So while you watch, Telly notes the
+// title and how far into it you got, and remembers only that (a title you quit early counts against it).
+
+function initNetflixPlayback() {
+  type Cur = { path: string; title: string; series: string | null; max: number; dur: number; played: number };
+  let cur: Cur | null = null;
+  let last = Date.now();
+
+  const readTitle = (): { title: string; series: string | null } | null => {
+    const el = document.querySelector('[data-uia="video-title"]');
+    if (!el) return null;
+    const series = el.querySelector('h4')?.textContent?.trim() || null;
+    if (series) {
+      const parts = [...el.querySelectorAll('span')].map((s) => s.textContent?.trim() ?? '').filter(Boolean);
+      return { series, title: [series, ...parts].join(': ') };
+    }
+    const t = el.textContent?.trim();
+    return t ? { series: null, title: t } : null;
+  };
+
+  async function flush() {
+    const c = cur;
+    cur = null;
+    if (!c || !nfProfileKey || c.played < 60 || !c.dur) return; // under a minute of play: ignore
+    const progress = Math.min(1, c.max / c.dur);
+    await addEvents(nfProfileKey, [
+      { platform: 'netflix', profileKey: nfProfileKey, rawTitle: c.title, seriesTitle: c.series, date: Date.now(), progress, source: 'passive' },
+    ]);
+  }
+
+  setInterval(() => {
+    try {
+      if (!/^\/watch\//.test(location.pathname)) {
+        if (cur) void flush();
+        return;
+      }
+      const v = document.querySelector('video');
+      if (!v) return;
+      if (cur && cur.path !== location.pathname) void flush();
+      if (!cur) {
+        const t = readTitle();
+        if (!t) return;
+        cur = { path: location.pathname, ...t, max: 0, dur: 0, played: 0 };
+      }
+      const now = Date.now();
+      if (!v.paused && v.readyState > 2) cur.played += Math.min(5, (now - last) / 1000);
+      last = now;
+      if (v.duration && Number.isFinite(v.duration)) cur.dur = v.duration;
+      cur.max = Math.max(cur.max, v.currentTime);
+    } catch {
+      /* the player page changed shape; never let this break the page */
+    }
+  }, 2000);
+  document.addEventListener('visibilitychange', () => document.hidden && void flush());
+  window.addEventListener('pagehide', () => void flush());
+}
+
 // ---------------- boot ----------------
 
 (async () => {
@@ -200,7 +270,10 @@ function initPassive(platform: PlatformId) {
   const s = await getSettings();
   if (!s.platforms[info.id] && !forcedSync) return; // user turned this platform off
   if (s.cornerButton) mountButton(info.id);
-  if (info.id === 'netflix') initNetflix();
+  if (info.id === 'netflix') {
+    initNetflix();
+    if (s.passiveLogging) initNetflixPlayback();
+  }
   else if (info.id === 'prime') initPrime();
   else if (s.passiveLogging) initPassive(info.id);
 })();

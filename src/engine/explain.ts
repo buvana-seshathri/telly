@@ -1,6 +1,6 @@
 // Explanations built only from real evidence in the user's history.
 import type { Catalog, CatalogItem, Evidence } from '../shared/types';
-import { genreLabel } from './text';
+import { genreLabel, langLabel } from './text';
 import type { TasteProfile, TitleSignal } from './profile';
 
 function anchorPhrase(item: CatalogItem, s: TitleSignal): string {
@@ -32,7 +32,7 @@ export function explain(
   profile: TasteProfile,
   item: CatalogItem,
   anchor: TitleSignal | null,
-  opts: { maxMinutes: number | null; stretch?: boolean },
+  opts: { maxMinutes: number | null; stretch?: boolean; linked?: boolean },
 ): { why: string; evidence: Evidence[] } {
   const evidence: Evidence[] = [];
   let why = '';
@@ -44,12 +44,15 @@ export function explain(
     const kws = sharedKeywords(a, item);
     const genres = shared(a.genres, item.genres);
     let reason: string;
+    if (opts.linked) evidence.push({ kind: 'collab', text: `Often watched by people who liked ${a.title}`, anchorId: a.id });
     if (creators.length) {
       reason = 'Same creators';
       evidence.push({ kind: 'same-creator', text: `Made by ${creators.join(' & ')}, who also made ${a.title}`, anchorId: a.id });
     } else if (cast.length) {
       reason = `Also stars ${cast[0]}`;
       evidence.push({ kind: 'same-cast', text: `${cast.join(', ')} also starred in ${a.title}`, anchorId: a.id });
+    } else if (opts.linked) {
+      reason = 'People who liked it often watch this too';
     } else if (kws.length >= 2) {
       reason = `Same ${kws[0]} and ${kws[1]} feel`;
     } else if (kws.length === 1) {
@@ -72,6 +75,8 @@ export function explain(
     const share = top ? profile.genreShare.get(top) ?? 0 : 0;
     if (share >= 0.15) evidence.push({ kind: 'genre-fit', text: `${genreLabel(top)} makes up ${Math.round(share * 100)}% of what you watch` });
   }
+  const ls = item.lang && item.lang !== 'en' ? profile.langShare.get(item.lang) ?? 0 : 0;
+  if (ls >= 0.12) evidence.push({ kind: 'language', text: `${Math.round(ls * 100)}% of what you watch is in ${langLabel(item.lang!)}` });
   if (item.runtime) {
     const unit = item.type === 'tv' ? `~${item.runtime} min episodes` : `${Math.floor(item.runtime / 60)}h ${item.runtime % 60}m`;
     const fits = opts.maxMinutes ? ' — fits your time' : '';

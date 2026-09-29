@@ -90,8 +90,7 @@ export function buildPrompt(cat: Catalog, p: TasteProfile, recs: Rec[], req: Llm
   return { system, user };
 }
 
-async function call(s: LlmSettings, system: string, user: string, signal?: AbortSignal): Promise<string> {
-  const model = s.model || LLM_PROVIDERS[s.provider].defaultModel;
+async function callOnce(s: LlmSettings, model: string, system: string, user: string, signal?: AbortSignal): Promise<string> {
   if (s.provider === 'gemini') {
     const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
       method: 'POST',
@@ -148,6 +147,47 @@ async function call(s: LlmSettings, system: string, user: string, signal?: Abort
   return j.choices?.[0]?.message?.content ?? '';
 }
 
+// Providers retire models often, so a hard-coded default goes stale. If the model is gone,
+// look at what the provider offers today, pick a good chat model, and remember it.
+const swapped: Partial<Record<LlmProvider, { from: string; to: string }>> = {};
+export const lastModelUsed = (provider: LlmProvider) => swapped[provider]?.to;
+
+const NOT_CHAT = /whisper|tts|guard|embed|moderation|image|vision-preview|dall|speech|transcri|rerank|compound|safeguard|orpheus|playai|realtime|audio/i;
+const PREFERRED: Record<LlmProvider, RegExp[]> = {
+  groq: [/gpt-oss-120b/, /llama-3\.3-70b/, /llama-4-maverick/, /llama-4-scout/, /gpt-oss-20b/, /qwen.*(32b|3)/, /llama-3\.1-8b/],
+  gemini: [/^gemini-flash-latest$/, /gemini-2\.5-flash$/, /gemini-.*flash(?!.*(lite|image|tts|live|preview))/],
+  openai: [/^gpt-4\.1-mini$/, /^gpt-4o-mini$/, /^gpt-5.*mini/, /^gpt-4\.1$/],
+  anthropic: [/haiku/, /sonnet/],
+  openrouter: [/^openrouter\/auto$/],
+};
+
+export function pickModel(provider: LlmProvider, ids: string[], avoid?: string): string | null {
+  const ok = ids.filter((m) => m !== avoid && !NOT_CHAT.test(m));
+  for (const re of PREFERRED[provider]) {
+    const hit = ok.find((m) => re.test(m));
+    if (hit) return hit;
+  }
+  return ok[0] ?? null;
+}
+
+const modelGone = (e: unknown) => /\b(404|400)\b/.test((e as Error).message) && /model/i.test((e as Error).message);
+
+async function call(s: LlmSettings, system: string, user: string, signal?: AbortSignal): Promise<string> {
+  const wanted = s.model || LLM_PROVIDERS[s.provider].defaultModel;
+  const known = swapped[s.provider];
+  const model = known && known.from === wanted ? known.to : wanted;
+  try {
+    return await callOnce(s, model, system, user, signal);
+  } catch (e) {
+    if (!modelGone(e)) throw e;
+    const next = pickModel(s.provider, await listModels(s), model);
+    if (!next) throw e;
+    const out = await callOnce(s, next, system, user, signal);
+    swapped[s.provider] = { from: wanted, to: next };
+    return out;
+  }
+}
+
 /** Pull {"picks":[...]} out of a reply, tolerating code fences or extra prose. */
 export function parsePicks(text: string): { id: string; why: string }[] {
   const m = text.match(/\{[\s\S]*\}/);
@@ -195,7 +235,7 @@ export async function testLlm(s: LlmSettings): Promise<string> {
   const text = await call(s, 'Reply with JSON only.', 'Return {"picks":[{"id":"ok","why":"ready"}]}');
   const picks = parsePicks(text);
   if (!picks.length) throw new Error('Connected, but the reply was not the expected JSON. Try another model.');
-  return 'Connected — smarter picks are on.';
+  return `Connected (${swapped[s.provider]?.to ?? (s.model || LLM_PROVIDERS[s.provider].defaultModel)}). Smarter picks are on.`;
 }
 
 export async function listModels(s: LlmSettings): Promise<string[]> {

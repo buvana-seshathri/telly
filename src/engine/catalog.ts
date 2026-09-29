@@ -42,7 +42,9 @@ export function loadCatalog(url: string): Promise<Catalog> {
   current = (async () => {
     if (url) {
       const cached = await idbGet<CachedCatalog>('catalog').catch(() => undefined);
-      const fresh = cached && cached.url === url && Date.now() - cached.fetchedAt < STALE_MS;
+      // (a copy saved before catalogs carried languages is refetched right away)
+      const hasLang = !!cached?.file.items.some((i) => i.lang);
+      const fresh = cached && hasLang && cached.url === url && Date.now() - cached.fetchedAt < STALE_MS;
       if (fresh) return parseCatalog(cached.file, cached.vectors);
       try {
         const got = await fetchCatalog(url);

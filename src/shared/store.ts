@@ -18,6 +18,7 @@ export const DEFAULT_SETTINGS: Settings = {
   refresh: 'every-visit',
   passiveLogging: true,
   cornerButton: true,
+  picksPerShelf: 5,
   catalogUrl: 'https://buvana-seshathri.github.io/telly/',
   llm: { enabled: false, provider: 'gemini', apiKey: '', model: '' },
 };
@@ -87,12 +88,18 @@ export async function getMyEvents(): Promise<WatchEvent[]> {
 
 export async function addEvents(profileKey: string, events: WatchEvent[], markSynced = false): Promise<number> {
   const existing = await getEvents(profileKey);
-  const seen = new Set(existing.map((e) => `${e.rawTitle}|${Math.floor(e.date / 86400000)}`));
+  const keyOf = (e: WatchEvent) => `${e.rawTitle}|${Math.floor(e.date / 86400000)}`;
+  const seen = new Map(existing.map((e) => [keyOf(e), e]));
   let added = 0;
   for (const e of events) {
-    const k = `${e.rawTitle}|${Math.floor(e.date / 86400000)}`;
-    if (seen.has(k)) continue;
-    seen.add(k);
+    const k = keyOf(e);
+    const have = seen.get(k);
+    if (have) {
+      // same title on the same day: keep one event, but remember how far you got
+      if (e.progress != null && (have.progress == null || e.progress > have.progress)) have.progress = e.progress;
+      continue;
+    }
+    seen.set(k, e);
     existing.push(e);
     added++;
   }

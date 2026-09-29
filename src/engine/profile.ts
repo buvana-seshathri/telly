@@ -2,6 +2,8 @@
 import type { Catalog, Feedback, WatchEvent } from '../shared/types';
 import { buildTitleIndex, matchTitle } from './match';
 import { addScaled, isZero, normalize } from './vector';
+import { catalogFacets, liftOf } from './facets';
+import { collabScores } from './neighbors';
 
 const DAY = 24 * 3600 * 1000;
 
@@ -14,7 +16,7 @@ export interface TitleSignal {
   bingeDays: number; // span of that window in days (1–3)
   progress: number | null;
   weight: number; // how much this title says about taste (can be negative)
-  reason: 'binge' | 'watched' | 'tried' | 'favorite' | 'liked' | 'disliked';
+  reason: 'binge' | 'watched' | 'tried' | 'dropped' | 'favorite' | 'liked' | 'disliked';
 }
 
 export interface TasteProfile {
@@ -27,6 +29,12 @@ export interface TasteProfile {
   creatorWeight: Map<string, number>;
   castWeight: Map<string, number>;
   typeShare: { movie: number; tv: number };
+  langShare: Map<string, number>; // 0–1 share of positive weight by original language
+  langByGenre: Map<string, { total: number; share: Map<string, number> }>; // language mix inside each genre
+  facetLift: Map<string, number>; // facet -> how over-represented it is in what you watch (0..1)
+  facetPenalty: Map<string, number>; // facet -> how over-represented it is in what you dropped or skipped
+  cf: Float32Array | null; // collaborative score per catalog item (from neighbour lists)
+  cfAnchor: Int32Array | null; // the watched title that contributed most to it
   seen: Set<number>; // catalog indexes already watched / marked seen
   rejected: Set<number>;
   unmatched: string[]; // history titles we could not find in the catalog
@@ -58,6 +66,7 @@ export function buildProfile(
   const unmatched = new Set<string>();
   const notMe = new Set(feedback.filter((f) => f.kind === 'notme').map((f) => f.itemId));
 
+  const passive: { idx: number; date: number; progress: number | null }[] = [];
   for (const e of events) {
     const m = matchTitle(cat, index, e.rawTitle, e.seriesTitle);
     if (!m) {
@@ -66,9 +75,20 @@ export function buildProfile(
     }
     if (notMe.has(cat.items[m.index].id)) continue;
     const g = groups.get(m.index) ?? { dates: [], progress: [] };
+    groups.set(m.index, g);
+    if (e.source === 'passive') {
+      passive.push({ idx: m.index, date: e.date, progress: e.progress ?? null });
+      continue;
+    }
     g.dates.push(e.date);
     if (e.progress != null) g.progress.push(e.progress);
-    groups.set(m.index, g);
+  }
+  // Playback the extension timed itself: it adds how far you got, and only counts as a new
+  // viewing when the history did not already list that title on that day.
+  for (const q of passive) {
+    const g = groups.get(q.idx)!;
+    if (!g.dates.some((d) => Math.floor(d / DAY) === Math.floor(q.date / DAY))) g.dates.push(q.date);
+    if (q.progress != null) g.progress.push(q.progress);
   }
 
   const signals: TitleSignal[] = [];
@@ -84,21 +104,31 @@ export function buildProfile(
     let base: number;
     let reason: TitleSignal['reason'] = 'watched';
     if (item.type === 'tv') {
-      base = Math.min(1.4, 0.3 + 0.25 * Math.log2(1 + count));
+      base = Math.min(2.0, 0.3 + 0.3 * Math.log2(1 + count));
       if (b.count >= 4) {
         base += 0.25;
         reason = 'binge';
       }
-      if (count === 1 && ageDays > 30) {
-        base = 0.12;
+      const dropped = count <= 2 && (progress != null ? progress < 0.3 : ageDays > 21);
+      if (dropped) {
+        // one or two episodes and then nothing: it did not hook you
+        base = -0.25;
+        reason = 'dropped';
+      } else if (count === 1) {
+        base = 0.15;
         reason = 'tried';
       }
     } else {
-      base = progress != null && progress < 0.3 ? 0.15 : 1;
-      if (progress != null && progress < 0.3) reason = 'tried';
-      if (count > 1) base += 0.2; // rewatched
+      // a movie you stopped early (under ~30%, roughly 20+ minutes in) is a soft "no"
+      if (progress != null && progress < 0.3) {
+        base = -0.5;
+        reason = 'dropped';
+      } else {
+        base = progress != null && progress < 0.6 ? 0.5 : 1;
+        if (count > 1) base += 0.2; // rewatched
+      }
     }
-    signals.push({ index: idx, count, first, last, bingeCount: b.count, bingeDays: b.days, progress, weight: base * recency, reason });
+    signals.push({ index: idx, count, first, last, bingeCount: b.count, bingeDays: b.days, progress, weight: base < 0 ? base * Math.max(0.5, recency) : base * recency, reason });
   }
 
   // Feedback: favorites/likes add taste, nopes subtract, "seen" hides without much weight.
@@ -129,6 +159,7 @@ export function buildProfile(
   const pos = new Float32Array(dims);
   const neg = new Float32Array(dims);
   const genreW = new Map<string, number>();
+  const langW = new Map<string, number>();
   const creatorWeight = new Map<string, number>();
   const castWeight = new Map<string, number>();
   let total = 0;
@@ -140,14 +171,44 @@ export function buildProfile(
       total += s.weight;
       typeW[item.type] += s.weight;
       for (const g of item.genres) genreW.set(g, (genreW.get(g) ?? 0) + s.weight);
+      if (item.lang) langW.set(item.lang, (langW.get(item.lang) ?? 0) + s.weight);
       for (const c of item.creators) creatorWeight.set(c, (creatorWeight.get(c) ?? 0) + s.weight);
       for (const c of item.cast) castWeight.set(c, (castWeight.get(c) ?? 0) + s.weight);
     } else {
       addScaled(neg, cat.vectors[s.index], -s.weight);
     }
   }
+  // language mix overall and inside each genre
+  const langByGenre = new Map<string, { total: number; share: Map<string, number> }>();
+  const facetW = new Map<string, number>();
+  const facetNegW = new Map<string, number>();
+  let negTotal = 0;
+  const { facets } = catalogFacets(cat);
+  for (const s of signals) {
+    const item = cat.items[s.index];
+    const target = s.weight > 0 ? facetW : facetNegW;
+    for (const f of facets[s.index]) target.set(f, (target.get(f) ?? 0) + Math.abs(s.weight));
+    if (s.weight <= 0) {
+      negTotal += -s.weight;
+      continue;
+    }
+    if (!item.lang) continue;
+    for (const g of item.genres) {
+      const e = langByGenre.get(g) ?? { total: 0, share: new Map<string, number>() };
+      e.total += s.weight;
+      e.share.set(item.lang, (e.share.get(item.lang) ?? 0) + s.weight);
+      langByGenre.set(g, e);
+    }
+  }
+  for (const e of langByGenre.values()) for (const [l, w] of e.share) e.share.set(l, w / e.total);
+  const facetLift = liftOf(cat, facetW, total);
+  const facetPenalty = negTotal >= 0.5 ? liftOf(cat, facetNegW, negTotal) : new Map<string, number>();
+  const collab = cat.meta.hasRecs && positives.length ? collabScores(cat, signals.filter((s) => s.weight > 0)) : null;
   const genreShare = new Map<string, number>();
   if (total > 0) for (const [g, w] of genreW) genreShare.set(g, w / total);
+  const langShare = new Map<string, number>();
+  const langTotal = [...langW.values()].reduce((a, c) => a + c, 0);
+  if (langTotal > 0) for (const [l, w] of langW) langShare.set(l, w / langTotal);
   const typeTotal = typeW.movie + typeW.tv || 1;
 
   return {
@@ -160,6 +221,12 @@ export function buildProfile(
     creatorWeight,
     castWeight,
     typeShare: { movie: typeW.movie / typeTotal, tv: typeW.tv / typeTotal },
+    langShare,
+    langByGenre,
+    facetLift,
+    facetPenalty,
+    cf: collab?.score ?? null,
+    cfAnchor: collab?.anchor ?? null,
     seen,
     rejected,
     unmatched: [...unmatched],

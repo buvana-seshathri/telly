@@ -3,7 +3,7 @@ import { readFileSync } from 'node:fs';
 import { parseCatalog } from '../src/engine/catalog';
 import { buildTitleIndex, matchTitle } from '../src/engine/match';
 import { buildProfile } from '../src/engine/profile';
-import { recommend, genreSections, surprise } from '../src/engine/recommend';
+import { recommend, genreSections, languageSections, langQuota, surprise } from '../src/engine/recommend';
 import { parseVibe, searchVibe } from '../src/engine/vibe';
 import { hashEmbedQuery } from '../src/engine/embed-hash';
 import { parsePicks, llmRerank } from '../src/engine/llm';
@@ -142,5 +142,118 @@ describe('importers', () => {
     expect(platformFromTmdbName('Max')).toBe('max');
     expect(platformFromTmdbName('Paramount+ Amazon Channel')).toBe('paramount');
     expect(platformFromTmdbName('Mubi')).toBeNull();
+  });
+});
+
+describe('language taste and "Like X" chips', () => {
+  const DAY = 24 * 3600 * 1000;
+  const ev = (title: string, n: number, ago: number) =>
+    Array.from({ length: n }, (_, i) => ({ platform: 'netflix' as const, profileKey: 'netflix:k', rawTitle: `${title}: Season 1: Episode ${i + 1}`, date: Date.now() - (ago - Math.floor(i / 4)) * DAY, source: 'history' as const }));
+  const events = [
+    ...ev('True Beauty', 10, 20), ...ev('Crash Landing on You', 12, 40), ...ev('Business Proposal', 8, 60), ...ev('The Glory', 8, 80),
+    ...ev('Dark', 8, 15), ...ev('Mindhunter', 6, 30), ...ev('Ozark', 8, 50),
+    { platform: 'netflix' as const, profileKey: 'netflix:k', rawTitle: 'Prisoners', date: Date.now() - 5 * DAY, source: 'history' as const },
+  ];
+  const p = buildProfile(cat, events, []);
+  it('reads language share from history', () => {
+    expect((p.langShare.get('ko') ?? 0)).toBeGreaterThan(0.3);
+  });
+  it('gives a Korean shelf and Korean picks inside genre shelves', () => {
+    const langs = languageSections(cat, p, all, 3);
+    expect(langs[0]?.lang).toBe('ko');
+    expect(langs[0].recs.every((r) => r.item.lang === 'ko')).toBe(true);
+    const secs = genreSections(cat, p, all, 3, 6, langs.flatMap((s) => s.recs.map((r) => r.item.id)));
+    const withKo = secs.filter((s) => s.recs.some((r) => r.item.lang === 'ko')).length;
+    expect(withKo).toBeGreaterThanOrEqual(2);
+  });
+  it('the "Like X" chip shares a genre with the shelf and varies across shelves', () => {
+    const secs = genreSections(cat, p, all, 3, 8);
+    const anchors = new Set<string>();
+    for (const s of secs) {
+      for (const r of s.recs) {
+        if (!r.anchorId) continue;
+        const a = cat.items[cat.byId.get(r.anchorId)!];
+        expect(a.genres.some((g) => r.item.genres.includes(g))).toBe(true);
+        if (!s.stretch) expect(a.genres).toContain(s.genre);
+        anchors.add(r.anchorId);
+      }
+    }
+    expect(anchors.size).toBeGreaterThanOrEqual(4);
+  });
+});
+
+describe('LLM model recovery', () => {
+  it('picks a current chat model when the default is retired', async () => {
+    const { pickModel } = await import('../src/engine/llm');
+    const groq = ['whisper-large-v3', 'meta-llama/llama-prompt-guard-2-86m', 'llama-3.1-8b-instant', 'openai/gpt-oss-120b', 'playai-tts'];
+    expect(pickModel('groq', groq, 'llama-3.3-70b-versatile')).toBe('openai/gpt-oss-120b');
+    expect(pickModel('groq', ['whisper-large-v3', 'llama-3.1-8b-instant'])).toBe('llama-3.1-8b-instant');
+    expect(pickModel('groq', ['whisper-large-v3'])).toBeNull();
+  });
+});
+
+describe('LLM retry on retired model', () => {
+  it('lists models, switches, and succeeds', async () => {
+    const { testLlm, lastModelUsed } = await import('../src/engine/llm');
+    const { vi } = await import('vitest');
+    const calls: string[] = [];
+    vi.stubGlobal('fetch', async (url: string, init?: { body?: string }) => {
+      if (String(url).endsWith('/models')) return { ok: true, json: async () => ({ data: [{ id: 'whisper-large-v3' }, { id: 'openai/gpt-oss-120b' }] }) };
+      const model = JSON.parse(init!.body!).model;
+      calls.push(model);
+      if (model === 'llama-3.3-70b-versatile') return { ok: false, status: 404, text: async () => '{"error":{"code":"model_not_found"}}' };
+      return { ok: true, json: async () => ({ choices: [{ message: { content: '{"picks":[{"id":"ok","why":"ready"}]}' } }] }) };
+    });
+    const msg = await testLlm({ enabled: true, provider: 'groq', apiKey: 'k', model: '' });
+    vi.unstubAllGlobals();
+    expect(calls).toEqual(['llama-3.3-70b-versatile', 'openai/gpt-oss-120b']);
+    expect(msg).toContain('openai/gpt-oss-120b');
+    expect(lastModelUsed('groq')).toBe('openai/gpt-oss-120b');
+  });
+});
+
+describe('mood search without the language model', () => {
+  it('still finds titles by the words in the request', () => {
+    const p = buildProfile(cat, demoEvents(), []);
+    const r = searchVibe(cat, p, 'korean revenge thriller', null, all, 5);
+    expect(r.length).toBe(5);
+    expect(r[0].why).toMatch(/Matches/);
+  });
+});
+
+describe('multi-signal ranking', () => {
+  const DAY = 24 * 3600 * 1000;
+  const ev = (title: string, n: number, ago: number, progress?: number) =>
+    Array.from({ length: n }, (_, i) => ({ platform: 'netflix' as const, profileKey: 'netflix:m', rawTitle: n === 1 && !title.includes(':') ? title : `${title}: Season 1: Episode ${i + 1}`, date: Date.now() - (ago - Math.floor(i / 4)) * DAY, progress: progress ?? null, source: 'history' as const }));
+  const korean = [...ev('True Beauty', 12, 20), ...ev('Crash Landing on You', 12, 40), ...ev('Business Proposal', 8, 60), ...ev('Hometown Cha-Cha-Cha', 6, 90)];
+  const p = buildProfile(cat, [...korean, ...ev('Mindhunter', 6, 30), ...ev('Ozark', 8, 50)], []);
+
+  it('a Korean-heavy taste gets Korean picks at the top, in the same lane', () => {
+    const top = recommend(cat, p, all, 6);
+    expect(top.filter((r) => r.item.lang === 'ko').length).toBeGreaterThanOrEqual(3);
+    const first = top[0];
+    expect(first.item.lang).toBe('ko');
+    if (first.anchorId) expect(cat.items[cat.byId.get(first.anchorId)!].lang).toBe('ko');
+  });
+  it('uses neighbour lists: a listed neighbour of what you binged is ranked well', () => {
+    const cf = buildProfile(cat, ev('Ted Lasso', 10, 20), []);
+    const names = recommend(cat, cf, all, 8).map((r) => r.item.title);
+    expect(names.some((n) => ["Schitt's Creek", 'Abbott Elementary', 'The Good Place', 'Brooklyn Nine-Nine'].includes(n))).toBe(true);
+  });
+  it('the language mix is read per genre, so English crime does not get a Korean quota', () => {
+    expect((langQuota(p, 5, 'romance').get('ko') ?? 0)).toBeGreaterThanOrEqual(2);
+    expect((langQuota(p, 5, 'crime').get('ko') ?? 0)).toBeLessThanOrEqual(1);
+  });
+  it('a movie you stopped early counts against it', () => {
+    const q = buildProfile(cat, [...korean, ...ev('Whiplash', 1, 10, 0.08)], []);
+    const s = q.signals.find((x) => cat.items[x.index].title === 'Whiplash')!;
+    expect(s.weight).toBeLessThan(0);
+    expect(s.reason).toBe('dropped');
+    expect(q.positives.some((x) => cat.items[x.index].title === 'Whiplash')).toBe(false);
+    expect(q.seen.has(s.index)).toBe(true);
+  });
+  it('one episode and then nothing, weeks ago, reads as dropped', () => {
+    const q = buildProfile(cat, [...korean, ...ev('Bodies', 1, 40).map((e) => ({ ...e, rawTitle: 'Bodies: Season 1: Episode 1' }))], []);
+    expect(q.signals.find((x) => cat.items[x.index].title === 'Bodies')?.reason).toBe('dropped');
   });
 });

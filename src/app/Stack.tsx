@@ -46,11 +46,15 @@ export function Stack({
       <div class="fan" onKeyDown={(e) => { if (e.key === 'ArrowRight') step(1); if (e.key === 'ArrowLeft') step(-1); }}>
         {recs.map((r, i) => {
           const pos = (i - idx + n) % n; // 0 = front
+          // A quiet stack: same angle, each card a little lower, narrower and darker than the one above.
+          const depth = Math.min(pos, 3);
           const style = {
-            transform: pos === 0 ? 'none' : `translateX(${pos * 14}px) translateY(${pos * -8}px) rotate(${pos * 4}deg) scale(${1 - pos * 0.05})`,
+            transform: pos === 0 ? 'none' : `translate(${depth * 13}px, ${depth * -13}px) scale(${1 - depth * 0.025})`,
+            filter: pos === 0 ? 'none' : `brightness(${1 - depth * 0.2})`,
             zIndex: n - pos,
             opacity: pos > 2 ? 0 : 1,
-          };
+            pointerEvents: pos === 0 ? 'auto' : 'none',
+          } as const;
           return pos === 0 ? (
             <button class="fan-card front" style={style} onClick={() => onOpen(r)} aria-label={`${r.item.title}: details and why`}>
               <Poster item={r.item} height="100%" showTitle={false} />
@@ -72,9 +76,13 @@ export function Stack({
           <button class="icon-btn sm" aria-label="Previous" onClick={() => step(-1)}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6" /></svg>
           </button>
-          <span class="dots" aria-label={`${(idx % n) + 1} of ${n}`}>
-            {recs.map((_, i) => <span class={'d' + (i === idx % n ? ' on' : '')} />)}
-          </span>
+          {n <= 5 ? (
+            <span class="dots" aria-label={`${(idx % n) + 1} of ${n}`}>
+              {recs.map((_, i) => <span class={'d' + (i === idx % n ? ' on' : '')} />)}
+            </span>
+          ) : (
+            <span class="count" aria-label={`${(idx % n) + 1} of ${n}`}>{(idx % n) + 1} / {n}</span>
+          )}
           <button class="icon-btn sm" aria-label="Next" onClick={() => step(1)}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6" /></svg>
           </button>

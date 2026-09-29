@@ -1,9 +1,11 @@
 import type { CatalogItem, PlatformId, Settings } from '../shared/types';
 import { PLATFORM_BY_ID } from '../shared/platforms';
+import { langLabel } from '../engine/text';
 
 export function metaLine(item: CatalogItem): string {
   const parts: string[] = [item.type === 'tv' ? 'Series' : 'Movie'];
   if (item.year) parts.push(String(item.year));
+  if (item.lang && item.lang !== 'en') parts.push(langLabel(item.lang));
   if (item.runtime) parts.push(item.type === 'tv' ? `${item.runtime} min eps` : `${Math.floor(item.runtime / 60)}h ${item.runtime % 60}m`);
   return parts.join(' · ');
 }

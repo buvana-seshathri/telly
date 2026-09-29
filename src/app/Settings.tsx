@@ -5,7 +5,7 @@ import { APP_NAME } from '../shared/brand';
 import { addEvents, deleteAll, exportAll, saveSettings, setProfileIsMe, upsertProfile } from '../shared/store';
 import { IS_EXTENSION, openUrl } from '../shared/env';
 import { parseNetflixCsv } from '../platforms/netflix-csv';
-import { buildPrompt, LLM_PROVIDERS, listModels, testLlm } from '../engine/llm';
+import { buildPrompt, LLM_PROVIDERS, lastModelUsed, listModels, testLlm } from '../engine/llm';
 import { recommend } from '../engine/recommend';
 import type { EngineState } from '../ui/useEngine';
 import { InfoTip } from '../ui/InfoTip';
@@ -82,6 +82,26 @@ export function SettingsPage({ engine }: { engine: EngineState }) {
             ))}
           </div>
         )}
+        {profile && profiles.length > 0 && (
+          <p class="note">
+            {profile.hasSignal ? `${profile.signals.length} titles are shaping your picks` : 'No history in use yet'}
+            {profile.unmatched.length > 0 && ` · ${profile.unmatched.length} not in the catalog yet`}
+          </p>
+        )}
+      </section>
+
+      <section class="panel">
+        <div class="row">
+          <span class="grow">
+            Picks per shelf{' '}
+            <InfoTip label="About picks per shelf">Each shelf holds this many picks. The stack shows the top three at a time; use the arrows for the rest.</InfoTip>
+          </span>
+          <div class="seg" role="radiogroup" aria-label="Picks per shelf">
+            {([3, 5, 10] as const).map((n) => (
+              <button role="radio" aria-checked={(s.picksPerShelf ?? 5) === n} aria-pressed={(s.picksPerShelf ?? 5) === n} onClick={() => set({ picksPerShelf: n })}>{n}</button>
+            ))}
+          </div>
+        </div>
       </section>
 
       <HistoryPanel engine={engine} />
@@ -208,7 +228,14 @@ function LlmPanel({ engine }: { engine: EngineState }) {
         return;
       }
       const next = { enabled, provider, apiKey: key.trim(), model: model.trim() };
-      if (enabled) setStatus(await testLlm(next));
+      if (enabled) {
+        setStatus(await testLlm(next));
+        const used = lastModelUsed(provider);
+        if (used && used !== next.model) {
+          next.model = used;
+          setModel(used);
+        }
+      }
       await saveSettings({ llm: next });
       if (!enabled) setStatus('Off.');
     } catch (e) {

@@ -169,11 +169,11 @@ pre.sent { white-space: pre-wrap; font-size: 11.5px; line-height: 1.45; backgrou
 .because-text { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* ---------- card stacks ---------- */
-.stacks { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 44px 32px; margin-top: 30px; }
-.stack-block { display: flex; flex-direction: column; gap: 12px; }
+.stacks { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 22px 28px; margin-top: 34px; }
+.stack-block { display: flex; flex-direction: column; gap: 10px; padding: 4px 0 8px; }
 .stack-title { font-size: 20px; display: flex; align-items: center; gap: 8px; }
-.fan { position: relative; width: 200px; height: 300px; margin: 8px 0 4px 6px; }
-.fan-card { position: absolute; inset: 0; padding: 0; border: 0; background: none; border-radius: 16px; transition: transform .35s cubic-bezier(.2, .8, .2, 1), opacity .2s; transform-origin: 30% 100%; box-shadow: 0 8px 20px rgba(0, 0, 0, .35); }
+.fan { position: relative; width: 200px; height: 300px; margin: 32px 34px 14px 0; }
+.fan-card { position: absolute; inset: 0; padding: 0; border: 0; background: none; border-radius: 16px; transition: transform .35s cubic-bezier(.2, .8, .2, 1), opacity .2s; transform-origin: 0% 100%; box-shadow: 0 10px 22px rgba(0, 0, 0, .38); }
 .fan-card .poster { border-radius: 16px; }
 .fan-card.front { cursor: pointer; }
 .fan-card.front:hover { transform: translateY(-4px) !important; }
@@ -196,3 +196,5 @@ pre.sent { white-space: pre-wrap; font-size: 11.5px; line-height: 1.45; backgrou
   .bubble-card h1 { font-size: 28px; }
 }
 .more-row { display: flex; justify-content: center; margin: 8px 0 4px; }
+
+.stack-nav .count { font-size: 12px; color: var(--muted); min-width: 44px; text-align: center; font-variant-numeric: tabular-nums; }

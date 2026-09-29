@@ -107,3 +107,12 @@ export function genreLabel(g: string): string {
   if (g === 'sci-fi') return 'Sci-fi';
   return g.charAt(0).toUpperCase() + g.slice(1);
 }
+
+/** "ko" -> "Korean" (falls back to the code if the browser cannot name it). */
+export function langLabel(code: string): string {
+  try {
+    return new Intl.DisplayNames(['en'], { type: 'language' }).of(code) ?? code;
+  } catch {
+    return code;
+  }
+}

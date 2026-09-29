@@ -16,7 +16,8 @@ cpSync('node_modules/@fontsource-variable/nunito/files/nunito-latin-wght-normal.
 const ort = 'node_modules/onnxruntime-web/dist';
 if (existsSync(ort)) {
   mkdirSync(`${out}/ort`, { recursive: true });
-  for (const f of ['ort-wasm-simd-threaded.wasm', 'ort-wasm-simd-threaded.mjs']) {
+  // the transformers.js build asks for the "asyncify" flavour; the plain one is kept as a fallback
+  for (const f of ['ort-wasm-simd-threaded.asyncify.wasm', 'ort-wasm-simd-threaded.asyncify.mjs', 'ort-wasm-simd-threaded.wasm', 'ort-wasm-simd-threaded.mjs']) {
     if (existsSync(`${ort}/${f}`)) cpSync(`${ort}/${f}`, `${out}/ort/${f}`);
   }
 }

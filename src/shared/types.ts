@@ -31,6 +31,10 @@ export interface CatalogItem {
   providers: PlatformId[]; // where it streams (flatrate) in the catalog's region
   poster?: string | null; // full image URL
   aliases?: string[]; // alternative titles, used when matching history
+  lang?: string; // original language, ISO 639-1 ("en", "ko", "ja")
+  countries?: string[]; // origin countries, ISO 3166-1 ("KR", "US")
+  studios?: string[]; // TV networks (tvN, JTBC) or production companies
+  recs?: number[]; // catalog indexes of "people who liked this also liked" (from TMDB), best first
 }
 
 export interface CatalogFile {
@@ -40,6 +44,7 @@ export interface CatalogFile {
   region: string;
   generatedAt: string;
   sample?: boolean;
+  hasRecs?: boolean; // items carry collaborative neighbours (recs)
   items: CatalogItem[];
 }
 
@@ -99,6 +104,7 @@ export interface Settings {
   refresh: RefreshCadence;
   passiveLogging: boolean;
   cornerButton: boolean;
+  picksPerShelf: 3 | 5 | 10; // how many picks each shelf holds (the stack shows the top 3 at a time)
   catalogUrl: string; // where the weekly catalog is hosted ('' = bundled sample)
   llm: LlmSettings;
 }
@@ -107,6 +113,8 @@ export interface Settings {
 export interface Evidence {
   kind:
     | 'similar-to'
+    | 'collab'
+    | 'language'
     | 'same-creator'
     | 'same-cast'
     | 'genre-fit'
@@ -132,4 +140,5 @@ export interface Filters {
   maxMinutes: number | null; // null = no limit
   genre: string | null;
   platforms: PlatformId[]; // which platforms to pull from
+  lang?: string | null; // only titles originally in this language
 }

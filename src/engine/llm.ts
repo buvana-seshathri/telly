@@ -170,6 +170,17 @@ export function pickModel(provider: LlmProvider, ids: string[], avoid?: string):
   return ok[0] ?? null;
 }
 
+export type LlmFailureKind = 'quota' | 'rate' | 'auth' | 'other';
+
+/** What went wrong with an LLM call, in terms the app can act on. */
+export function classifyLlmError(e: unknown): LlmFailureKind {
+  const m = String((e as Error)?.message ?? e);
+  if (/\b(401|403)\b|invalid[_ ]api[_ ]key|unauthori[sz]ed|permission|api key not valid|incorrect api key/i.test(m)) return 'auth';
+  if (/\b402\b|insufficient|quota|billing|credit|exceeded your|resource_exhausted|out of/i.test(m)) return 'quota';
+  if (/\b429\b|rate.?limit|too many requests|overloaded|\b529\b/i.test(m)) return 'rate';
+  return 'other';
+}
+
 const modelGone = (e: unknown) => /\b(404|400)\b/.test((e as Error).message) && /model/i.test((e as Error).message);
 
 async function call(s: LlmSettings, system: string, user: string, signal?: AbortSignal): Promise<string> {

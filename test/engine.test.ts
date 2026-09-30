@@ -257,3 +257,14 @@ describe('multi-signal ranking', () => {
     expect(q.signals.find((x) => cat.items[x.index].title === 'Bodies')?.reason).toBe('dropped');
   });
 });
+
+import { classifyLlmError } from '../src/engine/llm';
+describe('LLM failure classification', () => {
+  it('tells out-of-credit, rate limits and bad keys apart', () => {
+    expect(classifyLlmError(new Error('OpenAI 429: You exceeded your current quota, please check your plan and billing'))).toBe('quota');
+    expect(classifyLlmError(new Error('Gemini 429: RESOURCE_EXHAUSTED'))).toBe('quota');
+    expect(classifyLlmError(new Error('Groq 429: Rate limit reached for model'))).toBe('rate');
+    expect(classifyLlmError(new Error('Anthropic 401: invalid x-api-key'))).toBe('auth');
+    expect(classifyLlmError(new Error('Failed to fetch'))).toBe('other');
+  });
+});

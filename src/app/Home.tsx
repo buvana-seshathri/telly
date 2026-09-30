@@ -6,7 +6,7 @@ import { searchVibe } from '../engine/vibe';
 import { embedQuery, warmEmbedder } from '../engine/embed-query';
 import { genreLabel, langLabel } from '../engine/text';
 import type { EngineState } from '../ui/useEngine';
-import { useLlmRerank } from '../ui/useLlm';
+import { useLlmHealth, useLlmRerank } from '../ui/useLlm';
 import { Poster } from '../ui/Poster';
 import { Telly, type TellyMood } from '../ui/Telly';
 import { InfoTip } from '../ui/InfoTip';
@@ -44,6 +44,8 @@ export function Home({ engine }: { engine: EngineState }) {
   const [hostVisible, setHostVisible] = useState(true);
   const hostRef = useRef<HTMLElement>(null);
   const act = useActions(engine);
+  const llmHealth = useLlmHealth(engine);
+  const [fresh, setFresh] = useState(false);
 
   const filters: Filters = { type, maxMinutes, genre: null, platforms: enabled };
   const fkey = `${type}|${maxMinutes}|${enabled.join(',')}`;
@@ -79,7 +81,10 @@ export function Home({ engine }: { engine: EngineState }) {
     if (!q || !catalog || !profile) return;
     setAsked(q);
     setSearching(true);
+    setFresh(false);
     setMood('wow');
+    // the answer appears in the pick card above the search box, so bring it into view right away
+    hostRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     try {
       let vec: Float32Array | null = null;
       try {
@@ -89,6 +94,8 @@ export function Home({ engine }: { engine: EngineState }) {
       }
       setWordsOnly(!vec);
       setVibeRecs(searchVibe(catalog, profile, q, vec, filters, 6));
+      setFresh(true);
+      setTimeout(() => setFresh(false), 1600);
     } finally {
       setSearching(false);
       setTimeout(() => setMood('happy'), 700);
@@ -117,7 +124,7 @@ export function Home({ engine }: { engine: EngineState }) {
 
   return (
     <div class="home">
-      <section class="host" ref={hostRef} aria-label="Telly's pick">
+      <section class={'host' + (searching ? ' busy' : '') + (fresh ? ' fresh' : '')} ref={hostRef} aria-label="Telly's pick" aria-busy={searching}>
         <div class="host-telly" aria-hidden="true">
           <Telly size={116} mood={mood} />
         </div>
@@ -172,9 +179,18 @@ export function Home({ engine }: { engine: EngineState }) {
         <label class="sr-only" for="vibe">Tell Telly a mood</label>
         <input id="vibe" value={query} placeholder="Not it? Tell me a mood…" autocomplete="off" onFocus={() => catalog && warmEmbedder(catalog)} onInput={(e) => setQuery(e.currentTarget.value)} />
         <button class="go" type="submit" aria-label="Ask" disabled={searching || !query.trim()}>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg>
+          {searching ? (
+            <span class="spin" aria-hidden="true" />
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg>
+          )}
         </button>
       </form>
+      {llmHealth.health && (
+        <p class="llm-note" role="status">
+          {llmHealth.message} <a href="#/settings">Settings</a>
+        </p>
+      )}
 
       <div class="bar">
         <div class="seg" role="group" aria-label="Type">

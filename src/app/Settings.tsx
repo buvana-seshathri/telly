@@ -8,6 +8,7 @@ import { parseNetflixCsv } from '../platforms/netflix-csv';
 import { buildPrompt, LLM_PROVIDERS, lastModelUsed, listModels, testLlm } from '../engine/llm';
 import { recommend } from '../engine/recommend';
 import type { EngineState } from '../ui/useEngine';
+import { clearLlmHealth, useLlmHealth } from '../ui/useLlm';
 import { InfoTip } from '../ui/InfoTip';
 
 function Toggle({ checked, onChange, label, id }: { checked: boolean; onChange: (v: boolean) => void; label: string; id: string }) {
@@ -47,6 +48,7 @@ export function SettingsPage({ engine }: { engine: EngineState }) {
             Turn off any you don't want picks from, even ones you pay for. Netflix and Prime Video: I read your history. Others: I learn as you watch.
           </InfoTip>
         </h2>
+        <p class="muted small panel-note">Telly only reads history from, and suggests titles on, the platforms switched on here.</p>
         <div class="platform-grid">
           {PLATFORMS.map((p) => (
             <label class="row" for={'pf-' + p.id}>
@@ -181,6 +183,9 @@ function HistoryPanel({ engine }: { engine: EngineState }) {
         </label>
       </div>
       {msg && <p class="note">{msg}</p>}
+      <p class="disclaimer">
+        <b>How syncing works:</b> "Sync" opens your watch-history page and Telly reads the titles and dates on it, saving them in this browser only. Nothing is uploaded. It reads the page as you see it, so a site redesign can break it until Telly is updated; the CSV import is the fallback for Netflix.
+      </p>
       <label class="row" for="passive">
         <span class="grow">
           Learn while I watch{' '}
@@ -206,6 +211,7 @@ function LlmPanel({ engine }: { engine: EngineState }) {
   const [busy, setBusy] = useState(false);
   const [showSent, setShowSent] = useState(false);
   const info = LLM_PROVIDERS[provider];
+  const { health, message: healthMsg } = useLlmHealth(engine);
 
   const preview = useMemo(() => {
     if (!showSent || !engine.catalog || !engine.profile) return '';
@@ -237,6 +243,7 @@ function LlmPanel({ engine }: { engine: EngineState }) {
         }
       }
       await saveSettings({ llm: next });
+      if (enabled) await clearLlmHealth();
       if (!enabled) setStatus('Off.');
     } catch (e) {
       setStatus('Could not connect: ' + (e as Error).message);
@@ -303,7 +310,18 @@ function LlmPanel({ engine }: { engine: EngineState }) {
         <span class="grow" />
         <button class="linkish" onClick={() => setShowSent((v) => !v)} aria-expanded={showSent}>{showSent ? 'Hide' : 'What gets sent?'}</button>
       </div>
+      {health && !status && <p class="llm-note" role="status">{healthMsg}</p>}
       {status && <p class="note">{status}</p>}
+      <div class="disclaimer">
+        <b>Before you add a key:</b>
+        <ul class="plain">
+          <li>This is optional. Telly's own picks work without it.</li>
+          <li>Your key is saved in this browser only (not encrypted). Don't add it on a shared computer, and use a key you can revoke.</li>
+          <li>Each refresh of your picks or mood search makes a small request that counts against your provider's free allowance or bill. Set a spending limit with them if you can.</li>
+          <li>The AI only sees a short taste summary and the shortlisted titles ("What gets sent?" shows exactly what), never your account details.</li>
+          <li>If the key runs out of credit or gets rate-limited, Telly says so here and on the home page, and carries on with its own picks.</li>
+        </ul>
+      </div>
       {showSent && <pre class="sent">{preview}</pre>}
     </section>
   );

@@ -40,7 +40,7 @@ export function FloatingTelly({ engine, show = true }: { engine: EngineState; sh
     <>
       <div class={'floaty' + (show ? '' : ' away')} aria-hidden={!show}>
         <div class="floaty-bob">
-          {tip && <div class="bubble" role="status">Stuck? Click me.</div>}
+          {tip && <div class="bubble" role="status">Stuck? Ask Telly.</div>}
           <button class="telly-btn" onClick={roll} onMouseEnter={() => setMood('wink')} onMouseLeave={() => setMood('happy')} aria-label="Surprise me" title="Surprise me">
             <Telly size={72} mood={mood} />
           </button>

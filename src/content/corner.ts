@@ -32,6 +32,9 @@ const CSS = `
 .tip, .toast { position: absolute; right: 70px; bottom: 12px; white-space: nowrap; padding: 9px 13px; border-radius: 14px 14px 4px 14px;
   background: #f5f2ee; color: #1a1a1d; font-size: 13px; font-weight: 600; box-shadow: 0 8px 24px rgba(0,0,0,.35); animation: pop .2s ease-out; }
 .toast { background: #ffa14a; color: #2a1500; }
+.done { position: absolute; right: 70px; bottom: 12px; white-space: nowrap; padding: 10px 12px 10px 14px; border-radius: 14px 14px 4px 14px; background: #3ecf8e; color: #062a19; font: 700 13px/1.3 system-ui, sans-serif; box-shadow: 0 8px 24px rgba(0,0,0,.35); display: flex; align-items: center; gap: 10px; }
+.done button { all: unset; cursor: pointer; font-size: 16px; line-height: 1; padding: 0 2px; opacity: .7; }
+.done button:hover { opacity: 1; }
 .hidden { display: none; }
 @media (prefers-reduced-motion: reduce) { .btn, .btn .eyes, .panel, .tip, .toast { animation: none; } }
 `;
@@ -74,23 +77,35 @@ function closePanel() {
   panel = null;
 }
 
-function say(text: string, kind: 'tip' | 'toast' = 'toast', ms = 4500) {
+/** A message beside the Telly button. 'done' is green and stays until closed. */
+function say(text: string, kind: 'tip' | 'toast' | 'done' = 'toast', ms = 4500) {
   const wrap = root?.querySelector('.wrap');
   if (!wrap || panel) return;
-  wrap.querySelector('.tip, .toast')?.remove();
+  if (kind === 'tip' && wrap.querySelector('.toast, .done')) return; // never cover a sync message
+  wrap.querySelector('.tip, .toast, .done')?.remove();
   const el = document.createElement('div');
   el.className = kind;
-  el.textContent = text;
+  el.setAttribute('role', 'status');
+  const span = document.createElement('span');
+  span.textContent = text;
+  el.appendChild(span);
   wrap.appendChild(el);
-  setTimeout(() => el.remove(), ms);
+  if (kind === 'done') {
+    const x = document.createElement('button');
+    x.textContent = '×';
+    x.setAttribute('aria-label', 'Close');
+    x.onclick = () => el.remove();
+    el.appendChild(x);
+  } else setTimeout(() => el.remove(), ms);
 }
 
 async function maybeTip(_wrap: HTMLElement) {
+  if (forcedSync) return;
   const today = new Date().toDateString();
   const { lastTip } = await chrome.storage.local.get('lastTip');
   if (lastTip === today) return;
   await chrome.storage.local.set({ lastTip: today });
-  setTimeout(() => say("Stuck? Click me.", 'tip', 5000), 2500);
+  setTimeout(() => say("Stuck? Ask Telly.", 'tip', 5000), 2500);
 }
 
 /** Hide during full-screen / player pages so Telly never covers video controls. */
@@ -129,7 +144,7 @@ let nfProfileKey: string | null = null;
 function initNetflix() {
   let gotProfile = false;
   if (forcedSync) {
-    setTimeout(() => say('Telly is reading your Netflix history. This can take a minute.', 'toast', 9000), 600);
+    setTimeout(() => say('Telly is syncing your Netflix history. Please wait…', 'toast', 9000), 600);
     setTimeout(() => {
       if (!gotProfile) say("Telly can't tell which Netflix profile this is. Pick your profile on Netflix's home page, then try Sync again.", 'toast', 10000);
     }, 9000);
@@ -137,11 +152,12 @@ function initNetflix() {
   window.addEventListener('message', async (e) => {
     if (e.source !== window || e.data?.source !== 'tonight-nf') return;
     const d = e.data;
-    if (d.type === 'progress' && forcedSync) say(`Reading your history: ${d.count} titles so far…`, 'toast', 8000);
+    if (d.type === 'progress' && forcedSync) say(`Syncing ${d.count} titles, please wait…`, 'toast', 8000);
     if (d.type === 'profile') {
       gotProfile = true;
       const prof = await upsertProfile('netflix', d.id, d.name);
       nfProfileKey = prof.key;
+      if (!prof.confirmed) say(`New profile "${prof.name}". Telly keeps it separate from yours. Mark it as yours in Settings if it is.`, 'toast', 9000);
       const r = await chrome.runtime.sendMessage({ type: 'needs-sync', platform: 'netflix', profileKey: prof.key, forced: forcedSync });
       if (r?.sync) window.postMessage({ source: 'tonight-cs', type: 'sync' }, location.origin);
     }
@@ -159,7 +175,10 @@ function initNetflix() {
           source: 'history',
         }));
       const added = await addEvents(prof.key, events, true);
-      if (added > 0 || forcedSync) say(added ? `Telly learned ${added} new views ✓` : 'Telly is up to date ✓');
+      if (forcedSync) {
+        const whose = prof.isMe ? '' : ` (kept separate: "${prof.name}" isn't marked as yours)`;
+        say(`Synced ${events.length} titles${added ? `, ${added} new` : ''}${whose} ✓ You can close this tab now.`, 'done');
+      } else if (added > 0) say(`Telly learned ${added} new views ✓`);
     }
     if (d.type === 'error' && forcedSync) say(`Couldn't read Netflix history (${d.message}). Use "Download all" at the bottom of this page, then Import CSV in Telly's Settings.`, 'toast', 9000);
   });
@@ -180,7 +199,8 @@ async function initPrime() {
     if (!entries.length) continue;
     const events: WatchEvent[] = entries.map((x) => ({ platform: 'prime', profileKey: prof.key, rawTitle: x.title, date: x.date, source: 'history' }));
     const added = await addEvents(prof.key, events, true);
-    say(`Telly read your Prime history: ${added} new ✓`);
+    if (forcedSync) say(`Synced ${entries.length} titles${added ? `, ${added} new` : ''} ✓ You can close this tab now.`, 'done');
+    else if (added) say(`Telly learned ${added} new Prime views ✓`);
     return;
   }
   if (forcedSync) say("Couldn't find titles on this page yet. Scroll the list, then reload.", 'toast', 7000);
@@ -269,7 +289,7 @@ function initNetflixPlayback() {
   if (!info) return;
   const s = await getSettings();
   if (!s.platforms[info.id] && !forcedSync) return; // user turned this platform off
-  if (s.cornerButton) mountButton(info.id);
+  if (s.cornerButton || forcedSync) mountButton(info.id);
   if (info.id === 'netflix') {
     initNetflix();
     if (s.passiveLogging) initNetflixPlayback();

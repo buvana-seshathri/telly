@@ -49,20 +49,34 @@ export async function getProfiles(): Promise<Profile[]> {
   return kvGet<Profile[]>('profiles', []);
 }
 
-/** Register a profile seen on a platform. The first profile per platform counts as "me". */
+/**
+ * Register a profile seen on a platform. The first profile per platform counts as "me"; any
+ * later one is kept separate (not "me") until you say it's yours. An existing profile is never
+ * renamed: if the same id turns up with a different name, it is treated as a different profile,
+ * so two people's histories can't end up merged under one entry.
+ */
 export async function upsertProfile(platform: PlatformId, id: string, name: string): Promise<Profile> {
   const all = await getProfiles();
-  const key = `${platform}:${id}`;
+  let key = `${platform}:${id}`;
   let p = all.find((x) => x.key === key);
+  if (p && name && p.name !== name && p.platform === 'netflix') {
+    key = `${platform}:${id}~${name}`;
+    p = all.find((x) => x.key === key);
+  }
   if (!p) {
     const firstOnPlatform = !all.some((x) => x.platform === platform);
     p = { key, platform, id, name, isMe: firstOnPlatform, confirmed: firstOnPlatform, lastSynced: null, eventCount: 0 };
     all.push(p);
-  } else if (name && p.name !== name) {
-    p.name = name;
+    await kvSet('profiles', all);
   }
-  await kvSet('profiles', all);
   return p;
+}
+
+/** Forget one profile and its history (other profiles are untouched). */
+export async function deleteProfile(key: string): Promise<void> {
+  const all = await getProfiles();
+  await kvSet('profiles', all.filter((p) => p.key !== key));
+  await kvSet(evKey(key), []);
 }
 
 export async function setProfileIsMe(key: string, isMe: boolean) {

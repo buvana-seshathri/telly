@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'preact/hooks';
-import type { LlmProvider, RefreshCadence, Settings } from '../shared/types';
+import type { LlmProvider, Profile, RefreshCadence, Settings } from '../shared/types';
 import { PLATFORMS, PLATFORM_BY_ID } from '../shared/platforms';
 import { APP_NAME } from '../shared/brand';
-import { addEvents, deleteAll, exportAll, saveSettings, setProfileIsMe, upsertProfile } from '../shared/store';
+import { addEvents, deleteAll, deleteProfile, exportAll, saveSettings, setProfileIsMe, upsertProfile } from '../shared/store';
 import { IS_EXTENSION, openUrl } from '../shared/env';
 import { parseNetflixCsv } from '../platforms/netflix-csv';
 import { buildPrompt, LLM_PROVIDERS, lastModelUsed, listModels, testLlm } from '../engine/llm';
@@ -46,7 +46,7 @@ export function SettingsPage({ engine }: { engine: EngineState }) {
         <h2>
           Platforms{' '}
           <InfoTip label="About platforms">
-            Turn off any you don't want picks from, even ones you pay for. Netflix and Prime Video: I read your history. Others: I learn as you watch.
+            Turn off any you don't want picks from, even ones you pay for. Netflix and Prime Video: Telly reads your history. Others: Telly learns as you watch.
           </InfoTip>
         </h2>
         <p class="muted small panel-note">Telly only reads history from, and suggests titles on, the platforms switched on here.</p>
@@ -65,7 +65,7 @@ export function SettingsPage({ engine }: { engine: EngineState }) {
         <h2>
           Profiles{' '}
           <InfoTip label="About profiles">
-            Profiles marked "Me" count toward your taste, across platforms. Leave family profiles off so tastes don't mix.
+            Only profiles switched to "Mine" shape your picks. Each profile's history is stored separately, so family profiles never mix with yours unless you switch them on. × removes a profile and its history.
             {profile && profile.unmatched.length > 0 && <><br /><br />Not in the catalog yet: {profile.unmatched.slice(0, 6).join(', ')}</>}
           </InfoTip>
         </h2>
@@ -74,14 +74,7 @@ export function SettingsPage({ engine }: { engine: EngineState }) {
         ) : (
           <div class="list">
             {profiles.map((p) => (
-              <label class="row" for={'pm-' + p.key}>
-                <span class="dot" style={{ background: PLATFORM_BY_ID[p.platform].dot }} />
-                <span>{p.name}</span>
-                <span class="muted small">{p.eventCount} views · {ago(p.lastSynced)}</span>
-                <span class="grow" />
-                <span class="small muted">Me</span>
-                <Toggle id={'pm-' + p.key} label={`${p.name} is me`} checked={p.isMe} onChange={(v) => setProfileIsMe(p.key, v)} />
-              </label>
+              <ProfileRow p={p} />
             ))}
           </div>
         )}
@@ -134,6 +127,30 @@ export function SettingsPage({ engine }: { engine: EngineState }) {
   );
 }
 
+function ProfileRow({ p }: { p: Profile }) {
+  const [confirm, setConfirm] = useState(false);
+  return (
+    <div class="row profile-row">
+      <span class="dot" style={{ background: PLATFORM_BY_ID[p.platform].dot }} />
+      <span>{p.name}</span>
+      <span class="muted small">{p.eventCount} views · {ago(p.lastSynced)}</span>
+      <span class="grow" />
+      {confirm ? (
+        <>
+          <button class="btn btn-sm danger-solid" onClick={() => deleteProfile(p.key)}>Delete its history</button>
+          <button class="btn btn-sm btn-ghost" onClick={() => setConfirm(false)}>Cancel</button>
+        </>
+      ) : (
+        <>
+          <label class="small muted" for={'pm-' + p.key}>Mine</label>
+          <Toggle id={'pm-' + p.key} label={`${p.name} is mine`} checked={p.isMe} onChange={(v) => setProfileIsMe(p.key, v)} />
+          <button class="icon-btn small-x" aria-label={`Remove ${p.name}`} title="Remove this profile and its history" onClick={() => setConfirm(true)}>×</button>
+        </>
+      )}
+    </div>
+  );
+}
+
 function HistoryPanel({ engine }: { engine: EngineState }) {
   const s = engine.settings;
   const [msg, setMsg] = useState('');
@@ -162,7 +179,7 @@ function HistoryPanel({ engine }: { engine: EngineState }) {
       <h2>
         History{' '}
         <InfoTip label="About history">
-          How often I re-read your Netflix and Prime history. "Every visit" checks at most every 6 hours. You can also import Netflix's CSV (Account → Viewing activity → Download all).
+          How often Telly re-reads your Netflix and Prime history. "Every visit" checks at most every 6 hours. You can also import Netflix's CSV (Account → Viewing activity → Download all).
         </InfoTip>
       </h2>
       <div class="row">
@@ -187,10 +204,10 @@ function HistoryPanel({ engine }: { engine: EngineState }) {
       <Disclaimer label="How syncing works">Reads titles and dates from your history page and saves them in this browser only. A site redesign can break it; CSV import is the backup.</Disclaimer>
       <label class="row" for="passive">
         <span class="grow">
-          Learn while I watch{' '}
-          <InfoTip label="About learning while watching">Only Netflix and Prime have a history page I can read. On Hulu, Disney+, Max and others, I remember titles you play for 2+ minutes. You can also tap Already watched on any pick.</InfoTip>
+          Learn while you watch{' '}
+          <InfoTip label="About learning while watching">Only Netflix and Prime have a history page Telly can read. On Hulu, Disney+, Max and others, Telly remembers titles you play for 2+ minutes. You can also tap Already watched on any pick.</InfoTip>
         </span>
-        <Toggle id="passive" label="Learn while I watch" checked={s.passiveLogging} onChange={(v) => saveSettings({ passiveLogging: v })} />
+        <Toggle id="passive" label="Learn while you watch" checked={s.passiveLogging} onChange={(v) => saveSettings({ passiveLogging: v })} />
       </label>
       <label class="row" for="corner">
         <span class="grow">Telly button on streaming sites</span>
@@ -269,7 +286,7 @@ function LlmPanel({ engine }: { engine: EngineState }) {
         <h2>
           Smarter picks{' '}
           <InfoTip label="About smarter picks">
-            Optional. Add your own AI key and an AI model re-ranks my top picks and writes friendlier reasons, only from real titles on your platforms. Calls go straight from
+            Optional. Add your own AI key and an AI model re-ranks Telly's top picks and writes friendlier reasons, only from real titles on your platforms. Calls go straight from
             this browser to the provider and count against your key. {info.note}
           </InfoTip>
         </h2>

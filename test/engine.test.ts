@@ -287,3 +287,24 @@ describe('mood search understands story themes', () => {
     }
   });
 });
+
+import { getProfiles, upsertProfile, deleteProfile, addEvents, getMyEvents } from '../src/shared/store';
+describe('profiles never merge', () => {
+  it('keeps a second profile separate, even if Netflix reports the same id', async () => {
+    const mem = new Map<string, string>();
+    (globalThis as any).localStorage = { getItem: (k: string) => mem.get(k) ?? null, setItem: (k: string, v: string) => mem.set(k, v), removeItem: (k: string) => mem.delete(k) };
+    (globalThis as any).window = { dispatchEvent: () => true };
+    (globalThis as any).CustomEvent = class { constructor(public type: string, public init?: unknown) {} };
+    const me = await upsertProfile('netflix', 'ACCT', 'buvi');
+    const bro = await upsertProfile('netflix', 'ACCT', 'brother');
+    expect(bro.key).not.toBe(me.key);
+    expect(me.isMe).toBe(true);
+    expect(bro.isMe).toBe(false);
+    const names = (await getProfiles()).map((p) => p.name);
+    expect(names).toEqual(['buvi', 'brother']);
+    await addEvents(bro.key, [{ platform: 'netflix', profileKey: bro.key, rawTitle: 'X', date: 1, source: 'history' }]);
+    expect(await getMyEvents()).toHaveLength(0);
+    await deleteProfile(bro.key);
+    expect((await getProfiles()).map((p) => p.name)).toEqual(['buvi']);
+  });
+});

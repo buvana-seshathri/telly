@@ -10,6 +10,7 @@ import type { EngineState } from '../ui/useEngine';
 import { useLlmHealth, useLlmRerank } from '../ui/useLlm';
 import { Poster } from '../ui/Poster';
 import { Telly, type TellyMood } from '../ui/Telly';
+import { fullRows, useGridColumns } from '../ui/useColumns';
 import { InfoTip } from '../ui/InfoTip';
 import { metaLine } from '../ui/format';
 import { DetailModal, PlatformBadges, Tile, useActions } from './RecCard';
@@ -41,7 +42,8 @@ export function Home({ engine }: { engine: EngineState }) {
   const [hostIdx, setHostIdx] = useState(0);
   const [whyOpen, setWhyOpen] = useState(false);
   const [mood, setMood] = useState<TellyMood>('happy');
-  const [genreCap, setGenreCap] = useState(6);
+  const [stacksRef, cols] = useGridColumns<HTMLDivElement>(4);
+  const [rowsShown, setRowsShown] = useState(2);
   const [hostVisible, setHostVisible] = useState(true);
   const hostRef = useRef<HTMLElement>(null);
   const act = useActions(engine);
@@ -62,8 +64,11 @@ export function Home({ engine }: { engine: EngineState }) {
     const skip = top[0] ? [top[0].item.id] : [];
     const langs = languageSections(catalog, profile, filters, perShelf, skip);
     const taken = [...skip, ...langs.flatMap((s) => s.recs.map((r) => r.item.id))];
-    return [...langs, ...genreSections(catalog, profile, filters, perShelf, genreCap, taken)];
-  }, [catalog, profile, fkey, top[0]?.item.id, genreCap, perShelf]);
+    // ask for a few extra shelves, then show whole rows only
+    const want = rowsShown * cols;
+    return [...langs, ...genreSections(catalog, profile, filters, perShelf, Math.max(1, want - langs.length + cols), taken)];
+  }, [catalog, profile, fkey, top[0]?.item.id, rowsShown, cols, perShelf]);
+  const shown = fullRows(sections.slice(0, rowsShown * cols), cols);
 
   useEffect(() => {
     setHostIdx(0);
@@ -132,7 +137,7 @@ export function Home({ engine }: { engine: EngineState }) {
         {pick ? (
           <div class="bubble-card">
             <p class="bubble-lead">
-              {searching ? 'Thinking about that…' : vibeRecs ? "For that mood, try" : "I'd go with"}
+              {searching ? 'Thinking about that…' : vibeRecs ? "For that mood, try" : "Telly's pick"}
               {vibeRecs && (
                 <button class="linkish inline" onClick={() => { setVibeRecs(null); setQuery(''); }}>clear</button>
               )}
@@ -178,7 +183,7 @@ export function Home({ engine }: { engine: EngineState }) {
         }}
       >
         <label class="sr-only" for="vibe">Tell Telly a mood</label>
-        <input id="vibe" value={query} placeholder="Not it? Tell me a mood…" autocomplete="off" onFocus={() => catalog && warmEmbedder(catalog)} onInput={(e) => setQuery(e.currentTarget.value)} />
+        <input id="vibe" value={query} placeholder="Not it? Tell Telly a mood…" autocomplete="off" onFocus={() => catalog && warmEmbedder(catalog)} onInput={(e) => setQuery(e.currentTarget.value)} />
         <button class="go" type="submit" aria-label="Ask" disabled={searching || !query.trim()}>
           {searching ? (
             <span class="spin" aria-hidden="true" />
@@ -212,8 +217,8 @@ export function Home({ engine }: { engine: EngineState }) {
         </button>
       </div>
 
-      <div class="stacks">
-        {sections.map((s) => (
+      <div class="stacks" ref={stacksRef}>
+        {shown.map((s) => (
           <Stack
             title={s.lang ? langLabel(s.lang) : s.stretch ? 'Something different' : genreLabel(s.genre)}
             info={
@@ -224,7 +229,7 @@ export function Home({ engine }: { engine: EngineState }) {
                     ? `${genreLabel(s.genre)} isn't your usual, but these sit close to your taste.`
                     : s.share > 0
                       ? `About ${Math.round(s.share * 100)}% of what you watch. Your top ${perShelf}.`
-                      : 'Popular picks while I learn your taste.'}
+                      : 'Popular picks while Telly learns your taste.'}
               </InfoTip>
             }
             recs={s.recs}
@@ -233,9 +238,9 @@ export function Home({ engine }: { engine: EngineState }) {
           />
         ))}
       </div>
-      {sections.filter((s) => !s.lang).length >= genreCap && (
+      {sections.length >= (rowsShown + 1) * cols && (
         <div class="more-row">
-          <button class="btn" onClick={() => setGenreCap((n) => n + 6)}>More genres</button>
+          <button class="btn" onClick={() => setRowsShown((n) => n + 2)}>More genres</button>
         </div>
       )}
 

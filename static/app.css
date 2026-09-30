@@ -234,3 +234,5 @@ pre.sent { white-space: pre-wrap; font-size: 11.5px; line-height: 1.45; backgrou
 .panel-note { margin: -4px 0 10px; }
 .disclaimer ul.plain { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 3px; }
 .panel .disclaimer { margin-top: 12px; }
+.profile-row .small-x { width: 28px; height: 28px; font-size: 17px; color: var(--faint); }
+.profile-row .small-x:hover { color: var(--text); }

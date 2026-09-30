@@ -16,7 +16,7 @@ interface NfItem {
 
 type RC = {
   models?: {
-    userInfo?: { data?: { guid?: string; userGuid?: string; name?: string; profileName?: string } };
+    userInfo?: { data?: { guid?: string; userGuid?: string; profileGuid?: string; name?: string; profileName?: string } };
     serverDefs?: { data?: { BUILD_IDENTIFIER?: string; API_ROOT?: string } };
   };
 };
@@ -27,9 +27,11 @@ function ctx(): RC | undefined {
 
 function profile(): { id: string; name: string } | null {
   const u = ctx()?.models?.userInfo?.data;
-  const id = u?.guid ?? u?.userGuid;
+  // userGuid / profileGuid identify the profile you picked; guid can be the account as a whole,
+  // which is the same for every profile, so it is only a last resort.
+  const id = u?.profileGuid ?? u?.userGuid ?? u?.guid;
   if (!id) return null;
-  return { id, name: u?.name ?? u?.profileName ?? 'Netflix profile' };
+  return { id, name: u?.profileName ?? u?.name ?? 'Netflix profile' };
 }
 
 const post = (msg: Record<string, unknown>) => window.postMessage({ source: 'tonight-nf', ...msg }, location.origin);
@@ -55,6 +57,7 @@ async function fetchViaApi(maxPages = 40): Promise<NfItem[]> {
       const j = (await res.json().catch(() => ({}))) as { viewedItems?: NfItem[] };
       const page = j.viewedItems ?? [];
       items.push(...page);
+      post({ type: 'progress', count: items.length });
       if (page.length < 100) break;
       await new Promise((r) => setTimeout(r, 250)); // be gentle
     }

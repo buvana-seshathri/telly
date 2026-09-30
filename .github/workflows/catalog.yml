@@ -16,6 +16,7 @@ jobs:
       - run: npm ci
       - run: npx tsx scripts/build-catalog.ts --region US --pages 25 --embedder minilm --out catalog-dist
         env: { TMDB_TOKEN: '${{ secrets.TMDB_TOKEN }}' }
+      - run: cp -r site/. catalog-dist/  # privacy policy and other public pages
       - uses: actions/upload-pages-artifact@v3
         with: { path: catalog-dist }
   deploy:

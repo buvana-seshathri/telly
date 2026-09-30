@@ -117,7 +117,7 @@ export function searchVibe(
       const g = genres.filter((x) => item.genres.includes(x));
       vibeWhy = anyThemeHit
         ? `Not clearly about ${asked}, but ${g.length ? `a close ${joinList(g.map(quote))} pick` : 'close in feel'}.`
-        : `Nothing on your platforms is clearly about ${asked}; this is the closest I found.`;
+        : `Nothing on your platforms is clearly about ${asked}; this is the closest match.`;
     } else if (bits.length) {
       vibeWhy = `Matches ${joinList(bits.slice(0, 3))}.`;
     } else {

@@ -10,6 +10,7 @@ import type { EngineState } from '../ui/useEngine';
 import { Telly } from '../ui/Telly';
 import { Poster } from '../ui/Poster';
 import { InfoTip } from '../ui/InfoTip';
+import { Disclaimer } from '../ui/Disclaimer';
 
 export function Welcome({ engine }: { engine: EngineState }) {
   const [step, setStep] = useState(1);
@@ -75,9 +76,7 @@ export function Welcome({ engine }: { engine: EngineState }) {
           <Telly size={110} mood="wow" />
           <h1>Hi, I'm {APP_NAME}</h1>
           <p class="lead">Which of these do you watch on?</p>
-          <p class="lead small">
-            Pick the ones you want Telly to work with. For anything you leave off, I won't read history or suggest titles.
-          </p>
+          <p class="lead small">Pick the ones you want Telly to read. I won't touch the rest.</p>
           <div class="platform-pick">
             {PLATFORMS.map((p) => (
               <button class="pick-tile" aria-pressed={s.platforms[p.id]} onClick={() => saveSettings({ platforms: { ...s.platforms, [p.id]: !s.platforms[p.id] } })}>
@@ -86,9 +85,7 @@ export function Welcome({ engine }: { engine: EngineState }) {
               </button>
             ))}
           </div>
-          <p class="disclaimer">
-            <b>Good to know:</b> Telly is a free, independent extension. It isn't made by or connected to Netflix, Prime Video or any streaming service, and it only works as well as the history it can see. You can change any of this later in Settings.
-          </p>
+          <Disclaimer>Telly is free and independent, not made by Netflix, Prime or any streaming service. You can change this anytime in Settings.</Disclaimer>
           <button class="btn btn-primary big" onClick={() => setStep(2)}>Next</button>
         </section>
       )}
@@ -100,9 +97,7 @@ export function Welcome({ engine }: { engine: EngineState }) {
             Let me read what you've watched{' '}
             <InfoTip label="How history works">I read it right here in your browser and keep it on this computer. It's never sent to a Telly server, because there isn't one.</InfoTip>
           </h1>
-          <p class="lead small">
-            Your streaming site keeps a watch-history page. Open it below while you're signed in, and Telly will read the titles and dates on that page and save them here. Leave the tab open until you see a "synced" message, then come back.
-          </p>
+          <p class="lead small">Open your history page and I'll read what you've watched. Keep the tab open until it says synced.</p>
           <div class="row-actions center">
             {s.platforms.netflix && <button class="btn btn-primary" onClick={() => openUrl('https://www.netflix.com/viewingactivity?tonight-sync=1')}>Sync Netflix history</button>}
             {s.platforms.prime && <button class="btn btn-primary" onClick={() => openUrl('https://www.primevideo.com/settings/watch-history?tonight-sync=1')}>Sync Prime history</button>}
@@ -110,15 +105,16 @@ export function Welcome({ engine }: { engine: EngineState }) {
           {!s.platforms.netflix && !s.platforms.prime && (
             <p class="note">Netflix and Prime are the two with a history page I can read. On the others I learn as you watch, or from titles you tell me you've seen.</p>
           )}
-          <ul class="what-list">
-            <li>Reads: titles, dates and (on Netflix) how far you watched</li>
-            <li>Stays: saved in this browser only, per profile</li>
-            <li class="no">Never: your password, payment details or anything else on the page</li>
-          </ul>
+
           {engine.events.length > 0 && <p class="note">Got {engine.events.length} views ✓</p>}
-          <p class="disclaimer">
-            <b>Heads up:</b> this works by reading the page as you see it, so if a streaming site changes its layout, syncing can stop working until Telly is updated. You can skip this step and sync later in Settings. Only sync from a profile that's yours: I count every synced profile toward your taste unless you turn it off in Settings.
-          </p>
+          <Disclaimer label="What I read">
+            <ul class="plain">
+              <li>Only titles, dates and watch progress, saved in this browser.</li>
+              <li>Never your password or payment details.</li>
+              <li>Sync only your own profile. You can skip this and sync later.</li>
+              <li>If a site changes its layout, syncing may stop until Telly updates.</li>
+            </ul>
+          </Disclaimer>
           <div class="row-actions center">
             <button class="btn btn-ghost" onClick={() => setStep(1)}>Back</button>
             <button class="btn btn-primary big" onClick={() => setStep(3)}>Next</button>
@@ -129,7 +125,7 @@ export function Welcome({ engine }: { engine: EngineState }) {
       {step === 3 && (
         <section class="wstep wide">
           <h1>Tap a few you loved</h1>
-          <p class="lead small">A few taps sharpen your picks, especially if you skipped syncing. Not seeing yours? Search, or shuffle for a new set.</p>
+          <p class="lead small">A few taps sharpen your picks.</p>
           <label class="sr-only" for="fav-q">Search titles</label>
           <input id="fav-q" class="input search" placeholder="Search" value={q} onInput={(e) => setQ(e.currentTarget.value)} />
           <div class="fav-grid">

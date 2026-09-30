@@ -268,3 +268,22 @@ describe('LLM failure classification', () => {
     expect(classifyLlmError(new Error('Failed to fetch'))).toBe('other');
   });
 });
+
+import { themesIn } from '../src/engine/themes';
+describe('mood search understands story themes', () => {
+  it('reads "next life" as reincarnation, not just "romance"', () => {
+    expect(themesIn('next life romance').map((t) => t.theme.id)).toContain('reincarnation');
+    const p = buildProfile(cat, demoEvents(), []);
+    const romances = cat.items.map((it, i) => ({ it, i })).filter(({ it, i }) => it.genres.includes('romance') && !p.seen.has(i));
+    const target = romances[romances.length - 1];
+    const items = cat.items.slice();
+    items[target.i] = { ...target.it, keywords: [...target.it.keywords, 'reincarnation', 'past life'] };
+    const cat2 = { ...cat, items };
+    for (const vec of [null, hashEmbedQuery('next life romance')]) {
+      const r = searchVibe(cat2, p, 'next life romance', vec, all, 5);
+      expect(r[0].item.id).toBe(target.it.id);
+      expect(r[0].why).toMatch(/next life/);
+      expect(r[1].why).not.toMatch(/Matches “romance”\.$/);
+    }
+  });
+});

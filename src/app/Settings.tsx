@@ -10,6 +10,7 @@ import { recommend } from '../engine/recommend';
 import type { EngineState } from '../ui/useEngine';
 import { clearLlmHealth, useLlmHealth } from '../ui/useLlm';
 import { InfoTip } from '../ui/InfoTip';
+import { Disclaimer } from '../ui/Disclaimer';
 
 function Toggle({ checked, onChange, label, id }: { checked: boolean; onChange: (v: boolean) => void; label: string; id: string }) {
   return (
@@ -183,9 +184,7 @@ function HistoryPanel({ engine }: { engine: EngineState }) {
         </label>
       </div>
       {msg && <p class="note">{msg}</p>}
-      <p class="disclaimer">
-        <b>How syncing works:</b> "Sync" opens your watch-history page and Telly reads the titles and dates on it, saving them in this browser only. Nothing is uploaded. It reads the page as you see it, so a site redesign can break it until Telly is updated; the CSV import is the fallback for Netflix.
-      </p>
+      <Disclaimer label="How syncing works">Reads titles and dates from your history page and saves them in this browser only. A site redesign can break it; CSV import is the backup.</Disclaimer>
       <label class="row" for="passive">
         <span class="grow">
           Learn while I watch{' '}
@@ -312,16 +311,14 @@ function LlmPanel({ engine }: { engine: EngineState }) {
       </div>
       {health && !status && <p class="llm-note" role="status">{healthMsg}</p>}
       {status && <p class="note">{status}</p>}
-      <div class="disclaimer">
-        <b>Before you add a key:</b>
+      <Disclaimer label="Before you add a key">
         <ul class="plain">
-          <li>This is optional. Telly's own picks work without it.</li>
-          <li>Your key is saved in this browser only (not encrypted). Don't add it on a shared computer, and use a key you can revoke.</li>
-          <li>Each refresh of your picks or mood search makes a small request that counts against your provider's free allowance or bill. Set a spending limit with them if you can.</li>
-          <li>The AI only sees a short taste summary and the shortlisted titles ("What gets sent?" shows exactly what), never your account details.</li>
-          <li>If the key runs out of credit or gets rate-limited, Telly says so here and on the home page, and carries on with its own picks.</li>
+          <li>Optional. Telly works fine without it.</li>
+          <li>Stored in this browser, unencrypted. Avoid shared computers.</li>
+          <li>Each request uses your provider's allowance or bill.</li>
+          <li>The AI sees a taste summary and shortlisted titles only.</li>
         </ul>
-      </div>
+      </Disclaimer>
       {showSent && <pre class="sent">{preview}</pre>}
     </section>
   );

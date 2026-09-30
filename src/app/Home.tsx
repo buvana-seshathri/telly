@@ -3,6 +3,7 @@ import type { Filters, Rec } from '../shared/types';
 import { enabledPlatforms } from '../shared/store';
 import { genreSections, languageSections, recommend, surprise } from '../engine/recommend';
 import { searchVibe } from '../engine/vibe';
+import { expandQuery } from '../engine/themes';
 import { embedQuery, warmEmbedder } from '../engine/embed-query';
 import { genreLabel, langLabel } from '../engine/text';
 import type { EngineState } from '../ui/useEngine';
@@ -88,12 +89,12 @@ export function Home({ engine }: { engine: EngineState }) {
     try {
       let vec: Float32Array | null = null;
       try {
-        vec = await embedQuery(catalog, q);
+        vec = await embedQuery(catalog, expandQuery(q));
       } catch (e) {
         console.warn('[telly] language model unavailable, matching on words only', e);
       }
       setWordsOnly(!vec);
-      setVibeRecs(searchVibe(catalog, profile, q, vec, filters, 6));
+      setVibeRecs(searchVibe(catalog, profile, q, vec, filters, 10));
       setFresh(true);
       setTimeout(() => setFresh(false), 1600);
     } finally {

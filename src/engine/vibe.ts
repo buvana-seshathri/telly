@@ -3,7 +3,10 @@ import type { Catalog, CatalogItem, Filters, Rec } from '../shared/types';
 import { explain } from './explain';
 import type { TasteProfile } from './profile';
 import { passesFilters, tasteScore } from './recommend';
-import { conceptOf, contentWords, stem } from './text';
+import { conceptOf, contentWords, genresInText, GENRES, stem } from './text';
+import { langsIn, themesIn, themeTermsIn } from './themes';
+
+const GENRE_WORD_SET = new Set(['romance', 'romantic', 'romcom', 'comedy', 'comedies', 'funny', 'drama', 'dramas', 'thriller', 'thrillers', 'horror', 'scary', 'mystery', 'action', 'fantasy', 'crime', 'documentary', 'documentaries', 'animated', 'animation', 'scifi', 'sci', 'war', 'western', 'reality', 'kids', 'family', 'music', 'musical', 'history', 'historical', 'adventure', ...GENRES]);
 import { dot } from './vector';
 
 export interface ParsedVibe {
@@ -47,6 +50,17 @@ export function matchedTerms(query: string, item: CatalogItem): string[] {
   return hits.slice(0, 3);
 }
 
+const quote = (t: string) => `“${t}”`;
+function joinList(xs: string[]): string {
+  return xs.length <= 1 ? xs.join('') : xs.slice(0, -1).join(', ') + ' and ' + xs[xs.length - 1];
+}
+
+/**
+ * Mood search. A request is broken into story themes ("next life" = reincarnation), genres
+ * ("romance"), languages ("kdrama") and leftover words. Themes are what the person is really
+ * asking for, so a title has to speak to them to rank high; the genre word only narrows;
+ * the language model's similarity and your taste break ties.
+ */
 export function searchVibe(
   cat: Catalog,
   p: TasteProfile,
@@ -61,37 +75,67 @@ export function searchVibe(
     type: parsed.type ?? base.type,
     maxMinutes: parsed.maxMinutes ?? base.maxMinutes,
   };
-  const scored: { i: number; score: number; vibe: number }[] = [];
+  const themes = themesIn(query);
+  const genres = genresInText(query);
+  const langs = langsIn(query);
+  // words not already explained by a theme, genre or language
+  const covered = new Set([...themes.flatMap((t) => contentWords(t.said)), ...contentWords(genres.join(' '))]);
+  const extraQuery = contentWords(query).filter((w) => !covered.has(w) && !GENRE_WORD_SET.has(w) && !/^(korean|kdramas?|japanese|chinese|anime|hindi|bollywood|spanish|thai|turkish)$/.test(w)).join(' ');
+
+  type Hit = { i: number; score: number; themeHits: { said: string; terms: string[] }[]; genreHit: boolean; terms: string[] };
+  const scored: Hit[] = [];
   for (let i = 0; i < cat.items.length; i++) {
     const item = cat.items[i];
     if (p.seen.has(i) || p.rejected.has(i) || !passesFilters(item, f)) continue;
     if (parsed.short && item.runtime != null && item.runtime > (item.type === 'movie' ? 105 : 35)) continue;
-    const vibe = queryVec ? dot(queryVec, cat.vectors[i]) : 0;
-    const taste = p.hasSignal ? tasteScore(cat, p, i).score : 0;
-    scored.push({ i, vibe, score: queryVec ? 0.78 * vibe + 0.22 * taste : 0.3 * taste });
+    const themeHits = themes.map((t) => ({ said: t.said, terms: themeTermsIn(t.theme, item) })).filter((h) => h.terms.length);
+    const genreHit = genres.some((g) => item.genres.includes(g));
+    const terms = extraQuery ? matchedTerms(extraQuery, item) : [];
+    let score = 0;
+    if (queryVec) score += 0.55 * dot(queryVec, cat.vectors[i]);
+    if (p.hasSignal) score += 0.1 * tasteScore(cat, p, i).score;
+    if (themes.length) score += themeHits.length ? 0.5 * (themeHits.length / themes.length) + 0.04 * Math.min(3, themeHits.reduce((a, h) => a + h.terms.length, 0)) : -0.3;
+    if (genres.length) score += genreHit ? 0.1 : -0.25;
+    if (langs.length) score += item.lang && langs.includes(item.lang) ? 0.2 : -0.3;
+    score += (themes.length ? 0.04 : queryVec ? 0.07 : 0.25) * Math.min(3, terms.length);
+    scored.push({ i, score, themeHits, genreHit, terms });
   }
   scored.sort((a, b) => b.score - a.score);
-  // Re-score the head with explicit term matches, so titles that actually speak to the
-  // words in the request beat ones that are only loosely similar.
-  const head = (queryVec ? scored.slice(0, 60) : scored).map((x) => {
-    const terms = matchedTerms(query, cat.items[x.i]);
-    return { ...x, terms, score: x.score + (queryVec ? 0.07 : 0.25) * Math.min(3, terms.length) - (terms.length ? 0 : 0.05) };
-  });
-  head.sort((a, b) => b.score - a.score);
-  return head.slice(0, k).map(({ i, score, terms }) => {
+
+  const top = scored.slice(0, k);
+  const anyThemeHit = top.some((h) => h.themeHits.length);
+  return top.map(({ i, score, themeHits, genreHit, terms }) => {
     const item = cat.items[i];
     const base = explain(cat, p, item, null, { maxMinutes: f.maxMinutes });
-    const vibeWhy = terms.length
-      ? `Matches ${terms.map((t) => `“${t}”`).join(' and ').replace(/ and (“[^”]+”) and /, ', $1 and ')}.`
-      : 'Closest match to your description.';
+    const bits: string[] = [];
+    for (const h of themeHits) bits.push(h.terms.some((t) => t === h.said) ? quote(h.said) : `${quote(h.said)} (${h.terms.slice(0, 2).join(', ')})`);
+    for (const t of terms) bits.push(quote(t));
+    if (genreHit) bits.push(...genres.filter((g) => item.genres.includes(g)).map(quote));
+    let vibeWhy: string;
+    if (themes.length && !themeHits.length) {
+      const asked = joinList(themes.map((t) => quote(t.said)));
+      const g = genres.filter((x) => item.genres.includes(x));
+      vibeWhy = anyThemeHit
+        ? `Not clearly about ${asked}, but ${g.length ? `a close ${joinList(g.map(quote))} pick` : 'close in feel'}.`
+        : `Nothing on your platforms is clearly about ${asked}; this is the closest I found.`;
+    } else if (bits.length) {
+      vibeWhy = `Matches ${joinList(bits.slice(0, 3))}.`;
+    } else {
+      vibeWhy = 'Closest match to your description.';
+    }
+    // only mention your history when that title also fits the request itself
     const s = tasteScore(cat, p, i);
-    const close = s.anchor && p.hasSignal && dot(cat.vectors[s.anchor.index], cat.vectors[i]) > 0.35;
-    const tasteBit = close ? ` Also close to ${cat.items[s.anchor!.index].title}, which you watched.` : '';
+    const anchor = s.anchor && p.hasSignal ? cat.items[s.anchor.index] : null;
+    const anchorFits =
+      !!anchor &&
+      (themes.length ? themes.some((t) => themeTermsIn(t.theme, anchor).length) : genres.length ? genres.some((g) => anchor.genres.includes(g)) : true) &&
+      dot(cat.vectors[s.anchor!.index], cat.vectors[i]) > 0.35;
+    const tasteBit = anchorFits ? ` Also close to ${anchor!.title}, which you watched.` : '';
     return {
       item,
       score,
       why: vibeWhy + tasteBit,
-      anchorId: close ? cat.items[s.anchor!.index].id : undefined,
+      anchorId: anchorFits ? anchor!.id : undefined,
       evidence: [{ kind: 'vibe-match' as const, text: vibeWhy }, ...base.evidence],
     };
   });

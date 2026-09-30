@@ -34,6 +34,7 @@ export interface CatalogItem {
   lang?: string; // original language, ISO 639-1 ("en", "ko", "ja")
   countries?: string[]; // origin countries, ISO 3166-1 ("KR", "US")
   studios?: string[]; // TV networks (tvN, JTBC) or production companies
+  links?: Partial<Record<PlatformId, string>>; // direct title pages where known (else "Watch" opens that platform's search)
   recs?: number[]; // catalog indexes of "people who liked this also liked" (from TMDB), best first
 }
 

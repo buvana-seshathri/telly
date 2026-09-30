@@ -17,7 +17,8 @@ export function watchPlatform(item: CatalogItem, settings: Settings, prefer?: Pl
 }
 
 export function watchUrl(item: CatalogItem, platform: PlatformId | null): string | null {
-  return platform ? PLATFORM_BY_ID[platform].search(item.title) : null;
+  if (!platform) return null;
+  return item.links?.[platform] ?? PLATFORM_BY_ID[platform].search(item.title);
 }
 
 export function appUrl(hash = ''): string {

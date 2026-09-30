@@ -132,6 +132,35 @@ async function pool<T, R>(xs: T[], n: number, fn: (x: T) => Promise<R>): Promise
   return out;
 }
 
+/**
+ * Direct Netflix title pages. TMDB does not know Netflix's ids, but Wikidata links the two
+ * (Netflix ID = P1874, TMDB movie = P4947, TMDB series = P4983). Best effort: a title with no
+ * match simply keeps opening the platform's search page.
+ */
+async function directNetflixLinks(items: CatalogItem[]): Promise<void> {
+  const byKey = new Map(items.map((it) => [it.id, it]));
+  let linked = 0;
+  for (const [type, prop] of [['movie', 'P4947'], ['tv', 'P4983']] as const) {
+    try {
+      const query = `SELECT ?tmdb ?nf WHERE { ?i wdt:P1874 ?nf . ?i wdt:${prop} ?tmdb . }`;
+      const res = await fetch('https://query.wikidata.org/sparql?format=json&query=' + encodeURIComponent(query), {
+        headers: { accept: 'application/sparql-results+json', 'user-agent': 'Telly-catalog-builder/1.0 (open-source browser extension)' },
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      const rows = ((await res.json()) as { results: { bindings: { tmdb: { value: string }; nf: { value: string } }[] } }).results.bindings;
+      for (const r of rows) {
+        const it = byKey.get(`${type}:${r.tmdb.value}`);
+        if (!it || it.links?.netflix || !/^\d{5,10}$/.test(r.nf.value)) continue;
+        it.links = { ...it.links, netflix: `https://www.netflix.com/title/${r.nf.value}` };
+        linked++;
+      }
+    } catch (e) {
+      console.warn(`direct Netflix links (${type}) skipped:`, (e as Error).message);
+    }
+  }
+  console.log(`direct Netflix links: ${linked}/${items.length} titles`);
+}
+
 async function loadTmdb(): Promise<CatalogItem[]> {
   if (!TOKEN) throw new Error('Set TMDB_TOKEN (a TMDB v4 read access token) or use --sample');
   const ids = new Set<string>();
@@ -196,6 +225,7 @@ async function loadTmdb(): Promise<CatalogItem[]> {
     return recs.length ? { ...it, recs } : it;
   });
   console.log(`neighbour lists: ${withRecs}/${out.length} titles`);
+  await directNetflixLinks(out);
   return out;
 }
 

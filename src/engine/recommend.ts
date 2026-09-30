@@ -296,17 +296,30 @@ export function languageSections(cat: Catalog, p: TasteProfile, f: Filters, perS
   return out;
 }
 
-/** Smart random: a weighted draw from your top 40, never from the whole catalog. */
+/** Titles already shown by "surprise me" this session, so rolling again gives something new. */
+const seenSurprise = new Set<string>();
+
+/**
+ * Smart random: a draw from your top 60, never the whole catalog. Weights are gentle (so #1 does not
+ * win every time) and anything already rolled this session is skipped until the pool runs dry.
+ */
 export function surprise(cat: Catalog, p: TasteProfile, f: Filters, type: 'movie' | 'tv', rand = Math.random): Rec | null {
-  const ranked = rankAll(cat, p, { ...f, type }).slice(0, 40);
-  if (!ranked.length) return null;
+  const all = rankAll(cat, p, { ...f, type }).slice(0, 60);
+  if (!all.length) return null;
+  let ranked = all.filter((s) => !seenSurprise.has(cat.items[s.index].id));
+  if (ranked.length < 5) {
+    for (const s of all) seenSurprise.delete(cat.items[s.index].id);
+    ranked = all;
+  }
   const min = ranked[ranked.length - 1].score;
-  const weights = ranked.map((s) => Math.pow(s.score - min + 0.05, 2));
+  const weights = ranked.map((s) => s.score - min + 0.15);
   const total = weights.reduce((a, b) => a + b, 0);
   let r = rand() * total;
+  let pick = ranked[0];
   for (let i = 0; i < ranked.length; i++) {
     r -= weights[i];
-    if (r <= 0) return toRec(cat, p, ranked[i], f);
+    if (r <= 0) { pick = ranked[i]; break; }
   }
-  return toRec(cat, p, ranked[0], f);
+  seenSurprise.add(cat.items[pick.index].id);
+  return toRec(cat, p, pick, f);
 }

@@ -19,12 +19,32 @@ async function loadMiniLM(): Promise<Extractor> {
   return pipe as unknown as Extractor;
 }
 
-export async function embedQuery(cat: Catalog, text: string): Promise<Float32Array> {
+/** Start loading the language model in the background (cheap no-op for the bundled sample catalog). */
+export function warmEmbedder(cat: Catalog): void {
+  if (cat.meta.embedder === 'minilm-l6-v2') {
+    minilm ??= loadMiniLM();
+    minilm.catch(() => { minilm = null; });
+  }
+}
+
+function withTimeout<T>(p: Promise<T>, ms: number, what: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const t = setTimeout(() => reject(new Error(`${what} took longer than ${ms / 1000}s`)), ms);
+    p.then((v) => { clearTimeout(t); resolve(v); }, (e) => { clearTimeout(t); reject(e); });
+  });
+}
+
+export async function embedQuery(cat: Catalog, text: string, timeoutMs = 30000): Promise<Float32Array> {
   if (cat.meta.embedder === HASH_EMBEDDER) return hashEmbedQuery(text);
   if (cat.meta.embedder === 'minilm-l6-v2') {
     minilm ??= loadMiniLM();
-    const extract = await minilm;
-    const out = await extract(text, { pooling: 'mean', normalize: true });
+    // A model that is still downloading keeps loading in the background; this search just
+    // stops waiting for it (the caller falls back to words) instead of hanging silently.
+    const extract = await withTimeout(minilm, timeoutMs, 'Loading the language model').catch((e) => {
+      if (!/took longer/.test(String(e?.message))) minilm = null; // a real failure: retry next time
+      throw e;
+    });
+    const out = await withTimeout(extract(text, { pooling: 'mean', normalize: true }), 15000, 'Embedding your request');
     return new Float32Array(out.data);
   }
   throw new Error(`Unknown embedder ${cat.meta.embedder}`);

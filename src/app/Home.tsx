@@ -3,7 +3,7 @@ import type { Filters, Rec } from '../shared/types';
 import { enabledPlatforms } from '../shared/store';
 import { genreSections, languageSections, recommend, surprise } from '../engine/recommend';
 import { searchVibe } from '../engine/vibe';
-import { embedQuery } from '../engine/embed-query';
+import { embedQuery, warmEmbedder } from '../engine/embed-query';
 import { genreLabel, langLabel } from '../engine/text';
 import type { EngineState } from '../ui/useEngine';
 import { useLlmRerank } from '../ui/useLlm';
@@ -21,6 +21,8 @@ const TIMES: { label: string; value: number | null }[] = [
   { label: '1 hour', value: 60 },
   { label: 'Movie length', value: 180 },
 ];
+
+const NO_RECS: Rec[] = []; // stable identity, so the rerank hook does not re-run every render
 
 export function Home({ engine }: { engine: EngineState }) {
   const { catalog, profile, settings } = engine;
@@ -48,7 +50,7 @@ export function Home({ engine }: { engine: EngineState }) {
 
   const topBase = useMemo(() => (catalog && profile ? recommend(catalog, profile, filters, 8) : []), [catalog, profile, fkey]);
   const top = useLlmRerank(engine, topBase, { purpose: 'tonight', filters });
-  const vibeRanked = useLlmRerank(engine, vibeRecs ?? [], { purpose: 'vibe', filters, vibe: asked });
+  const vibeRanked = useLlmRerank(engine, vibeRecs ?? NO_RECS, { purpose: 'vibe', filters, vibe: asked });
   const hostRecs = vibeRecs ? vibeRanked : top;
   const pick = hostRecs.length ? hostRecs[hostIdx % hostRecs.length] : null;
 
@@ -122,7 +124,7 @@ export function Home({ engine }: { engine: EngineState }) {
         {pick ? (
           <div class="bubble-card">
             <p class="bubble-lead">
-              {vibeRecs ? "For that mood, try" : "I'd go with"}
+              {searching ? 'Thinking about that…' : vibeRecs ? "For that mood, try" : "I'd go with"}
               {vibeRecs && (
                 <button class="linkish inline" onClick={() => { setVibeRecs(null); setQuery(''); }}>clear</button>
               )}
@@ -134,7 +136,7 @@ export function Home({ engine }: { engine: EngineState }) {
               <BecauseChip rec={pick} catalog={catalog} />
             </div>
             {whyOpen && <p class="host-why">{pick.why}</p>}
-            {vibeRecs && wordsOnly && <p class="host-why">Matched on your words only, the smarter matching couldn't load.</p>}
+            {vibeRecs && wordsOnly && <p class="host-why">Matched on your words only: the smarter matching is still loading (first time only) or couldn't load. Try again in a minute.</p>}
             <div class="host-actions">
               <button class="btn btn-primary big" onClick={() => act.watch(pick)}>Watch</button>
               <button class="btn big" aria-expanded={whyOpen} onClick={() => setWhyOpen((v) => !v)}>Why?</button>
@@ -149,7 +151,7 @@ export function Home({ engine }: { engine: EngineState }) {
           </div>
         ) : (
           <div class="bubble-card">
-            <p class="bubble-lead">{vibeRecs ? 'Hmm, nothing on your platforms fits that.' : 'Nothing left for these filters.'}</p>
+            <p class="bubble-lead">{searching ? 'Thinking about that…' : vibeRecs ? 'Hmm, nothing on your platforms fits that.' : 'Nothing left for these filters.'}</p>
           </div>
         )}
         {pick && (
@@ -168,7 +170,7 @@ export function Home({ engine }: { engine: EngineState }) {
         }}
       >
         <label class="sr-only" for="vibe">Tell Telly a mood</label>
-        <input id="vibe" value={query} placeholder="Not it? Tell me a mood…" autocomplete="off" onInput={(e) => setQuery(e.currentTarget.value)} />
+        <input id="vibe" value={query} placeholder="Not it? Tell me a mood…" autocomplete="off" onFocus={() => catalog && warmEmbedder(catalog)} onInput={(e) => setQuery(e.currentTarget.value)} />
         <button class="go" type="submit" aria-label="Ask" disabled={searching || !query.trim()}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg>
         </button>

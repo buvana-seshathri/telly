@@ -19,7 +19,9 @@ function describe(f: Filters): string {
  * error) return the engine's picks unchanged.
  */
 export function useLlmRerank(engine: EngineState, recs: Rec[], opts: { purpose: LlmRequest['purpose']; filters: Filters; vibe?: string }): Rec[] {
-  const [out, setOut] = useState<Rec[]>(recs);
+  // remember which engine picks each reranked list belongs to, so a stale list is never shown for new picks
+  const [res, setRes] = useState<{ src: Rec[]; list: Rec[] }>({ src: recs, list: recs });
+  const setOut = (list: Rec[]) => setRes({ src: recs, list });
   const llm = engine.settings?.llm;
   const on = !!(llm?.enabled && llm.apiKey && engine.catalog && engine.profile && recs.length > 1);
   const key = on ? `${opts.purpose}|${opts.vibe ?? ''}|${recs.map((r) => r.item.id).join(',')}` : '';
@@ -44,5 +46,5 @@ export function useLlmRerank(engine: EngineState, recs: Rec[], opts: { purpose: 
     return () => ctrl.abort();
   }, [key, recs]);
 
-  return out;
+  return res.src === recs ? res.list : recs;
 }
